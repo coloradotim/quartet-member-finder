@@ -46,8 +46,16 @@ allow:
 - `http://localhost:3000`
 - `http://localhost:3000/auth/callback`
 
-For production, add the deployed app URL and `/auth/callback` URL in the
-Supabase dashboard before enabling sign-in links for users.
+For preview, add the exact Vercel preview URL and `/auth/callback` URL for the
+preview environment being manually tested.
+
+For production, configure:
+
+- site URL: `https://quartetmemberfinder.org`
+- redirect URL: `https://quartetmemberfinder.org/auth/callback`
+
+Set Vercel Production `NEXT_PUBLIC_APP_URL` to
+`https://quartetmemberfinder.org` after the domain is verified.
 
 Sign-in uses email one-time codes. Configure Supabase email templates to send
 the OTP token and avoid presenting the flow as a magic link in app copy.
@@ -62,6 +70,12 @@ Required server-only values for notification delivery:
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
+
+For production, use a verified sender on the project domain, such as:
+
+```text
+RESEND_FROM_EMAIL=messages@quartetmemberfinder.org
+```
 
 The browser submits only target IDs and message text. Recipient email lookup
 must happen in server code after the database resolves the recipient.
