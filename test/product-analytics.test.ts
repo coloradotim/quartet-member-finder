@@ -21,6 +21,8 @@ describe("product analytics helpers", () => {
       sanitizeAnalyticsProperties({
         email: "singer@example.com",
         feedback_type: "bug",
+        has_country: true,
+        has_locality: false,
         latitude_private: 40.5,
         message_body: "private message",
         route: "/help",
@@ -29,6 +31,8 @@ describe("product analytics helpers", () => {
       }),
     ).toEqual({
       feedback_type: "bug",
+      has_country: true,
+      has_locality: false,
       route: "/help",
       result_count: 2,
     });

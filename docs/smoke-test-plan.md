@@ -69,6 +69,19 @@ validation.
 4. Pass: signed-out users visiting `/app` are redirected to sign in.
 5. Fail: dashboard links point to missing routes or expose another user's data.
 
+## First-Run Onboarding
+
+1. Sign in with a test account that has not completed onboarding.
+2. Pass: onboarding first asks for display name and optional country or
+   approximate location before asking what to do first.
+3. Pass: display name is clearly required and the location fields are clearly
+   optional.
+4. Pass: workflow options are plain language and do not imply a permanent role.
+5. Pass: saving creates hidden starter profile context and routes to the chosen
+   next page.
+6. Fail: onboarding publishes the profile in discovery without the visibility
+   control being turned on.
+
 ## My Singer Profile
 
 1. Open `/app/profile`.

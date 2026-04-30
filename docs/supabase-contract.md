@@ -82,7 +82,11 @@ First-run onboarding writes these `account_profiles` fields:
 
 The server creates the account profile row after sign-in when needed. If neither
 completion nor skipped state is present, sign-in routes the user through
-`/app/onboarding` before continuing to the requested app destination.
+`/app/onboarding`. Current onboarding collects display name and optional
+country/approximate location before asking what workflow the user wants to open
+first. Completing onboarding also creates or updates a hidden starter
+`singer_profiles` row with that basic context so profile defaults are available
+without publishing the user in discovery.
 
 The legacy `/app/settings` route redirects to My Singer Profile. The app no
 longer asks users to re-run onboarding or choose account-level distance units.

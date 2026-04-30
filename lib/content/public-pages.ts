@@ -17,6 +17,13 @@ export const publicHelpSections = [
   },
   {
     body: [
+      "After sign-in, onboarding first asks for basic profile context like display name, country, and approximate location.",
+      "Then you choose what to do first. That choice is not permanent; you can use singer search, quartet openings, and Quartet Mode later.",
+    ],
+    heading: "First Sign-In",
+  },
+  {
+    body: [
       "A quartet listing is for a quartet or prospective quartet that has some parts covered and is looking for one or more singers.",
       "Listings keep covered parts and needed parts separate within the quartet's voicing so searchers can quickly understand what the group needs.",
     ],

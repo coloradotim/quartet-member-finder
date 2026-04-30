@@ -216,14 +216,17 @@ information.
 
 ## Onboarding model
 
-First-run onboarding asks signed-in users what they want to do first, not what
-role they permanently are. A user may use the app as a singer and in Quartet
-Mode.
+First-run onboarding first asks signed-in users for basic profile context:
+display name, country, and approximate location. It then asks what they want to
+do first, not what role they permanently are. A user may use the app as a singer
+and in Quartet Mode.
 
 Onboarding state is stored on the user's private `account_profiles` row. The app
-records whether onboarding was completed or skipped and, when completed, the
-selected first action. This state is used only to avoid showing first-run
-onboarding repeatedly and to route the user to a useful next step.
+records whether onboarding was completed and the selected first action. This
+state is used only to avoid showing first-run onboarding repeatedly and to route
+the user to a useful next step. Completing onboarding also creates or updates a
+hidden starter singer profile with the basic context so discovery defaults are
+available without publishing the profile.
 
 The onboarding copy reminds users that exact locations are not shown publicly,
 location fields should work outside the United States, and first contact starts
