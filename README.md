@@ -64,6 +64,9 @@ Testing expectations and the current unit-test structure are documented in
 Local and staging demo data is documented in `docs/seed-data.md`; the seed file
 is intentionally opt-in and must not be run against production.
 
+Manual launch and deployment validation steps are documented in
+`docs/smoke-test-plan.md`.
+
 ## Early project notes
 
 Project context, privacy expectations, workflow rules, and implementation

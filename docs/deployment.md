@@ -98,6 +98,10 @@ The CI workflow must fail the build if any of these commands fail:
 - `npm run test:run`
 - `npm run build`
 
+Before launch, after deployment changes, and after major feature work, run the
+manual smoke test plan in `docs/smoke-test-plan.md` against the relevant local,
+preview, or production environment.
+
 ## Supabase
 
 Supabase schema and Row Level Security changes should be managed by committed migrations, not dashboard-only edits.
