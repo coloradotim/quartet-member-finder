@@ -51,6 +51,11 @@ A `quartet_listings` row belongs to the authenticated user identified by
 `owner_user_id`. Multi-owner quartet management is not part of the initial
 schema.
 
+Quartet listing edits are saved through the protected app route at
+`/app/listings`. The server action writes `owner_user_id = auth.uid()` and
+filters updates by both listing ID and owner ID, with RLS enforcing the same
+ownership boundary in the database.
+
 Users can read and update their own private base-table rows.
 
 Public discovery should use the discovery views, not the base tables.
