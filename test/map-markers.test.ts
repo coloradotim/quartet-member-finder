@@ -12,7 +12,7 @@ describe("privacy-safe discovery map markers", () => {
         locality: "Fort Collins",
         locationLabelPublic: null,
         name: "Avery",
-        parts: ["lead"],
+        parts: ["TTBB:Lead"],
         region: "CO",
       },
       {
@@ -23,7 +23,7 @@ describe("privacy-safe discovery map markers", () => {
         locality: "Manchester",
         locationLabelPublic: "Manchester, UK area",
         name: "Northern Ring",
-        parts: ["bass"],
+        parts: ["SATB:Bass"],
         region: "England",
       },
     ]);
@@ -54,7 +54,7 @@ describe("privacy-safe discovery map markers", () => {
         locality: "Dublin",
         locationLabelPublic: null,
         name: "Casey",
-        parts: ["tenor"],
+        parts: ["TTBB:Tenor"],
         region: "Leinster",
       },
       {
@@ -65,7 +65,7 @@ describe("privacy-safe discovery map markers", () => {
         locality: "Dublin",
         locationLabelPublic: null,
         name: "River City Four",
-        parts: ["lead"],
+        parts: ["SSAA:Soprano 2"],
         region: "Leinster",
       },
     ]);
@@ -76,7 +76,7 @@ describe("privacy-safe discovery map markers", () => {
       kinds: ["quartet", "singer"],
       label: "Dublin, Leinster, Ireland area",
       names: ["Casey", "River City Four"],
-      parts: ["lead", "tenor"],
+      parts: ["SSAA:Soprano 2", "TTBB:Tenor"],
     });
   });
 
@@ -91,7 +91,7 @@ describe("privacy-safe discovery map markers", () => {
           locality: null,
           locationLabelPublic: null,
           name: "Hidden Location",
-          parts: ["bass"],
+          parts: ["SATB:Bass"],
           region: null,
         },
       ]),

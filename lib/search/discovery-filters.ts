@@ -1,9 +1,11 @@
 import {
-  BARBERSHOP_PARTS,
   PROFILE_GOALS,
-  type BarbershopPart,
   type ProfileGoal,
 } from "@/lib/profiles/singer-profile-form";
+import {
+  parseVoicingPartValue,
+  type VoicingPartSelection,
+} from "@/lib/parts/voicings";
 
 export type DiscoveryFilters = {
   availability: string | null;
@@ -11,7 +13,7 @@ export type DiscoveryFilters = {
   experience: string | null;
   goal: ProfileGoal | null;
   locality: string | null;
-  part: BarbershopPart | null;
+  part: VoicingPartSelection | null;
   region: string | null;
   travelRadiusKm: number | null;
 };
@@ -61,7 +63,7 @@ export function parseDiscoveryFilters(
     experience: normalizeSearchText(searchParams.experience),
     goal: parseAllowedValue(searchParams.goal, PROFILE_GOALS),
     locality: normalizeSearchText(searchParams.locality),
-    part: parseAllowedValue(searchParams.part, BARBERSHOP_PARTS),
+    part: parseVoicingPartValue(normalizeSearchText(searchParams.part) ?? ""),
     region: normalizeSearchText(searchParams.region),
     travelRadiusKm: parseTravelRadiusKm(searchParams.travelRadiusKm),
   };

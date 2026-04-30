@@ -105,8 +105,9 @@ export async function saveSingerProfile(formData: FormData) {
       .from("singer_profile_parts")
       .insert(
         values.parts.map((part) => ({
-          part,
+          part: part.part,
           singer_profile_id: profile.id,
+          voicing: part.voicing,
         })),
       );
 

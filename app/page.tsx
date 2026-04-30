@@ -12,7 +12,7 @@ const discoveryLinks = [
   {
     href: "/find?kind=quartets",
     label: "Browse quartet openings",
-    description: "See incomplete quartets looking for one or more parts.",
+    description: "See incomplete quartets looking for voicing-specific parts.",
   },
   {
     href: "/find?kind=singers",
@@ -45,8 +45,8 @@ export default function Home() {
             </p>
             <p className="mt-4 max-w-2xl text-base leading-7 text-[#394548]">
               {PRODUCT_NAME} is for practical introductions: create a singer
-              profile, list an incomplete quartet, or look around before you
-              decide what to share.
+              profile with the parts you sing by voicing, list an incomplete
+              quartet, or look around before you decide what to share.
             </p>
             <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap">
               <Link

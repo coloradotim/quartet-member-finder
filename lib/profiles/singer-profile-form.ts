@@ -1,4 +1,7 @@
-export const BARBERSHOP_PARTS = ["tenor", "lead", "baritone", "bass"] as const;
+import {
+  parseVoicingPartValue,
+  type VoicingPartSelection,
+} from "@/lib/parts/voicings";
 
 export const PROFILE_GOALS = [
   "casual",
@@ -9,7 +12,6 @@ export const PROFILE_GOALS = [
   "learning",
 ] as const;
 
-export type BarbershopPart = (typeof BARBERSHOP_PARTS)[number];
 export type ProfileGoal = (typeof PROFILE_GOALS)[number];
 
 export type SingerProfileFormValues = {
@@ -23,7 +25,7 @@ export type SingerProfileFormValues = {
   isVisible: boolean;
   locality: string | null;
   locationLabelPublic: string | null;
-  parts: BarbershopPart[];
+  parts: VoicingPartSelection[];
   postalCodePrivate: string | null;
   region: string | null;
   travelRadiusKm: number | null;
@@ -64,7 +66,7 @@ export function parseTravelRadiusKm(value: FormDataEntryValue | null) {
   return radius;
 }
 
-function parseAllowedList<T extends string>(
+export function parseAllowedList<T extends string>(
   values: FormDataEntryValue[],
   allowedValues: readonly T[],
 ) {
@@ -73,6 +75,13 @@ function parseAllowedList<T extends string>(
   return values
     .filter((value): value is string => typeof value === "string")
     .filter((value): value is T => allowed.has(value));
+}
+
+export function parseVoicingPartList(values: FormDataEntryValue[]) {
+  return values
+    .filter((value): value is string => typeof value === "string")
+    .map((value) => parseVoicingPartValue(value))
+    .filter((value): value is VoicingPartSelection => value != null);
 }
 
 export function parseSingerProfileFormData(
@@ -97,7 +106,7 @@ export function parseSingerProfileFormData(
     locationLabelPublic: normalizeOptionalText(
       formData.get("locationLabelPublic"),
     ),
-    parts: parseAllowedList(formData.getAll("parts"), BARBERSHOP_PARTS),
+    parts: parseVoicingPartList(formData.getAll("parts")),
     postalCodePrivate: normalizeOptionalText(formData.get("postalCodePrivate")),
     region: normalizeOptionalText(formData.get("region")),
     travelRadiusKm: parseTravelRadiusKm(formData.get("travelRadiusKm")),

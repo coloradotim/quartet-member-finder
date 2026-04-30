@@ -11,7 +11,7 @@ Public search results may show:
 - display name
 - approximate city/region/country
 - approximate distance from the searcher
-- voice parts sung or needed
+- voice parts sung or needed, with voicing context
 - quartet goals and experience information
 - availability and travel preferences when the user chooses to provide them
 
@@ -26,7 +26,7 @@ Public search results must not show:
 
 Public singer and quartet discovery pages must query privacy-safe discovery
 views rather than private base tables. Filters may use public country, region,
-locality, part, goal, experience/commitment, availability, and travel
+locality, voicing-aware part, goal, experience/commitment, availability, and travel
 willingness fields where data exists. Exact coordinates, private postal codes,
 formatted private addresses, email addresses, and phone numbers are not part of
 the public result shape.
@@ -103,7 +103,7 @@ Signed-in users can manage their own singer profile from the protected app area.
 The MVP profile form stores:
 
 - display name
-- barbershop parts sung
+- barbershop parts sung, grouped by voicing
 - goals
 - descriptive experience level
 - availability
@@ -124,6 +124,7 @@ Signed-in users can manage a quartet listing from the protected app area. The
 MVP listing form stores:
 
 - listing or quartet name
+- quartet voicing
 - parts currently covered
 - parts needed
 - goals
@@ -135,9 +136,10 @@ MVP listing form stores:
 - country, region, locality, and private postal code when provided
 - search visibility
 
-The listing form keeps covered and needed parts distinct so public discovery can
-clearly show what the quartet has and what it is seeking. Postal code remains
-private listing data and should not be shown in public listing discovery.
+The listing form keeps covered and needed parts distinct and tied to the
+listing's primary voicing so public discovery can clearly show what the quartet
+has and what it is seeking. Postal code remains private listing data and should
+not be shown in public listing discovery.
 
 ## Contact model
 

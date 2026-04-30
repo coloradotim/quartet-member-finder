@@ -11,7 +11,7 @@ describe("discovery filters", () => {
       locality: " Manchester ",
       region: " Greater Manchester ",
       goal: "contest",
-      part: "lead",
+      part: "SATB:Soprano",
       travelRadiusKm: "50",
     });
 
@@ -19,7 +19,7 @@ describe("discovery filters", () => {
     expect(filters.locality).toBe("Manchester");
     expect(filters.region).toBe("Greater Manchester");
     expect(filters.goal).toBe("contest");
-    expect(filters.part).toBe("lead");
+    expect(filters.part).toEqual({ part: "Soprano", voicing: "SATB" });
     expect(filters.travelRadiusKm).toBe(50);
     expect(hasDiscoveryFilters(filters)).toBe(true);
   });
@@ -42,14 +42,14 @@ describe("discovery filters", () => {
       country: ["Ireland", "United States"],
       goal: ["pickup", "contest"],
       locality: ["Dublin", "Boston"],
-      part: ["tenor", "melody"],
+      part: ["TTBB:Tenor", "melody"],
       travelRadiusKm: ["10000", "25"],
     });
 
     expect(filters.country).toBe("Ireland");
     expect(filters.locality).toBe("Dublin");
     expect(filters.goal).toBe("pickup");
-    expect(filters.part).toBe("tenor");
+    expect(filters.part).toEqual({ part: "Tenor", voicing: "TTBB" });
     expect(filters.travelRadiusKm).toBe(10000);
   });
 

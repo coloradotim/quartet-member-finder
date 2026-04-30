@@ -106,14 +106,16 @@ export async function saveQuartetListing(formData: FormData) {
 
   const partRows = [
     ...values.partsCovered.map((part) => ({
-      part,
+      part: part.part,
       quartet_listing_id: listingId,
       status: "covered",
+      voicing: part.voicing,
     })),
     ...values.partsNeeded.map((part) => ({
-      part,
+      part: part.part,
       quartet_listing_id: listingId,
       status: "needed",
+      voicing: part.voicing,
     })),
   ];
 

@@ -1,11 +1,11 @@
 import Link from "next/link";
+import { QuartetListingPartsFieldset } from "@/components/quartet-listing-parts-fieldset";
 import {
-  BARBERSHOP_PARTS,
   PROFILE_GOALS,
-  type BarbershopPart,
   type ProfileGoal,
 } from "@/lib/profiles/singer-profile-form";
 import { locationFieldLabelsForCountry } from "@/lib/location/country-location-defaults";
+import { type Voicing } from "@/lib/parts/voicings";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { saveQuartetListing } from "./actions";
 
@@ -31,13 +31,6 @@ type ManageListingsPageProps = {
     error?: string;
     message?: string;
   }>;
-};
-
-const partLabels: Record<BarbershopPart, string> = {
-  baritone: "Baritone",
-  bass: "Bass",
-  lead: "Lead",
-  tenor: "Tenor",
 };
 
 const goalLabels: Record<ProfileGoal, string> = {
@@ -83,18 +76,20 @@ export default async function ManageListingsPage({
     supabase && listing
       ? await supabase
           .from("quartet_listing_parts")
-          .select("part, status")
+          .select("part, status, voicing")
           .eq("quartet_listing_id", listing.id)
       : { data: [] };
 
+  const selectedVoicing =
+    (parts?.[0]?.voicing as Voicing | undefined) ?? "TTBB";
   const partsCovered =
     parts
       ?.filter((partRow) => partRow.status === "covered")
-      .map((partRow) => partRow.part as BarbershopPart) ?? [];
+      .map((partRow) => `${partRow.voicing}:${partRow.part}`) ?? [];
   const partsNeeded =
     parts
       ?.filter((partRow) => partRow.status === "needed")
-      .map((partRow) => partRow.part as BarbershopPart) ?? [];
+      .map((partRow) => `${partRow.voicing}:${partRow.part}`) ?? [];
   const locationLabels = locationFieldLabelsForCountry(
     listing?.country_code,
     listing?.country_name,
@@ -194,49 +189,11 @@ export default async function ManageListingsPage({
           </label>
         </section>
 
-        <section className="space-y-4">
-          <h2 className="text-xl font-bold text-[#172023]">Parts</h2>
-          <div className="grid gap-6 sm:grid-cols-2">
-            <fieldset className="space-y-3">
-              <legend className="text-sm font-semibold text-[#172023]">
-                Currently covered
-              </legend>
-              {BARBERSHOP_PARTS.map((part) => (
-                <label
-                  className="flex items-center gap-3 rounded-md border border-[#d7cec0] bg-[#fffaf2] px-3 py-2"
-                  key={part}
-                >
-                  <input
-                    defaultChecked={checked(part, partsCovered)}
-                    name="partsCovered"
-                    type="checkbox"
-                    value={part}
-                  />
-                  <span className="font-semibold">{partLabels[part]}</span>
-                </label>
-              ))}
-            </fieldset>
-            <fieldset className="space-y-3">
-              <legend className="text-sm font-semibold text-[#172023]">
-                Needed
-              </legend>
-              {BARBERSHOP_PARTS.map((part) => (
-                <label
-                  className="flex items-center gap-3 rounded-md border border-[#d7cec0] bg-[#fffaf2] px-3 py-2"
-                  key={part}
-                >
-                  <input
-                    defaultChecked={checked(part, partsNeeded)}
-                    name="partsNeeded"
-                    type="checkbox"
-                    value={part}
-                  />
-                  <span className="font-semibold">{partLabels[part]}</span>
-                </label>
-              ))}
-            </fieldset>
-          </div>
-        </section>
+        <QuartetListingPartsFieldset
+          initialCoveredParts={partsCovered}
+          initialNeededParts={partsNeeded}
+          initialVoicing={selectedVoicing}
+        />
 
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-[#172023]">Location</h2>
