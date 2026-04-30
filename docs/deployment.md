@@ -76,6 +76,25 @@ The production app should eventually use:
 - `quartetmemberfinder.org`
 - optionally `www.quartetmemberfinder.org` redirecting to the canonical host
 
+## GitHub Actions CI
+
+The repository uses `.github/workflows/ci.yml` for baseline validation on pull
+requests and pushes to `main`.
+
+Current CI assumptions:
+
+- Node.js 22 is the supported CI runtime.
+- npm is the package manager, with dependency installation through `npm ci`.
+- Dependency caching uses the npm cache support in `actions/setup-node`.
+- Basic validation does not require secrets or deployed service credentials.
+
+The CI workflow must fail the build if any of these commands fail:
+
+- `npm run lint`
+- `npm run typecheck`
+- `npm run test:run`
+- `npm run build`
+
 ## Supabase
 
 Supabase schema and Row Level Security changes should be managed by committed migrations, not dashboard-only edits.
