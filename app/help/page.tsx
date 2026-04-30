@@ -23,10 +23,10 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
           Home
         </Link>
         <Link className="font-semibold text-[#2f6f73]" href="/singers">
-          Singers
+          Find Singers
         </Link>
         <Link className="font-semibold text-[#2f6f73]" href="/quartets">
-          Quartets
+          Find Quartet Openings
         </Link>
         <Link className="font-semibold text-[#2f6f73]" href="/privacy">
           Privacy

@@ -157,19 +157,20 @@ export default async function SingerSearchPage({
             Quartet Member Finder
           </Link>
           <h1 className="mt-4 text-3xl font-bold text-[#172023]">
-            Find singers
+            Find Singers
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-[#394548]">
-            Search visible singer profiles using privacy-safe discovery data.
-            Results show approximate location only.
+            Search visible singer profiles for singers who may be open to
+            quartet opportunities, pickup singing, or local connections. Results
+            show approximate location only.
           </p>
         </div>
         <div className="flex gap-4">
           <Link className="font-semibold text-[#2f6f73]" href="/quartets">
-            Find quartets
+            Find Quartet Openings
           </Link>
           <Link className="font-semibold text-[#2f6f73]" href="/map">
-            View map
+            View Map
           </Link>
           <Link className="font-semibold text-[#2f6f73]" href="/help">
             Help

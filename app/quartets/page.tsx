@@ -159,19 +159,19 @@ export default async function QuartetSearchPage({
             Quartet Member Finder
           </Link>
           <h1 className="mt-4 text-3xl font-bold text-[#172023]">
-            Find quartets
+            Find Quartet Openings
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-[#394548]">
-            Search visible quartet listings using privacy-safe discovery data.
-            Results show approximate location only.
+            Search visible quartet listings from groups looking for one or more
+            missing parts. Results show approximate location only.
           </p>
         </div>
         <div className="flex gap-4">
           <Link className="font-semibold text-[#2f6f73]" href="/singers">
-            Find singers
+            Find Singers
           </Link>
           <Link className="font-semibold text-[#2f6f73]" href="/map">
-            View map
+            View Map
           </Link>
           <Link className="font-semibold text-[#2f6f73]" href="/help">
             Help
@@ -290,7 +290,7 @@ export default async function QuartetSearchPage({
       <section className="mt-8 grid gap-4">
         {quartets.length === 0 && !errorMessage ? (
           <p className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 text-[#394548]">
-            No visible quartet listings match these filters yet.
+            No visible quartet openings match these filters yet.
           </p>
         ) : null}
 

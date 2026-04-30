@@ -35,9 +35,9 @@ type MapPageProps = {
 };
 
 const kindOptions = [
-  ["both", "Singers and quartets"],
+  ["both", "Singers and quartet openings"],
   ["singers", "Singers"],
-  ["quartets", "Quartets"],
+  ["quartets", "Quartet openings"],
 ];
 
 const partOptions = [
@@ -216,19 +216,19 @@ export default async function DiscoveryMapPage({ searchParams }: MapPageProps) {
             Quartet Member Finder
           </Link>
           <h1 className="mt-4 text-3xl font-bold text-[#172023]">
-            Discovery map
+            Discovery Map
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-[#394548]">
-            Explore visible singer and quartet availability by approximate
-            public region.
+            Explore visible singers and quartet openings by approximate public
+            region.
           </p>
         </div>
         <div className="flex gap-4">
           <Link className="font-semibold text-[#2f6f73]" href="/singers">
-            Find singers
+            Find Singers
           </Link>
           <Link className="font-semibold text-[#2f6f73]" href="/quartets">
-            Find quartets
+            Find Quartet Openings
           </Link>
           <Link className="font-semibold text-[#2f6f73]" href="/help">
             Help

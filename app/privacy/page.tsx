@@ -12,10 +12,10 @@ export default function PrivacyPage() {
           Help
         </Link>
         <Link className="font-semibold text-[#2f6f73]" href="/singers">
-          Singers
+          Find Singers
         </Link>
         <Link className="font-semibold text-[#2f6f73]" href="/quartets">
-          Quartets
+          Find Quartet Openings
         </Link>
       </nav>
 

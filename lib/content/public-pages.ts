@@ -22,7 +22,8 @@ export const publicHelpSections = [
   },
   {
     body: [
-      "Search can show visible singers, visible quartet listings, and approximate regional map markers. Filters can use public fields like part, goal, country, region, locality, availability, and travel willingness where that data exists.",
+      "Find Quartet Openings shows visible quartet listings from groups looking for missing parts. Find Singers shows visible singer profiles for both individual singers and quartet representatives.",
+      "Search and map filters can use public fields like part, goal, country, region, locality, availability, and travel willingness where that data exists.",
       "Search results are useful even when a profile is incomplete, but more complete profiles are easier for others to evaluate.",
     ],
     heading: "Search",
