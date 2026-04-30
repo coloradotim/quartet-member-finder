@@ -7,6 +7,10 @@ import {
   normalizePostOnboardingPath,
 } from "@/lib/onboarding/app-onboarding";
 import {
+  captureProductEvent,
+  pseudonymousAnalyticsUserId,
+} from "@/lib/analytics/product-analytics";
+import {
   ensureAccountProfileForOnboarding,
   type AuthUserForOnboarding,
 } from "@/lib/onboarding/account-onboarding";
@@ -59,6 +63,16 @@ export async function completeOnboarding(formData: FormData) {
     redirect("/app/onboarding?error=Unable%20to%20save%20onboarding.");
   }
 
+  await captureProductEvent(
+    "onboarding_completed",
+    {
+      onboarding_choice: choiceId,
+      route: "/app/onboarding",
+      route_area: "signed_in_app",
+    },
+    { distinctId: pseudonymousAnalyticsUserId(user.id) },
+  );
+
   redirect(destinationForOnboardingChoice(choiceId));
 }
 
@@ -83,6 +97,15 @@ export async function skipOnboarding(formData: FormData) {
   if (error) {
     redirect("/app/onboarding?error=Unable%20to%20skip%20onboarding.");
   }
+
+  await captureProductEvent(
+    "onboarding_skipped",
+    {
+      route: "/app/onboarding",
+      route_area: "signed_in_app",
+    },
+    { distinctId: pseudonymousAnalyticsUserId(user.id) },
+  );
 
   redirect(next);
 }

@@ -7,6 +7,7 @@ The app will need environment variables for:
 - app base URL
 - Supabase project URL
 - Supabase public browser client value
+- optional PostHog product analytics configuration
 - server-only Supabase administrative value, if needed for scripts or trusted server tasks
 - Resend API access
 - Resend sender email
@@ -17,6 +18,8 @@ The current scaffold includes `.env.example` with safe placeholder keys:
 - `NEXT_PUBLIC_APP_URL`
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_POSTHOG_KEY` optional privacy-safe product analytics project key
+- `NEXT_PUBLIC_POSTHOG_HOST` optional PostHog host, defaulting to the US ingest host
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
@@ -112,3 +115,21 @@ The MVP discovery map does not require a map provider. Optional public map
 values are reserved for a future MapLibre/OpenStreetMap-compatible tile setup.
 Geocoding secrets, if later needed, should be server-only and must not use the
 `NEXT_PUBLIC_` prefix.
+
+## Product Analytics
+
+PostHog analytics is optional and disabled when `NEXT_PUBLIC_POSTHOG_KEY` is
+blank.
+
+When enabled, analytics uses an internal app endpoint that accepts only
+allowlisted product events and safe properties. The app may track route views and
+high-level funnel events such as onboarding completion, profile/listing saves,
+discovery searches, map views, contact request submission, and feedback
+submission.
+
+Do not send email addresses, display names, profile/listing text, contact or
+feedback message text, postal codes, exact coordinates, phone numbers, or raw
+private ownership identifiers to PostHog.
+
+Set `NEXT_PUBLIC_POSTHOG_HOST` if the project uses a non-default PostHog region,
+for example `https://eu.i.posthog.com`.

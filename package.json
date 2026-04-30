@@ -9,6 +9,10 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "posthog:dashboards:check": "node scripts/posthog/check-dashboards.mjs",
+    "posthog:dashboards:compare": "node scripts/posthog/compare-dashboards.mjs",
+    "posthog:dashboards:inspect": "node scripts/posthog/inspect-dashboards.mjs",
+    "posthog:dashboards:sync": "node scripts/posthog/sync-dashboards.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
     "test:run": "vitest run"

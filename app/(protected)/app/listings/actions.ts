@@ -3,6 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
+  captureProductEvent,
+  pseudonymousAnalyticsUserId,
+} from "@/lib/analytics/product-analytics";
+import {
   buildQuartetPublicLocationLabel,
   inferQuartetLocationPrecision,
   parseQuartetListingFormData,
@@ -120,5 +124,15 @@ export async function saveQuartetListing(formData: FormData) {
   }
 
   revalidatePath("/app/listings");
+  await captureProductEvent(
+    "quartet_listing_saved",
+    {
+      is_visible: values.isVisible,
+      route: "/app/listings",
+      route_area: "signed_in_app",
+      visibility_enabled: values.isVisible,
+    },
+    { distinctId: pseudonymousAnalyticsUserId(user.id) },
+  );
   redirectWithListingMessage("message", "Quartet listing saved.");
 }

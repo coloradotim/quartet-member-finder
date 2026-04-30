@@ -71,6 +71,9 @@ Manual launch and deployment validation steps are documented in
 The final production-readiness and privacy launch checklist is documented in
 `docs/launch-readiness.md`.
 
+Privacy-safe PostHog event capture and launch dashboard setup are documented in
+`docs/posthog-analytics.md`.
+
 Vercel, Supabase, Resend, Namecheap DNS, and `quartetmemberfinder.org`
 deployment steps are documented in `docs/deployment.md`.
 

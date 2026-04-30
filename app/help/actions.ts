@@ -4,6 +4,10 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import {
+  captureProductEvent,
+  pseudonymousAnalyticsUserId,
+} from "@/lib/analytics/product-analytics";
+import {
   FEEDBACK_RATE_LIMIT_COUNT,
   feedbackRateLimitWindowStart,
   parseFeedbackFormData,
@@ -71,7 +75,7 @@ export async function submitHelpFeedback(formData: FormData) {
   const { data: feedbackSubmission, error: insertError } = await feedbackClient
     .from("feedback_submissions")
     .insert({
-      context_path: values.contextPath,
+      context_route: values.contextPath,
       feedback_type: values.feedbackType,
       message_body: values.message,
       submitter_email_private: user.email ?? null,
@@ -112,5 +116,15 @@ export async function submitHelpFeedback(formData: FormData) {
   }
 
   revalidatePath("/help");
+  await captureProductEvent(
+    "feedback_submitted",
+    {
+      feedback_type: values.feedbackType,
+      route: "/help",
+      route_area: "support",
+      status: "sent",
+    },
+    { distinctId: pseudonymousAnalyticsUserId(user.id) },
+  );
   redirectWithFeedbackStatus("sent");
 }

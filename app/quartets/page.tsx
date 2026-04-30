@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ContactRequestForm } from "@/components/contact/contact-request-form";
 import { PublicSiteHeader } from "@/components/navigation/public-site-header";
+import { captureProductEvent } from "@/lib/analytics/product-analytics";
 import { contactStatusMessage } from "@/lib/contact/contact-status";
 import {
   approximateLocationLabel,
@@ -80,6 +81,24 @@ function returnToPath(params: Record<string, string | string[] | undefined>) {
   return queryString ? `/quartets?${queryString}` : "/quartets";
 }
 
+function filterAnalyticsProperties(
+  filters: ReturnType<typeof parseDiscoveryFilters>,
+) {
+  const flags = {
+    has_availability_filter: Boolean(filters.availability),
+    has_country_filter: Boolean(filters.country),
+    has_experience_filter: Boolean(filters.experience),
+    has_goal_filter: Boolean(filters.goal),
+    has_locality_filter: Boolean(filters.locality),
+    has_part_filter: Boolean(filters.part),
+    has_region_filter: Boolean(filters.region),
+    has_travel_filter: filters.travelRadiusKm != null,
+  };
+  const filterCount = Object.values(flags).filter(Boolean).length;
+
+  return { filterCount, flags };
+}
+
 function contactBannerClass(tone: "error" | "notice" | "success") {
   if (tone === "error") {
     return "mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800";
@@ -153,6 +172,19 @@ export default async function QuartetSearchPage({
     } else {
       quartets = (data ?? []) as QuartetDiscoveryRow[];
     }
+  }
+
+  const { filterCount, flags } = filterAnalyticsProperties(filters);
+
+  if (filterCount > 0) {
+    await captureProductEvent("discovery_search_submitted", {
+      ...flags,
+      filter_count: filterCount,
+      kind: "quartet",
+      route: "/quartets",
+      result_count: quartets.length,
+      route_area: "discovery",
+    });
   }
 
   return (

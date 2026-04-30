@@ -3,6 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
+  captureProductEvent,
+  pseudonymousAnalyticsUserId,
+} from "@/lib/analytics/product-analytics";
+import {
   buildPublicLocationLabel,
   inferLocationPrecision,
   parseSingerProfileFormData,
@@ -107,5 +111,15 @@ export async function saveSingerProfile(formData: FormData) {
   }
 
   revalidatePath("/app/profile");
+  await captureProductEvent(
+    "singer_profile_saved",
+    {
+      is_visible: values.isVisible,
+      route: "/app/profile",
+      route_area: "signed_in_app",
+      visibility_enabled: values.isVisible,
+    },
+    { distinctId: pseudonymousAnalyticsUserId(user.id) },
+  );
   redirectWithProfileMessage("message", "Singer profile saved.");
 }
