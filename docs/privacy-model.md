@@ -172,9 +172,9 @@ The public help page stays readable before login. Signed-out visitors are
 invited to sign in before sending feedback.
 
 Signed-in users can submit private feedback, bug reports, or suggestions from
-the help page. The browser sends only the feedback type, message, current route
-context, and a spam honeypot field. The server action attaches the authenticated
-user ID and auth email when available, then stores the submission in Supabase.
+the help page. The browser sends only the feedback type, message, and current
+route context. The server action attaches the authenticated user ID and auth
+email when available, then stores the submission in Supabase.
 
 Feedback submissions are not public content and are not included in discovery
 views, search results, maps, or public profile/listing UI. Regular authenticated

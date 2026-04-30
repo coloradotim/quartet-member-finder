@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import {
-  FEEDBACK_HONEYPOT_FIELD,
   FEEDBACK_RATE_LIMIT_COUNT,
   FEEDBACK_RATE_LIMIT_WINDOW_MINUTES,
   feedbackRateLimitWindowStart,
@@ -24,7 +23,7 @@ describe("feedback form helpers", () => {
     expect(Array.from(formData.keys())).not.toContain("submitterEmail");
   });
 
-  it("rejects unsafe values and spam honeypot submissions", () => {
+  it("rejects unsafe values", () => {
     const formData = new FormData();
     formData.set("feedbackType", "other");
     formData.set("message", "Hello");
@@ -34,11 +33,7 @@ describe("feedback form helpers", () => {
     );
 
     formData.set("feedbackType", "feedback");
-    formData.set(FEEDBACK_HONEYPOT_FIELD, "https://spam.example");
 
-    expect(() => parseFeedbackFormData(formData)).toThrow(
-      "Feedback could not be submitted.",
-    );
     expect(normalizeFeedbackContext("https://example.com/help")).toBeNull();
     expect(normalizeFeedbackContext("//example.com/help")).toBeNull();
   });
