@@ -97,10 +97,16 @@ export default async function ManageProfilePage({
           Manage your singer profile
         </h1>
         <p className="mt-4 text-base leading-7 text-[#394548]">
-          Create the profile that quartets and other singers can discover. Keep
-          the public location approximate; postal code stays private for future
-          matching and search.
+          Create the public singer profile that quartets and other singers can
+          discover. Account identity, distance defaults, and onboarding reset
+          live in Account Settings.
         </p>
+        <Link
+          className="mt-4 inline-flex font-semibold text-[#2f6f73]"
+          href="/app/settings"
+        >
+          Manage account settings
+        </Link>
       </div>
 
       {params.error ? (
@@ -202,8 +208,10 @@ export default async function ManageProfilePage({
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-[#172023]">Location</h2>
           <p className="text-sm leading-6 text-[#394548]">
-            Use globally recognizable place names. Postal code is private and
-            public discovery should stay approximate.
+            Use globally recognizable place names for your public singer
+            profile. Postal code is private and public discovery should stay
+            approximate. Your default distance display preference lives in
+            Account Settings.
           </p>
           <label className="block">
             <span className="text-sm font-semibold text-[#172023]">

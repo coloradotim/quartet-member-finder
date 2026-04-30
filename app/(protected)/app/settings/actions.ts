@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import {
   isAccountDistanceUnit,
+  normalizeAccountDisplayName,
   normalizeAccountDistanceUnit,
 } from "@/lib/settings/account-settings";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -32,9 +33,16 @@ async function getSettingsUser() {
 }
 
 export async function saveAccountSettings(formData: FormData) {
+  const displayName = normalizeAccountDisplayName(
+    String(formData.get("displayName") ?? ""),
+  );
   const preferredDistanceUnit = normalizeAccountDistanceUnit(
     String(formData.get("preferredDistanceUnit") ?? ""),
   );
+
+  if (!displayName) {
+    redirectWithSettingsStatus("error");
+  }
 
   if (!isAccountDistanceUnit(preferredDistanceUnit)) {
     redirectWithSettingsStatus("error");
@@ -43,7 +51,10 @@ export async function saveAccountSettings(formData: FormData) {
   const { supabase, user } = await getSettingsUser();
   const { error } = await supabase
     .from("account_profiles")
-    .update({ preferred_distance_unit: preferredDistanceUnit })
+    .update({
+      display_name: displayName,
+      preferred_distance_unit: preferredDistanceUnit,
+    })
     .eq("user_id", user.id);
 
   if (error) {

@@ -53,6 +53,13 @@ export const publicHelpSections = [
   },
   {
     body: [
+      "Account Settings are for private account identity, preferred distance display, onboarding reset, and account-level actions.",
+      "My Singer Profile is for public singer details like display name, parts, goals, approximate location, and discovery visibility. Changing Account Settings does not publish your private email address or change what public discovery shows.",
+    ],
+    heading: "Account Settings Vs Singer Profile",
+  },
+  {
+    body: [
       "Use the same judgment you would use when meeting someone through a singing community. Start with app-mediated messages, meet in public or group settings when possible, and do not share private contact details until you are comfortable.",
       "The app helps reduce public exposure of personal data, but it does not replace personal judgment or formal moderation.",
     ],

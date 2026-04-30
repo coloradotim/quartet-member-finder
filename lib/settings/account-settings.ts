@@ -12,6 +12,12 @@ export const accountDistanceUnitOptions = [
 export type AccountDistanceUnit =
   (typeof accountDistanceUnitOptions)[number]["value"];
 
+export function normalizeAccountDisplayName(value: string | null) {
+  const trimmed = value?.trim();
+
+  return trimmed ? trimmed.slice(0, 120) : null;
+}
+
 export function isAccountDistanceUnit(
   value: string,
 ): value is AccountDistanceUnit {
