@@ -45,11 +45,22 @@ Do not rely only on client-side filtering for visibility, privacy, or ownership 
 
 The database may store coordinates or geocoded data needed for search, but public queries should expose only approximate location information.
 
+The schema should be globally tolerant. Do not require US-only fields such as state or ZIP code. Prefer fields that can support international location data, such as:
+
+- country code or country name
+- region/admin area when available
+- locality/city when available
+- postal code when available
+- formatted approximate location label
+- private geocoded latitude/longitude for search, if needed
+- preferred distance unit or display convention, if needed
+
 Preferred pattern:
 
 - Store private normalized location fields in base tables.
 - Expose privacy-safe search fields through views or controlled RPC functions.
 - Return approximate distance/region rather than exact coordinates for public discovery.
+- Support both miles and kilometers in UI/helper logic where practical.
 
 ## Contact data expectations
 
@@ -58,6 +69,8 @@ Email addresses and phone numbers should not appear in public search results by 
 The MVP contact flow should use app-mediated contact with Resend notifications.
 
 Contact request tables should support basic auditability, including sender, recipient/listing target, timestamp, and message body.
+
+Phone number handling, if added later, should not assume a US-only format.
 
 ## Migration rules
 
@@ -70,6 +83,7 @@ When database behavior changes, update this document in the same PR.
 Tests should cover privacy-sensitive helper logic where practical, especially:
 
 - location approximation
+- global distance-unit handling
 - profile/listing visibility filtering
 - contact eligibility checks
 - search filter logic
