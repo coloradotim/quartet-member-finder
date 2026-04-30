@@ -14,25 +14,28 @@ export function ContactRequestForm({
   targetKind,
   targetName,
 }: ContactRequestFormProps) {
+  const descriptionId = `contact-description-${targetKind}-${targetId}`;
+
   return (
     <form
+      aria-describedby={descriptionId}
       action={sendContactRequest}
       className="mt-5 rounded-md border border-[#d7cec0] bg-white p-4"
     >
       <input name="returnTo" type="hidden" value={returnTo} />
       <input name="targetId" type="hidden" value={targetId} />
       <input name="targetKind" type="hidden" value={targetKind} />
-      <p className="mb-3 text-sm leading-6 text-[#394548]">
+      <p className="mb-3 text-sm leading-6 text-[#394548]" id={descriptionId}>
         Contact starts through the app so personal email addresses and phone
         numbers stay private until both people choose to share them. You will be
         asked to sign in if you are not already signed in.
       </p>
       <label className="block">
-        <span className="text-sm font-semibold text-[#172023]">
+        <span className="text-sm font-semibold text-[#172023] [overflow-wrap:anywhere]">
           Contact {targetName}
         </span>
         <textarea
-          className="mt-2 min-h-24 w-full rounded-md border border-[#d7cec0] px-3 py-2 text-sm"
+          className="mt-2 min-h-28 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
           maxLength={2000}
           name="message"
           placeholder="Share a short, friendly note about the quartet opportunity."
@@ -40,7 +43,7 @@ export function ContactRequestForm({
         />
       </label>
       <button
-        className="mt-3 rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white"
+        className="mt-3 w-full rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c] sm:w-fit"
         type="submit"
       >
         Send contact request

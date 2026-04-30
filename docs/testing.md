@@ -33,3 +33,6 @@ Location, search, and distance tests should include non-US examples whenever the
 helper behavior touches geography, distance units, or public location display.
 Privacy-sensitive tests should assert that public helpers do not expose private
 postal codes, exact coordinates, email addresses, or phone numbers.
+
+Use `docs/accessibility-mobile-audit.md` for the current pre-launch
+accessibility and mobile usability audit notes.

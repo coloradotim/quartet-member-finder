@@ -93,6 +93,7 @@ export default async function AccountSettingsPage({
               ? "border-red-200 bg-red-50 text-red-800"
               : "border-[#b7d7ce] bg-[#eef8f4] text-[#174b4f]"
           }`}
+          role={params.settings === "error" ? "alert" : "status"}
         >
           {message}
         </p>
@@ -123,7 +124,7 @@ export default async function AccountSettingsPage({
             settings for discovery details.
           </p>
           <button
-            className="w-fit rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
+            className="w-full rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c] sm:w-fit"
             type="submit"
           >
             Save settings
@@ -139,7 +140,7 @@ export default async function AccountSettingsPage({
         </p>
         <form action={resetOnboarding} className="mt-4">
           <button
-            className="rounded-md border border-[#d7cec0] px-4 py-2.5 text-sm font-semibold text-[#172023] hover:bg-white"
+            className="w-full rounded-md border border-[#d7cec0] px-4 py-2.5 text-sm font-semibold text-[#172023] hover:bg-white sm:w-fit"
             type="submit"
           >
             Re-run onboarding

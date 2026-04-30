@@ -71,7 +71,7 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
               spam and gives the project team a way to follow up.
             </p>
             <Link
-              className="mt-4 inline-flex rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
+              className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c] sm:w-fit"
               href="/sign-in?next=%2Fhelp"
             >
               Sign in to send feedback

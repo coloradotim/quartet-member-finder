@@ -25,13 +25,19 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
         </p>
 
         {params.error ? (
-          <p className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+          <p
+            className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+            role="alert"
+          >
             {params.error}
           </p>
         ) : null}
 
         {params.message ? (
-          <p className="mt-6 rounded-lg border border-[#b7d7ce] bg-[#eef8f4] p-4 text-sm text-[#174b4f]">
+          <p
+            className="mt-6 rounded-lg border border-[#b7d7ce] bg-[#eef8f4] p-4 text-sm text-[#174b4f]"
+            role="status"
+          >
             {params.message}
           </p>
         ) : null}

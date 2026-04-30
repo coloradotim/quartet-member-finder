@@ -49,6 +49,9 @@ const goalOptions = [
   ["learning", "Learning"],
 ];
 
+const filterControlClass =
+  "mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20";
+
 function textValue(value: string | null) {
   return value ?? "";
 }
@@ -166,35 +169,41 @@ export default async function QuartetSearchPage({
           </p>
         </div>
 
-        <form className="mt-8 grid gap-4 rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-4 sm:grid-cols-2 lg:grid-cols-4">
+        <form
+          aria-label="Filter quartet openings"
+          className="mt-8 grid gap-4 rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-4 sm:grid-cols-2 lg:grid-cols-4"
+        >
           <label className="block">
             <span className="text-sm font-semibold">Country</span>
             <input
-              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              className={filterControlClass}
               defaultValue={textValue(filters.country)}
               name="country"
+              placeholder="United Kingdom"
             />
           </label>
           <label className="block">
             <span className="text-sm font-semibold">Region</span>
             <input
-              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              className={filterControlClass}
               defaultValue={textValue(filters.region)}
               name="region"
+              placeholder="Greater Manchester"
             />
           </label>
           <label className="block">
             <span className="text-sm font-semibold">Locality</span>
             <input
-              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              className={filterControlClass}
               defaultValue={textValue(filters.locality)}
               name="locality"
+              placeholder="Manchester"
             />
           </label>
           <label className="block">
             <span className="text-sm font-semibold">Needed part</span>
             <select
-              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              className={filterControlClass}
               defaultValue={textValue(filters.part)}
               name="part"
             >
@@ -208,7 +217,7 @@ export default async function QuartetSearchPage({
           <label className="block">
             <span className="text-sm font-semibold">Goal</span>
             <select
-              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              className={filterControlClass}
               defaultValue={textValue(filters.goal)}
               name="goal"
             >
@@ -222,7 +231,7 @@ export default async function QuartetSearchPage({
           <label className="block">
             <span className="text-sm font-semibold">Commitment</span>
             <input
-              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              className={filterControlClass}
               defaultValue={textValue(filters.experience)}
               name="experience"
             />
@@ -230,7 +239,7 @@ export default async function QuartetSearchPage({
           <label className="block">
             <span className="text-sm font-semibold">Rehearsal</span>
             <input
-              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              className={filterControlClass}
               defaultValue={textValue(filters.availability)}
               name="availability"
             />
@@ -238,7 +247,7 @@ export default async function QuartetSearchPage({
           <label className="block">
             <span className="text-sm font-semibold">Travel km</span>
             <input
-              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              className={filterControlClass}
               defaultValue={textValue(
                 filters.travelRadiusKm == null
                   ? null
@@ -249,27 +258,36 @@ export default async function QuartetSearchPage({
               type="number"
             />
           </label>
-          <div className="flex items-end gap-3 sm:col-span-2 lg:col-span-4">
+          <div className="flex flex-col gap-3 sm:col-span-2 sm:flex-row sm:items-end lg:col-span-4">
             <button
-              className="rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white"
+              className="rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
               type="submit"
             >
               Search
             </button>
-            <Link className="font-semibold text-[#2f6f73]" href="/quartets">
+            <Link
+              className="inline-flex min-h-11 items-center rounded-md px-2 py-2 font-semibold text-[#2f6f73] hover:bg-white/70"
+              href="/quartets"
+            >
               Clear
             </Link>
           </div>
         </form>
 
         {contactStatus ? (
-          <p className={contactBannerClass(contactStatus.tone)}>
+          <p
+            className={contactBannerClass(contactStatus.tone)}
+            role={contactStatus.tone === "error" ? "alert" : "status"}
+          >
             {contactStatus.text}
           </p>
         ) : null}
 
         {errorMessage ? (
-          <p className="mt-8 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+          <p
+            className="mt-8 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+            role="alert"
+          >
             {errorMessage}
           </p>
         ) : null}

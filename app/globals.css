@@ -32,3 +32,26 @@ body {
 a {
   color: inherit;
 }
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+:where(button, input, select, textarea) {
+  font: inherit;
+}
+
+:where(button, input, select, textarea) {
+  min-height: 44px;
+}
+
+:where(input[type="checkbox"], input[type="radio"]) {
+  min-height: auto;
+  min-width: 1rem;
+}
+
+::placeholder {
+  color: #6d7779;
+  opacity: 1;
+}

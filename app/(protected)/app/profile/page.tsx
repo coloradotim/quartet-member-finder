@@ -104,13 +104,19 @@ export default async function ManageProfilePage({
       </div>
 
       {params.error ? (
-        <p className="mt-8 max-w-3xl rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+        <p
+          className="mt-8 max-w-3xl rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+          role="alert"
+        >
           {params.error}
         </p>
       ) : null}
 
       {params.message ? (
-        <p className="mt-8 max-w-3xl rounded-lg border border-[#b7d7ce] bg-[#eef8f4] p-4 text-sm text-[#174b4f]">
+        <p
+          className="mt-8 max-w-3xl rounded-lg border border-[#b7d7ce] bg-[#eef8f4] p-4 text-sm text-[#174b4f]"
+          role="status"
+        >
           {params.message}
         </p>
       ) : null}
@@ -195,6 +201,10 @@ export default async function ManageProfilePage({
 
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-[#172023]">Location</h2>
+          <p className="text-sm leading-6 text-[#394548]">
+            Use globally recognizable place names. Postal code is private and
+            public discovery should stay approximate.
+          </p>
           <label className="block">
             <span className="text-sm font-semibold text-[#172023]">
               Public approximate location
@@ -347,7 +357,7 @@ export default async function ManageProfilePage({
         </section>
 
         <button
-          className="rounded-md bg-[#174b4f] px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
+          className="w-full rounded-md bg-[#174b4f] px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c] sm:w-fit"
           type="submit"
         >
           Save singer profile

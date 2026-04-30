@@ -27,39 +27,39 @@ export default function Home() {
             Start as a singer looking for quartet openings, or use Find Singers
             when you are helping an incomplete quartet fill a part.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap">
             <Link
-              className="rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
+              className="inline-flex min-h-11 items-center justify-center rounded-md bg-[#174b4f] px-4 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
               href="/quartets"
             >
               Find Quartet Openings
             </Link>
             <Link
-              className="rounded-md border border-[#d7cec0] px-4 py-2.5 text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
+              className="inline-flex min-h-11 items-center justify-center rounded-md border border-[#d7cec0] px-4 py-2.5 text-center text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
               href="/singers"
             >
               Find Singers
             </Link>
             <Link
-              className="rounded-md border border-[#d7cec0] px-4 py-2.5 text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
+              className="inline-flex min-h-11 items-center justify-center rounded-md border border-[#d7cec0] px-4 py-2.5 text-center text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
               href="/map"
             >
               View Map
             </Link>
             <Link
-              className="rounded-md border border-[#d7cec0] px-4 py-2.5 text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
+              className="inline-flex min-h-11 items-center justify-center rounded-md border border-[#d7cec0] px-4 py-2.5 text-center text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
               href="/sign-in?next=%2Fapp%2Fprofile"
             >
               My Singer Profile
             </Link>
             <Link
-              className="rounded-md border border-[#d7cec0] px-4 py-2.5 text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
+              className="inline-flex min-h-11 items-center justify-center rounded-md border border-[#d7cec0] px-4 py-2.5 text-center text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
               href="/sign-in?next=%2Fapp%2Flistings"
             >
               Quartet Mode
             </Link>
             <Link
-              className="rounded-md border border-[#d7cec0] px-4 py-2.5 text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
+              className="inline-flex min-h-11 items-center justify-center rounded-md border border-[#d7cec0] px-4 py-2.5 text-center text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
               href="/help"
             >
               Help

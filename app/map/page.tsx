@@ -59,6 +59,9 @@ const goalOptions = [
   ["learning", "Learning"],
 ];
 
+const filterControlClass =
+  "mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20";
+
 function textValue(value: string | null) {
   return value ?? "";
 }
@@ -223,11 +226,14 @@ export default async function DiscoveryMapPage({ searchParams }: MapPageProps) {
           </p>
         </div>
 
-        <form className="mt-8 grid gap-4 rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-4 sm:grid-cols-2 lg:grid-cols-5">
+        <form
+          aria-label="Filter discovery map"
+          className="mt-8 grid gap-4 rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-4 sm:grid-cols-2 lg:grid-cols-5"
+        >
           <label className="block">
             <span className="text-sm font-semibold">Show</span>
             <select
-              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              className={filterControlClass}
               defaultValue={kind}
               name="kind"
             >
@@ -241,31 +247,34 @@ export default async function DiscoveryMapPage({ searchParams }: MapPageProps) {
           <label className="block">
             <span className="text-sm font-semibold">Country</span>
             <input
-              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              className={filterControlClass}
               defaultValue={textValue(filters.country)}
               name="country"
+              placeholder="Australia"
             />
           </label>
           <label className="block">
             <span className="text-sm font-semibold">Region</span>
             <input
-              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              className={filterControlClass}
               defaultValue={textValue(filters.region)}
               name="region"
+              placeholder="Victoria"
             />
           </label>
           <label className="block">
             <span className="text-sm font-semibold">Locality</span>
             <input
-              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              className={filterControlClass}
               defaultValue={textValue(filters.locality)}
               name="locality"
+              placeholder="Melbourne"
             />
           </label>
           <label className="block">
             <span className="text-sm font-semibold">Part</span>
             <select
-              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              className={filterControlClass}
               defaultValue={textValue(filters.part)}
               name="part"
             >
@@ -279,7 +288,7 @@ export default async function DiscoveryMapPage({ searchParams }: MapPageProps) {
           <label className="block">
             <span className="text-sm font-semibold">Goal</span>
             <select
-              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              className={filterControlClass}
               defaultValue={textValue(filters.goal)}
               name="goal"
             >
@@ -290,21 +299,27 @@ export default async function DiscoveryMapPage({ searchParams }: MapPageProps) {
               ))}
             </select>
           </label>
-          <div className="flex items-end gap-3 sm:col-span-2 lg:col-span-5">
+          <div className="flex flex-col gap-3 sm:col-span-2 sm:flex-row sm:items-end lg:col-span-5">
             <button
-              className="rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white"
+              className="rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
               type="submit"
             >
               Search
             </button>
-            <Link className="font-semibold text-[#2f6f73]" href="/map">
+            <Link
+              className="inline-flex min-h-11 items-center rounded-md px-2 py-2 font-semibold text-[#2f6f73] hover:bg-white/70"
+              href="/map"
+            >
               Clear
             </Link>
           </div>
         </form>
 
         {errorMessage ? (
-          <p className="mt-8 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+          <p
+            className="mt-8 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+            role="alert"
+          >
             {errorMessage}
           </p>
         ) : null}
@@ -312,10 +327,10 @@ export default async function DiscoveryMapPage({ searchParams }: MapPageProps) {
         <section className="mt-8 overflow-hidden rounded-lg border border-[#d7cec0] bg-[#e7f0eb]">
           <div
             aria-label="Privacy-safe discovery map"
-            className="relative min-h-[420px] bg-[radial-gradient(circle_at_22%_38%,#c5d7c8_0_9%,transparent_10%),radial-gradient(circle_at_49%_38%,#c5d7c8_0_8%,transparent_9%),radial-gradient(circle_at_55%_55%,#c5d7c8_0_13%,transparent_14%),radial-gradient(circle_at_77%_63%,#c5d7c8_0_9%,transparent_10%),linear-gradient(135deg,#e7f0eb,#d9e8e1)]"
+            className="relative min-h-[520px] bg-[radial-gradient(circle_at_22%_38%,#c5d7c8_0_9%,transparent_10%),radial-gradient(circle_at_49%_38%,#c5d7c8_0_8%,transparent_9%),radial-gradient(circle_at_55%_55%,#c5d7c8_0_13%,transparent_14%),radial-gradient(circle_at_77%_63%,#c5d7c8_0_9%,transparent_10%),linear-gradient(135deg,#e7f0eb,#d9e8e1)] sm:min-h-[420px]"
             role="img"
           >
-            <div className="absolute inset-x-0 top-0 flex items-center justify-between bg-white/80 px-4 py-3 text-sm text-[#394548] backdrop-blur">
+            <div className="absolute inset-x-0 top-0 flex flex-col gap-1 bg-white/85 px-4 py-3 text-sm text-[#394548] backdrop-blur sm:flex-row sm:items-center sm:justify-between">
               <span>{markers.length} approximate regions</span>
               <span>
                 {mapItems.length} visible listings with public location
@@ -324,7 +339,7 @@ export default async function DiscoveryMapPage({ searchParams }: MapPageProps) {
 
             {markers.map((marker) => (
               <div
-                className="absolute max-w-48 -translate-x-1/2 -translate-y-1/2 rounded-md border border-[#174b4f]/30 bg-white px-3 py-2 text-sm shadow-sm"
+                className="absolute max-w-[10rem] -translate-x-1/2 -translate-y-1/2 rounded-md border border-[#174b4f]/30 bg-white px-3 py-2 text-sm shadow-sm [overflow-wrap:anywhere] sm:max-w-48"
                 key={marker.id}
                 style={{
                   left: `${marker.xPercent}%`,
