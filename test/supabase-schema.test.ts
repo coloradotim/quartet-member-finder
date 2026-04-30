@@ -49,6 +49,14 @@ describe("initial Supabase schema migration", () => {
     }
   });
 
+  it("stores first-run onboarding state on private account profiles", () => {
+    expect(migration).toContain("add column onboarding_completed_at");
+    expect(migration).toContain("add column onboarding_skipped_at");
+    expect(migration).toContain("add column onboarding_last_choice");
+    expect(migration).toContain("'find-quartet-openings'");
+    expect(migration).toContain("'quartet-mode-listing'");
+  });
+
   it("keeps private fields out of discovery views", () => {
     const privateFieldPattern =
       /user_id|owner_user_id|recipient_user_id|postal_code_private|formatted_address_private|latitude_private|longitude_private/i;
