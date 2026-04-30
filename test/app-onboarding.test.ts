@@ -1,43 +1,45 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   destinationForOnboardingChoice,
   isValidOnboardingChoice,
   normalizePostOnboardingPath,
   onboardingChoices,
-  onboardingSections,
 } from "@/lib/onboarding/app-onboarding";
 import {
   displayNameFromUser,
   onboardingIsDone,
 } from "@/lib/onboarding/account-onboarding";
 
+const pageSource = readFileSync(
+  "app/(protected)/app/onboarding/page.tsx",
+  "utf8",
+);
+
 describe("first-run onboarding", () => {
   it("uses the requested Singer and Quartet Mode language", () => {
-    const text = JSON.stringify(onboardingSections);
+    const text = JSON.stringify(onboardingChoices);
 
-    expect(text).toContain("My Singer Profile");
-    expect(text).toContain("Find quartet openings");
-    expect(text).toContain("Find singers");
-    expect(text).toContain("Quartet Mode");
-    expect(text).toContain("outside the United States");
+    expect(text).toContain("I'm a singer looking for quartet openings");
+    expect(text).toContain("I'm a singer looking for other singers");
+    expect(text).toContain("I represent a quartet looking for a singer");
+    expect(text).toContain("I just want to browse for now");
+    expect(pageSource).toContain("not a permanent role");
   });
 
   it("routes each first action to the expected destination", () => {
-    expect(destinationForOnboardingChoice("my-singer-profile")).toBe(
-      "/app/profile",
-    );
     expect(destinationForOnboardingChoice("find-quartet-openings")).toBe(
       "/find?kind=quartets",
     );
     expect(destinationForOnboardingChoice("quartet-mode-listing")).toBe(
       "/app/listings",
     );
-    expect(destinationForOnboardingChoice("read-help-privacy")).toBe("/help");
+    expect(destinationForOnboardingChoice("browse-for-now")).toBe("/find");
     expect(destinationForOnboardingChoice("unknown")).toBe("/app");
   });
 
   it("validates choices and post-onboarding paths", () => {
-    expect(onboardingChoices.length).toBe(7);
+    expect(onboardingChoices.length).toBe(4);
     expect(isValidOnboardingChoice("find-singers-as-singer")).toBe(true);
     expect(isValidOnboardingChoice("skipped")).toBe(false);
     expect(normalizePostOnboardingPath("/app/profile")).toBe("/app/profile");
