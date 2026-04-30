@@ -12,6 +12,10 @@ quartetmemberfinder@gmail.com
 
 Use that account where practical for Vercel, Supabase, Resend, and project administration so the app is separated from personal accounts.
 
+This project should use its own Vercel account or team rather than sharing the
+existing Vercel account used by unrelated projects. Create the Vercel account
+first, then import this GitHub repository into a new Vercel project.
+
 ## Local path
 
 Codex/local development path:
@@ -72,12 +76,105 @@ Do not commit real secrets.
 
 ## Vercel
 
-Vercel should deploy preview builds for pull requests and production from `main`.
+Vercel should deploy preview builds for pull requests and production from
+`main` through the GitHub integration.
 
-The production app should eventually use:
+Target production host behavior:
 
-- `quartetmemberfinder.org`
-- optionally `www.quartetmemberfinder.org` redirecting to the canonical host
+- `https://quartetmemberfinder.org` is the canonical production app URL.
+- `https://www.quartetmemberfinder.org` should redirect permanently to
+  `https://quartetmemberfinder.org`.
+- The Vercel-generated production URL should remain available for operations,
+  but public links, Supabase Auth settings, Resend links, and user-facing docs
+  should use the canonical apex domain once DNS is verified.
+- Vercel preview deployment URLs remain branch/PR-specific preview URLs and are
+  not canonical production hosts.
+
+Current setup note: this repository is not committed with a `.vercel/project.json`,
+and the connected Vercel account available to Codex did not contain a Quartet
+Member Finder project. Create a new Vercel account or team for this app, then
+create or import a project named `quartet-member-finder` from the GitHub
+repository.
+
+Recommended Vercel project setup:
+
+1. Create or sign into the dedicated Vercel account/team for Quartet Member
+   Finder.
+2. Connect GitHub and grant Vercel access to
+   `coloradotim/quartet-member-finder`.
+3. In Vercel, import `coloradotim/quartet-member-finder`.
+4. Use the Next.js framework preset.
+5. Set the production branch to `main`.
+6. Keep preview deployments enabled for pull requests.
+7. Add environment variables for Production and Preview. Production should use:
+
+```text
+NEXT_PUBLIC_APP_URL=https://quartetmemberfinder.org
+NEXT_PUBLIC_SUPABASE_URL=<production Supabase project URL>
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<production Supabase anon key>
+SUPABASE_SERVICE_ROLE_KEY=<production Supabase service-role key>
+RESEND_API_KEY=<production Resend API key>
+RESEND_FROM_EMAIL=messages@quartetmemberfinder.org
+```
+
+Preview should use a safe preview/staging Supabase project if available, not
+production data. For preview builds, set `NEXT_PUBLIC_APP_URL` to the exact
+preview URL being tested or keep a documented preview/staging host with matching
+Supabase Auth redirects.
+
+### Vercel custom domain setup
+
+In the Vercel project settings:
+
+1. Open Project Settings, then Domains.
+2. Add `quartetmemberfinder.org`.
+3. Add `www.quartetmemberfinder.org`.
+4. Configure `www.quartetmemberfinder.org` to redirect to
+   `https://quartetmemberfinder.org` with a permanent redirect.
+5. Let Vercel issue and manage the TLS certificates.
+6. Wait for both domains to show as verified.
+
+Equivalent CLI shape, if the project is already linked and the operator is
+signed in with the right Vercel account:
+
+```bash
+vercel domains add quartetmemberfinder.org quartet-member-finder
+vercel domains add www.quartetmemberfinder.org quartet-member-finder
+```
+
+Use Vercel's project domain UI for the `www` redirect unless the CLI/API command
+is being run by someone who has already confirmed the exact redirect settings.
+
+### Namecheap DNS for Vercel
+
+In Namecheap, open Domain List, Manage `quartetmemberfinder.org`, then Advanced
+DNS. Remove conflicting parked-domain, forwarding, or old host records for `@`
+and `www`, then add the records Vercel shows for the project.
+
+Expected Vercel records are usually:
+
+```text
+Type: A
+Host: @
+Value: 76.76.21.21
+TTL: Automatic
+
+Type: CNAME
+Host: www
+Value: cname.vercel-dns.com or the current Vercel-provided CNAME target
+TTL: Automatic
+```
+
+Prefer the exact values shown in Vercel's domain verification screen if they
+differ. DNS changes may take time to propagate.
+
+After DNS is verified:
+
+1. Visit `https://quartetmemberfinder.org`.
+2. Visit `https://www.quartetmemberfinder.org`.
+3. Confirm `www` redirects to the apex domain.
+4. Confirm the Vercel deployment shown for the domain is the latest production
+   deployment from `main`.
 
 ## GitHub Actions CI
 
@@ -116,7 +213,10 @@ Supabase Auth should be configured with the deployed app URL as the site URL and
 the app callback route as an allowed redirect URL:
 
 - local callback: `http://localhost:3000/auth/callback`
-- production callback: `https://<production-host>/auth/callback`
+- preview callback: the exact Vercel preview URL plus `/auth/callback` for any
+  preview environment being manually tested
+- production site URL: `https://quartetmemberfinder.org`
+- production callback: `https://quartetmemberfinder.org/auth/callback`
 
 The app's protected management routes use Supabase's anonymous public key on the
 server and in browser-safe helpers. Service-role keys must stay server-only and
@@ -136,6 +236,29 @@ Preferred sender addresses should use the domain once DNS is configured, such as
 - `no-reply@quartetmemberfinder.org`
 - `messages@quartetmemberfinder.org`
 - `support@quartetmemberfinder.org`
+
+Recommended initial sender:
+
+```text
+messages@quartetmemberfinder.org
+```
+
+Resend setup:
+
+1. Add `quartetmemberfinder.org` as a sending domain in Resend.
+2. Choose the same region/account that will be used by production.
+3. Copy the DNS records Resend provides for SPF/return-path, DKIM, and any
+   recommended DMARC record.
+4. Add those records in Namecheap Advanced DNS exactly as Resend displays them.
+5. Wait for Resend verification to pass.
+6. Set Vercel Production environment values:
+
+```text
+RESEND_API_KEY=<production Resend API key>
+RESEND_FROM_EMAIL=messages@quartetmemberfinder.org
+```
+
+Do not commit Resend API keys or DNS verification secrets to the repository.
 
 The contact relay requires these server-side values in production:
 
@@ -183,7 +306,13 @@ Before public launch:
 - Supabase migrations are documented and applied
 - RLS policies have been reviewed
 - environment variables are documented
+- Vercel project is linked to the GitHub repository
+- `quartetmemberfinder.org` is added to the Vercel project and verified
+- `www.quartetmemberfinder.org` redirects to `quartetmemberfinder.org`
+- Namecheap DNS points the apex and `www` hosts to Vercel
+- `NEXT_PUBLIC_APP_URL` is set to `https://quartetmemberfinder.org` in Vercel Production
+- Supabase Auth site URL and redirect URLs include the production domain
 - Resend domain authentication is configured
-- domain DNS is configured
+- Namecheap DNS includes Resend authentication records
 - privacy model is reflected in UI and database access patterns
 - contact relay is rate-limited or otherwise protected from obvious abuse
