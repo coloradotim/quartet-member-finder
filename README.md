@@ -52,6 +52,7 @@ Validate the project:
 npm run lint
 npm run typecheck
 npm run test:run
+npm run format:check
 npm run build
 ```
 
@@ -69,6 +70,16 @@ Manual launch and deployment validation steps are documented in
 
 Vercel, Supabase, Resend, Namecheap DNS, and `quartetmemberfinder.org`
 deployment steps are documented in `docs/deployment.md`.
+
+## Repository workflow
+
+Normal work should happen on short-lived feature branches and merge to `main`
+through pull requests. The protected `main` branch requires the `guardrails`,
+`validate`, and `Vercel` checks before merge.
+
+Squash merge is the preferred merge strategy, auto-merge may be used once a PR
+is ready and checks are expected to pass, and feature branches should be deleted
+after merge.
 
 ## Early project notes
 

@@ -213,6 +213,47 @@ Before launch, after deployment changes, and after major feature work, run the
 manual smoke test plan in `docs/smoke-test-plan.md` against the relevant local,
 preview, or production environment.
 
+## Branch protection and merge policy
+
+`main` is the protected production branch. Normal feature, bug, and
+documentation work should flow through pull requests from short-lived feature
+branches.
+
+Required pull request checks for `main`:
+
+- `guardrails`
+- `validate`
+- `Vercel`
+
+Branch protection expectations:
+
+- Require branches to be up to date before merging.
+- Require the status checks above before merging.
+- Require pull requests before updates to `main`.
+- Do not require human review for solo-maintainer changes unless the repository
+  later adds collaborators or CODEOWNERS.
+- Require conversation resolution before merging.
+- Block force pushes and branch deletion.
+- Apply protection to administrators where practical so accidental direct pushes
+  to `main` are blocked.
+
+Merge strategy:
+
+- Squash merge is the preferred merge method for normal PRs. It keeps `main`
+  readable while preserving PR discussion and CI history.
+- Merge commits and rebase merges should stay disabled unless there is a
+  deliberate one-off reason to re-enable them.
+- Delete feature branches after merge.
+
+Auto-merge:
+
+- Auto-merge may be enabled for PRs after review of the diff, verification
+  notes, and any deployment or migration implications.
+- Auto-merge should use the protected branch path. Do not bypass required checks,
+  branch protection, or failing production deployment signals.
+- If a PR includes Supabase migrations, confirm production migration workflow
+  credentials are available before enabling auto-merge.
+
 ## GitHub Actions production deployment
 
 The repository uses `.github/workflows/production-deploy.yml` for production
