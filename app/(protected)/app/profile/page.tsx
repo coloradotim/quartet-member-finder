@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import {
   PROFILE_GOALS,
   type ProfileGoal,
@@ -55,6 +56,14 @@ function fieldValue(value: string | number | null | undefined) {
   return value == null ? "" : String(value);
 }
 
+function FieldNote({ children, id }: { children: ReactNode; id?: string }) {
+  return (
+    <span className="mt-2 block text-sm leading-6 text-[#596466]" id={id}>
+      {children}
+    </span>
+  );
+}
+
 export default async function ManageProfilePage({
   searchParams,
 }: ManageProfilePageProps) {
@@ -103,6 +112,11 @@ export default async function ManageProfilePage({
           Create the public singer profile that quartets and other singers can
           discover. Location and country also set sensible distance defaults, so
           you do not need a separate account settings step.
+        </p>
+        <p className="mt-3 text-sm leading-6 text-[#596466]">
+          Only display name is required. Everything else is optional, but parts,
+          goals, availability, and approximate location make it easier for good
+          matches to decide whether to contact you.
         </p>
       </div>
 
@@ -159,34 +173,46 @@ export default async function ManageProfilePage({
           <h2 className="text-xl font-bold text-[#172023]">Basics</h2>
           <label className="block">
             <span className="text-sm font-semibold text-[#172023]">
-              Display name
+              Display name <span className="text-[#8a3b12]">Required</span>
             </span>
             <input
+              aria-describedby="display-name-help"
               className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
               defaultValue={fieldValue(profile?.display_name)}
               maxLength={120}
               name="displayName"
               required
             />
+            <FieldNote id="display-name-help">
+              Use the name you want visible in discovery. This can be your real
+              name, a familiar singing name, or another clear public name.
+            </FieldNote>
           </label>
           <label className="block">
             <span className="text-sm font-semibold text-[#172023]">
-              Short bio
+              Short bio{" "}
+              <span className="font-normal text-[#596466]">Optional</span>
             </span>
             <textarea
+              aria-describedby="bio-help"
               className="mt-2 min-h-28 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
               defaultValue={fieldValue(profile?.bio)}
               maxLength={2000}
               name="bio"
             />
+            <FieldNote id="bio-help">
+              Briefly share what kind of singing you enjoy. Avoid private
+              contact details here because this text may be public.
+            </FieldNote>
           </label>
         </section>
 
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-[#172023]">Parts Sung</h2>
           <p className="text-sm leading-6 text-[#394548]">
-            Select every part you sing, grouped by voicing. TTBB Tenor and SATB
-            Tenor are different discovery contexts.
+            Optional, but strongly recommended. Select every part you would be
+            comfortable being contacted about, grouped by voicing. TTBB Tenor
+            and SATB Tenor are different discovery contexts.
           </p>
           <div className="grid gap-4">
             {VOICINGS.map((voicing) => (
@@ -236,6 +262,7 @@ export default async function ManageProfilePage({
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
                 Country name
+                <span className="font-normal text-[#596466]"> Optional</span>
               </span>
               <input
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
@@ -248,6 +275,7 @@ export default async function ManageProfilePage({
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
                 Country code
+                <span className="font-normal text-[#596466]"> Optional</span>
               </span>
               <input
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base uppercase text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
@@ -260,6 +288,7 @@ export default async function ManageProfilePage({
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
                 {locationLabels.locality}
+                <span className="font-normal text-[#596466]"> Optional</span>
               </span>
               <input
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
@@ -271,6 +300,7 @@ export default async function ManageProfilePage({
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
                 {locationLabels.region}
+                <span className="font-normal text-[#596466]"> Optional</span>
               </span>
               <input
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
@@ -283,6 +313,7 @@ export default async function ManageProfilePage({
           <label className="block">
             <span className="text-sm font-semibold text-[#172023]">
               Public approximate location
+              <span className="font-normal text-[#596466]"> Optional</span>
             </span>
             <input
               className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
@@ -291,14 +322,15 @@ export default async function ManageProfilePage({
               name="locationLabelPublic"
               placeholder="Manchester, UK area"
             />
-            <span className="mt-2 block text-sm leading-6 text-[#596466]">
+            <FieldNote>
               This is the public label people see. Leave it blank to use
               city/region/country as an approximate area.
-            </span>
+            </FieldNote>
           </label>
           <label className="block">
             <span className="text-sm font-semibold text-[#172023]">
               Private {locationLabels.postalCode.toLowerCase()}
+              <span className="font-normal text-[#596466]"> Optional</span>
             </span>
             <input
               className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
@@ -313,6 +345,10 @@ export default async function ManageProfilePage({
           <h2 className="text-xl font-bold text-[#172023]">
             Quartet Preferences
           </h2>
+          <p className="text-sm leading-6 text-[#394548]">
+            Optional details here help people understand what kind of quartet
+            connection might fit before they send a contact request.
+          </p>
           <div className="grid gap-3 sm:grid-cols-2">
             {PROFILE_GOALS.map((goal) => (
               <label
@@ -333,37 +369,57 @@ export default async function ManageProfilePage({
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
                 Experience level
+                <span className="font-normal text-[#596466]"> Optional</span>
               </span>
               <input
+                aria-describedby="experience-help"
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
                 defaultValue={fieldValue(profile?.experience_level)}
                 maxLength={120}
                 name="experienceLevel"
+                placeholder="Chapter singer, contest quartet experience, new to barbershop"
               />
+              <FieldNote id="experience-help">
+                Plain descriptions work best, such as “new to barbershop,”
+                “experienced chapter singer,” or “contest quartet experience.”
+              </FieldNote>
             </label>
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
                 Travel willingness in km
+                <span className="font-normal text-[#596466]"> Optional</span>
               </span>
               <input
+                aria-describedby="travel-radius-help"
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
                 defaultValue={fieldValue(profile?.travel_radius_km)}
                 min={0}
                 name="travelRadiusKm"
                 type="number"
               />
+              <FieldNote id="travel-radius-help">
+                Enter about how far you would travel for rehearsals, auditions,
+                or pickup singing. Leave blank if you are unsure.
+              </FieldNote>
             </label>
           </div>
           <label className="block">
             <span className="text-sm font-semibold text-[#172023]">
               Availability
+              <span className="font-normal text-[#596466]"> Optional</span>
             </span>
             <textarea
+              aria-describedby="availability-help"
               className="mt-2 min-h-24 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
               defaultValue={fieldValue(profile?.availability)}
               maxLength={500}
               name="availability"
+              placeholder="Weeknight rehearsals, occasional weekends, contest season, pickup singing at events"
             />
+            <FieldNote id="availability-help">
+              Mention useful constraints: weeknights or weekends, rehearsal
+              frequency, contest interest, pickup singing, or travel limits.
+            </FieldNote>
           </label>
         </section>
 
@@ -382,7 +438,8 @@ export default async function ManageProfilePage({
               </span>
               <span className="mt-1 block text-sm leading-6 text-[#596466]">
                 Discovery views include your display name, parts, goals, and
-                approximate location only.
+                approximate location only. Turn this off if the profile is not
+                ready for people to find.
               </span>
             </span>
           </label>
