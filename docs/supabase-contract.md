@@ -60,6 +60,15 @@ Users can read and update their own private base-table rows.
 
 Public discovery should use the discovery views, not the base tables.
 
+The public discovery routes are:
+
+- `/singers`, backed by `singer_discovery_profiles`
+- `/quartets`, backed by `quartet_discovery_listings`
+
+These routes may filter on public location fields, part, goals,
+experience/commitment, availability, and travel willingness. They should not
+read private base-table location or contact fields.
+
 ## Row Level Security expectations
 
 RLS should enforce:
