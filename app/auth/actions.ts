@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { firstSignInDestination } from "@/lib/onboarding/account-onboarding";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 function redirectWithMessage(
@@ -95,7 +96,15 @@ export async function verifyEmailOtp(formData: FormData) {
     );
   }
 
-  redirect(safeNext);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect(safeNext);
+  }
+
+  redirect(await firstSignInDestination(supabase, user, safeNext));
 }
 
 export async function signOut() {

@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { firstSignInDestination } from "@/lib/onboarding/account-onboarding";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function GET(request: NextRequest) {
@@ -13,8 +14,15 @@ export async function GET(request: NextRequest) {
       ? await supabase.auth.exchangeCodeForSession(code)
       : { error: new Error("Supabase Auth is not configured.") };
 
-    if (!error) {
-      return NextResponse.redirect(new URL(safeNext, requestUrl.origin));
+    if (!error && supabase) {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      const destination = user
+        ? await firstSignInDestination(supabase, user, safeNext)
+        : safeNext;
+
+      return NextResponse.redirect(new URL(destination, requestUrl.origin));
     }
   }
 

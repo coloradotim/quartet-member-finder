@@ -40,6 +40,8 @@ Baritone, and Bass unless the product explicitly adds alternate naming later.
 ## Ownership model
 
 An `account_profiles` row belongs to one authenticated user by `user_id`.
+It also stores first-run onboarding completion/skipped state so new users can be
+guided to a first action after sign-in without choosing a permanent role.
 
 A `singer_profiles` row belongs to one authenticated user by `user_id`. The
 initial schema enforces one singer profile per user.
@@ -60,6 +62,16 @@ ownership boundary in the database.
 Users can read and update their own private base-table rows.
 
 Public discovery should use the discovery views, not the base tables.
+
+First-run onboarding writes these `account_profiles` fields:
+
+- `onboarding_completed_at`
+- `onboarding_skipped_at`
+- `onboarding_last_choice`
+
+The server creates the account profile row after sign-in when needed. If neither
+completion nor skipped state is present, sign-in routes the user through
+`/app/onboarding` before continuing to the requested app destination.
 
 The public discovery routes are:
 
