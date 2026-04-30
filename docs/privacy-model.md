@@ -9,7 +9,7 @@ The app should help singers and incomplete quartets find each other without expo
 Public search results may show:
 
 - display name
-- approximate city/region
+- approximate city/region/country
 - approximate distance from the searcher
 - voice parts sung or needed
 - quartet goals and experience information
@@ -24,16 +24,35 @@ Public search results must not show:
 - unlisted profile/listing data
 - inactive or hidden profiles/listings
 
+## Global location expectations
+
+Barbershop is global. The app should not assume that all users are in the United States.
+
+Location handling should support international cities, regions, countries, postal codes, and map/geocoding behavior where practical.
+
+Avoid hard-coding assumptions such as:
+
+- ZIP code as the only supported location input
+- US state as a required field
+- miles as the only supported distance unit
+- US phone-number formats
+- US-only address parsing
+- country-specific validation unless the user has selected a country
+
+The MVP can be English-only, but location and distance handling should be globally tolerant from the start.
+
 ## Location handling
 
-Users may enter a city, ZIP/postal code, or approximate location.
+Users may enter a city, postal code, country, or approximate location.
 
 The app may store normalized location data to support distance search, but public UI should only expose approximate location.
 
 Acceptable user-facing examples:
 
 - “Fort Collins, CO area”
-- “about 15 miles away”
+- “Toronto, ON area”
+- “Manchester, UK area”
+- “about 15 miles / 24 km away”
 - “Northern Colorado”
 
 Avoid exact map pins. Map interfaces should use one of the following:
