@@ -20,6 +20,14 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
       <Link className="text-sm font-semibold text-[#2f6f73]" href="/">
         Quartet Member Finder
       </Link>
+      <div className="mt-4 flex gap-4 text-sm">
+        <Link className="font-semibold text-[#2f6f73]" href="/help">
+          Help
+        </Link>
+        <Link className="font-semibold text-[#2f6f73]" href="/privacy">
+          Privacy
+        </Link>
+      </div>
       <h1 className="mt-6 text-3xl font-bold text-[#172023]">Sign in</h1>
       <p className="mt-3 text-base leading-7 text-[#394548]">
         Enter your email address and Supabase will send a one-time code.

@@ -171,6 +171,9 @@ export default async function SingerSearchPage({
           <Link className="font-semibold text-[#2f6f73]" href="/map">
             View map
           </Link>
+          <Link className="font-semibold text-[#2f6f73]" href="/help">
+            Help
+          </Link>
         </div>
       </div>
 

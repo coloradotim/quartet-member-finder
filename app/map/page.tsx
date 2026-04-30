@@ -230,6 +230,9 @@ export default async function DiscoveryMapPage({ searchParams }: MapPageProps) {
           <Link className="font-semibold text-[#2f6f73]" href="/quartets">
             Find quartets
           </Link>
+          <Link className="font-semibold text-[#2f6f73]" href="/help">
+            Help
+          </Link>
         </div>
       </div>
 

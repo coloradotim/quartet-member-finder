@@ -60,6 +60,15 @@ export default async function ProtectedAppLayout({
             >
               Quartet listings
             </Link>
+            <Link className="text-sm font-semibold text-[#394548]" href="/help">
+              Help
+            </Link>
+            <Link
+              className="text-sm font-semibold text-[#394548]"
+              href="/privacy"
+            >
+              Privacy
+            </Link>
           </nav>
           <form action={signOut}>
             <button

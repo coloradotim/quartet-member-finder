@@ -45,6 +45,12 @@ export default function Home() {
           >
             Sign in
           </Link>
+          <Link
+            className="rounded-md border border-[#d7cec0] px-4 py-2.5 text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
+            href="/help"
+          >
+            Help
+          </Link>
         </div>
       </section>
 
@@ -61,6 +67,15 @@ export default function Home() {
           </div>
         ))}
       </section>
+
+      <footer className="mt-12 flex flex-wrap gap-4 border-t border-[#d7cec0] pt-6">
+        <Link className="font-semibold text-[#2f6f73]" href="/help">
+          Help
+        </Link>
+        <Link className="font-semibold text-[#2f6f73]" href="/privacy">
+          Privacy
+        </Link>
+      </footer>
     </main>
   );
 }
