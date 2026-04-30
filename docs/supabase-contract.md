@@ -43,6 +43,10 @@ An `account_profiles` row belongs to one authenticated user by `user_id`.
 A `singer_profiles` row belongs to one authenticated user by `user_id`. The
 initial schema enforces one singer profile per user.
 
+Singer profile edits are saved through the protected app route at
+`/app/profile`. The server action writes `user_id = auth.uid()` and relies on
+RLS to reject writes for any other owner.
+
 A `quartet_listings` row belongs to the authenticated user identified by
 `owner_user_id`. Multi-owner quartet management is not part of the initial
 schema.
