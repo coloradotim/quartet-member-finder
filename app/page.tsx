@@ -1,4 +1,5 @@
 import { PRODUCT_NAME, PRODUCT_PROMISE } from "@/lib/app-metadata";
+import Link from "next/link";
 
 const discoveryPaths = [
   "Singer profiles for quartet opportunities",
@@ -19,6 +20,20 @@ export default function Home() {
         <p className="mt-6 max-w-2xl text-lg leading-8 text-[#394548]">
           {PRODUCT_PROMISE}
         </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link
+            className="rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
+            href="/sign-in"
+          >
+            Sign in
+          </Link>
+          <Link
+            className="rounded-md border border-[#d7cec0] px-4 py-2.5 text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
+            href="/app"
+          >
+            Manage profile
+          </Link>
+        </div>
       </section>
 
       <section

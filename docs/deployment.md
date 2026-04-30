@@ -101,6 +101,16 @@ Supabase schema and Row Level Security changes should be managed by committed mi
 
 Production deploys should not depend on undocumented manual database changes.
 
+Supabase Auth should be configured with the deployed app URL as the site URL and
+the app callback route as an allowed redirect URL:
+
+- local callback: `http://localhost:3000/auth/callback`
+- production callback: `https://<production-host>/auth/callback`
+
+The app's protected management routes use Supabase's anonymous public key on the
+server and in browser-safe helpers. Service-role keys must stay server-only and
+are not required for basic sign-in, sign-out, or protected route checks.
+
 ## Resend
 
 Resend should be used for transactional email, including auth-related email where appropriate and the app-mediated contact relay.
