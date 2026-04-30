@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { signInWithEmail, verifyEmailOtp } from "@/app/auth/actions";
+import { PublicSiteHeader } from "@/components/navigation/public-site-header";
 
 type SignInPageProps = {
   searchParams: Promise<{
@@ -16,85 +16,77 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
   const email = params.email ?? "";
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-6 py-16">
-      <Link className="text-sm font-semibold text-[#2f6f73]" href="/">
-        Quartet Member Finder
-      </Link>
-      <div className="mt-4 flex gap-4 text-sm">
-        <Link className="font-semibold text-[#2f6f73]" href="/help">
-          Help
-        </Link>
-        <Link className="font-semibold text-[#2f6f73]" href="/privacy">
-          Privacy
-        </Link>
-      </div>
-      <h1 className="mt-6 text-3xl font-bold text-[#172023]">Sign in</h1>
-      <p className="mt-3 text-base leading-7 text-[#394548]">
-        Enter your email address and Supabase will send a one-time code.
-      </p>
-
-      {params.error ? (
-        <p className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
-          {params.error}
+    <>
+      <PublicSiteHeader />
+      <main className="mx-auto flex w-full max-w-md flex-col px-6 py-12">
+        <h1 className="mt-6 text-3xl font-bold text-[#172023]">Sign in</h1>
+        <p className="mt-3 text-base leading-7 text-[#394548]">
+          Enter your email address and Supabase will send a one-time code.
         </p>
-      ) : null}
 
-      {params.message ? (
-        <p className="mt-6 rounded-lg border border-[#b7d7ce] bg-[#eef8f4] p-4 text-sm text-[#174b4f]">
-          {params.message}
-        </p>
-      ) : null}
+        {params.error ? (
+          <p className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+            {params.error}
+          </p>
+        ) : null}
 
-      <form action={signInWithEmail} className="mt-8 space-y-4">
-        <input name="next" type="hidden" value={next} />
-        <label className="block">
-          <span className="text-sm font-semibold text-[#172023]">Email</span>
-          <input
-            autoComplete="email"
-            className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-            defaultValue={email}
-            name="email"
-            placeholder="singer@example.com"
-            required
-            type="email"
-          />
-        </label>
-        <button
-          className="w-full rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
-          type="submit"
-        >
-          Send one-time code
-        </button>
-      </form>
+        {params.message ? (
+          <p className="mt-6 rounded-lg border border-[#b7d7ce] bg-[#eef8f4] p-4 text-sm text-[#174b4f]">
+            {params.message}
+          </p>
+        ) : null}
 
-      {email ? (
-        <form
-          action={verifyEmailOtp}
-          className="mt-6 space-y-4 rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-4"
-        >
-          <input name="email" type="hidden" value={email} />
+        <form action={signInWithEmail} className="mt-8 space-y-4">
           <input name="next" type="hidden" value={next} />
           <label className="block">
-            <span className="text-sm font-semibold text-[#172023]">
-              One-time code
-            </span>
+            <span className="text-sm font-semibold text-[#172023]">Email</span>
             <input
-              autoComplete="one-time-code"
+              autoComplete="email"
               className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-              inputMode="numeric"
-              name="token"
-              placeholder="123456"
+              defaultValue={email}
+              name="email"
+              placeholder="singer@example.com"
               required
+              type="email"
             />
           </label>
           <button
             className="w-full rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
             type="submit"
           >
-            Verify code
+            Send one-time code
           </button>
         </form>
-      ) : null}
-    </main>
+
+        {email ? (
+          <form
+            action={verifyEmailOtp}
+            className="mt-6 space-y-4 rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-4"
+          >
+            <input name="email" type="hidden" value={email} />
+            <input name="next" type="hidden" value={next} />
+            <label className="block">
+              <span className="text-sm font-semibold text-[#172023]">
+                One-time code
+              </span>
+              <input
+                autoComplete="one-time-code"
+                className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
+                inputMode="numeric"
+                name="token"
+                placeholder="123456"
+                required
+              />
+            </label>
+            <button
+              className="w-full rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
+              type="submit"
+            >
+              Verify code
+            </button>
+          </form>
+        ) : null}
+      </main>
+    </>
   );
 }

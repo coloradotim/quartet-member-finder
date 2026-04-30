@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { signOut } from "@/app/auth/actions";
-import { signedInNavigationLinks } from "@/lib/navigation/signed-in-nav";
+import {
+  signedInModeNavigationLinks,
+  signedInPrimaryNavigationLinks,
+  signedInUtilityNavigationLinks,
+} from "@/lib/navigation/signed-in-nav";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -39,35 +43,59 @@ export default async function ProtectedAppLayout({
   }
 
   return (
-    <div className="min-h-screen">
+    <div>
       <header className="border-b border-[#d7cec0] bg-[#fffaf2]/90">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-6 py-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <Link className="text-lg font-bold text-[#172023]" href="/app">
               Quartet Member Finder
             </Link>
-            <form action={signOut}>
-              <button
-                className="w-fit rounded-md border border-[#d7cec0] px-3 py-2 text-sm font-semibold text-[#172023] hover:bg-white"
-                type="submit"
-              >
-                Sign out
-              </button>
-            </form>
+            <div className="flex flex-wrap items-center gap-3">
+              {signedInUtilityNavigationLinks.map((link) => (
+                <Link
+                  className="text-sm font-semibold text-[#394548] hover:text-[#174b4f]"
+                  href={link.href}
+                  key={link.href}
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <form action={signOut}>
+                <button
+                  className="w-fit rounded-md border border-[#d7cec0] px-3 py-2 text-sm font-semibold text-[#172023] hover:bg-white"
+                  type="submit"
+                >
+                  Sign out
+                </button>
+              </form>
+            </div>
           </div>
           <nav
             aria-label="App navigation"
-            className="flex flex-wrap gap-x-4 gap-y-2"
+            className="grid gap-3 lg:grid-cols-[1fr_auto]"
           >
-            {signedInNavigationLinks.map((link) => (
-              <Link
-                className="text-sm font-semibold text-[#394548] hover:text-[#174b4f]"
-                href={link.href}
-                key={link.href}
-              >
-                {link.label}
-              </Link>
-            ))}
+            <div className="flex flex-wrap gap-2" aria-label="Singer tasks">
+              {signedInPrimaryNavigationLinks.map((link) => (
+                <Link
+                  className="rounded-md border border-[#d7cec0] bg-white/60 px-3 py-2 text-sm font-semibold text-[#394548] hover:border-[#2f6f73] hover:text-[#174b4f]"
+                  href={link.href}
+                  key={link.href}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-2" aria-label="Quartet mode">
+              {signedInModeNavigationLinks.map((link) => (
+                <Link
+                  className="rounded-md bg-[#174b4f] px-3 py-2 text-sm font-semibold text-white hover:bg-[#10393c]"
+                  href={link.href}
+                  key={link.href}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
           </nav>
         </div>
       </header>

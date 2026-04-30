@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ContactRequestForm } from "@/components/contact/contact-request-form";
+import { PublicSiteHeader } from "@/components/navigation/public-site-header";
 import { contactStatusMessage } from "@/lib/contact/contact-status";
 import {
   approximateLocationLabel,
@@ -150,12 +151,10 @@ export default async function SingerSearchPage({
   }
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-6xl px-6 py-12">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <>
+      <PublicSiteHeader />
+      <main className="mx-auto w-full max-w-6xl px-6 py-12">
         <div>
-          <Link className="text-sm font-semibold text-[#2f6f73]" href="/">
-            Quartet Member Finder
-          </Link>
           <h1 className="mt-4 text-3xl font-bold text-[#172023]">
             Find Singers
           </h1>
@@ -165,220 +164,211 @@ export default async function SingerSearchPage({
             show approximate location only.
           </p>
         </div>
-        <div className="flex gap-4">
-          <Link className="font-semibold text-[#2f6f73]" href="/quartets">
-            Find Quartet Openings
-          </Link>
-          <Link className="font-semibold text-[#2f6f73]" href="/map">
-            View Map
-          </Link>
-          <Link className="font-semibold text-[#2f6f73]" href="/help">
-            Help
-          </Link>
-        </div>
-      </div>
 
-      <form className="mt-8 grid gap-4 rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-4 sm:grid-cols-2 lg:grid-cols-4">
-        <label className="block">
-          <span className="text-sm font-semibold">Country</span>
-          <input
-            className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
-            defaultValue={textValue(filters.country)}
-            name="country"
-          />
-        </label>
-        <label className="block">
-          <span className="text-sm font-semibold">Region</span>
-          <input
-            className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
-            defaultValue={textValue(filters.region)}
-            name="region"
-          />
-        </label>
-        <label className="block">
-          <span className="text-sm font-semibold">Locality</span>
-          <input
-            className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
-            defaultValue={textValue(filters.locality)}
-            name="locality"
-          />
-        </label>
-        <label className="block">
-          <span className="text-sm font-semibold">Part</span>
-          <select
-            className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
-            defaultValue={textValue(filters.part)}
-            name="part"
-          >
-            {partOptions.map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="block">
-          <span className="text-sm font-semibold">Goal</span>
-          <select
-            className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
-            defaultValue={textValue(filters.goal)}
-            name="goal"
-          >
-            {goalOptions.map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="block">
-          <span className="text-sm font-semibold">Experience</span>
-          <input
-            className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
-            defaultValue={textValue(filters.experience)}
-            name="experience"
-          />
-        </label>
-        <label className="block">
-          <span className="text-sm font-semibold">Availability</span>
-          <input
-            className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
-            defaultValue={textValue(filters.availability)}
-            name="availability"
-          />
-        </label>
-        <label className="block">
-          <span className="text-sm font-semibold">Travel km</span>
-          <input
-            className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
-            defaultValue={textValue(
-              filters.travelRadiusKm == null
-                ? null
-                : String(filters.travelRadiusKm),
-            )}
-            min={0}
-            name="travelRadiusKm"
-            type="number"
-          />
-        </label>
-        <div className="flex items-end gap-3 sm:col-span-2 lg:col-span-4">
-          <button
-            className="rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white"
-            type="submit"
-          >
-            Search
-          </button>
-          <Link className="font-semibold text-[#2f6f73]" href="/singers">
-            Clear
-          </Link>
-        </div>
-      </form>
+        <form className="mt-8 grid gap-4 rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-4 sm:grid-cols-2 lg:grid-cols-4">
+          <label className="block">
+            <span className="text-sm font-semibold">Country</span>
+            <input
+              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              defaultValue={textValue(filters.country)}
+              name="country"
+            />
+          </label>
+          <label className="block">
+            <span className="text-sm font-semibold">Region</span>
+            <input
+              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              defaultValue={textValue(filters.region)}
+              name="region"
+            />
+          </label>
+          <label className="block">
+            <span className="text-sm font-semibold">Locality</span>
+            <input
+              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              defaultValue={textValue(filters.locality)}
+              name="locality"
+            />
+          </label>
+          <label className="block">
+            <span className="text-sm font-semibold">Part</span>
+            <select
+              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              defaultValue={textValue(filters.part)}
+              name="part"
+            >
+              {partOptions.map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block">
+            <span className="text-sm font-semibold">Goal</span>
+            <select
+              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              defaultValue={textValue(filters.goal)}
+              name="goal"
+            >
+              {goalOptions.map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block">
+            <span className="text-sm font-semibold">Experience</span>
+            <input
+              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              defaultValue={textValue(filters.experience)}
+              name="experience"
+            />
+          </label>
+          <label className="block">
+            <span className="text-sm font-semibold">Availability</span>
+            <input
+              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              defaultValue={textValue(filters.availability)}
+              name="availability"
+            />
+          </label>
+          <label className="block">
+            <span className="text-sm font-semibold">Travel km</span>
+            <input
+              className="mt-2 w-full rounded-md border border-[#d7cec0] px-3 py-2"
+              defaultValue={textValue(
+                filters.travelRadiusKm == null
+                  ? null
+                  : String(filters.travelRadiusKm),
+              )}
+              min={0}
+              name="travelRadiusKm"
+              type="number"
+            />
+          </label>
+          <div className="flex items-end gap-3 sm:col-span-2 lg:col-span-4">
+            <button
+              className="rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white"
+              type="submit"
+            >
+              Search
+            </button>
+            <Link className="font-semibold text-[#2f6f73]" href="/singers">
+              Clear
+            </Link>
+          </div>
+        </form>
 
-      {contactStatus ? (
-        <p className={contactBannerClass(contactStatus.tone)}>
-          {contactStatus.text}
-        </p>
-      ) : null}
-
-      {errorMessage ? (
-        <p className="mt-8 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
-          {errorMessage}
-        </p>
-      ) : null}
-
-      <section className="mt-8 grid gap-4">
-        {singers.length === 0 && !errorMessage ? (
-          <section className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 text-[#394548]">
-            <h2 className="text-xl font-bold text-[#172023]">
-              No visible singer profiles match these filters yet
-            </h2>
-            <p className="mt-3 text-sm leading-6">
-              Try clearing filters, widening the country/region/locality, or
-              checking the map. Early on, some singers may still be creating My
-              Singer Profile or keeping it hidden.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-4">
-              <Link className="font-semibold text-[#2f6f73]" href="/singers">
-                Clear filters
-              </Link>
-              <Link className="font-semibold text-[#2f6f73]" href="/map">
-                View Map
-              </Link>
-              <Link className="font-semibold text-[#2f6f73]" href="/quartets">
-                Find Quartet Openings
-              </Link>
-            </div>
-          </section>
+        {contactStatus ? (
+          <p className={contactBannerClass(contactStatus.tone)}>
+            {contactStatus.text}
+          </p>
         ) : null}
 
-        {singers.map((singer) => (
-          <article
-            className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 shadow-sm"
-            key={singer.id}
-          >
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-              <div>
-                <h2 className="text-xl font-bold text-[#172023]">
-                  {singer.display_name}
-                </h2>
-                <p className="mt-1 text-sm text-[#596466]">
-                  {approximateLocationLabel(
-                    toPublicLocationSummary({
-                      countryName: singer.country_name,
-                      locality: singer.locality,
-                      locationLabelPublic: singer.location_label_public,
-                      region: singer.region,
-                    }),
-                  )}
+        {errorMessage ? (
+          <p className="mt-8 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+            {errorMessage}
+          </p>
+        ) : null}
+
+        <section className="mt-8 grid gap-4">
+          {singers.length === 0 && !errorMessage ? (
+            <section className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 text-[#394548]">
+              <h2 className="text-xl font-bold text-[#172023]">
+                No visible singer profiles match these filters yet
+              </h2>
+              <p className="mt-3 text-sm leading-6">
+                Try clearing filters, widening the country/region/locality, or
+                checking the map. Early on, some singers may still be creating
+                My Singer Profile or keeping it hidden.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-4">
+                <Link className="font-semibold text-[#2f6f73]" href="/singers">
+                  Clear filters
+                </Link>
+                <Link className="font-semibold text-[#2f6f73]" href="/map">
+                  View Map
+                </Link>
+                <Link className="font-semibold text-[#2f6f73]" href="/quartets">
+                  Find Quartet Openings
+                </Link>
+              </div>
+            </section>
+          ) : null}
+
+          {singers.map((singer) => (
+            <article
+              className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 shadow-sm"
+              key={singer.id}
+            >
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-[#172023]">
+                    {singer.display_name}
+                  </h2>
+                  <p className="mt-1 text-sm text-[#596466]">
+                    {approximateLocationLabel(
+                      toPublicLocationSummary({
+                        countryName: singer.country_name,
+                        locality: singer.locality,
+                        locationLabelPublic: singer.location_label_public,
+                        region: singer.region,
+                      }),
+                    )}
+                  </p>
+                </div>
+                <p className="text-sm font-semibold text-[#2f6f73]">
+                  {tags(singer.parts)}
                 </p>
               </div>
-              <p className="text-sm font-semibold text-[#2f6f73]">
-                {tags(singer.parts)}
-              </p>
-            </div>
-            <dl className="mt-4 grid gap-3 text-sm text-[#394548] sm:grid-cols-2">
-              {singer.goals.length > 0 ? (
-                <div>
-                  <dt className="font-semibold text-[#172023]">Goals</dt>
-                  <dd>{tags(singer.goals)}</dd>
-                </div>
-              ) : null}
-              {singer.experience_level ? (
-                <div>
-                  <dt className="font-semibold text-[#172023]">Experience</dt>
-                  <dd>{singer.experience_level}</dd>
-                </div>
-              ) : null}
-              {singer.availability ? (
-                <div>
-                  <dt className="font-semibold text-[#172023]">Availability</dt>
-                  <dd>{singer.availability}</dd>
-                </div>
-              ) : null}
-              {travelRadiusLabel(
-                singer.travel_radius_km,
-                singer.preferred_distance_unit,
-              ) ? (
-                <div>
-                  <dt className="font-semibold text-[#172023]">Travel</dt>
-                  <dd>
-                    {travelRadiusLabel(
-                      singer.travel_radius_km,
-                      singer.preferred_distance_unit,
-                    )}
-                  </dd>
-                </div>
-              ) : null}
-            </dl>
-            <ContactRequestForm
-              returnTo={returnTo}
-              targetId={singer.id}
-              targetKind="singer"
-              targetName={singer.display_name}
-            />
-          </article>
-        ))}
-      </section>
-    </main>
+              <dl className="mt-4 grid gap-3 text-sm text-[#394548] sm:grid-cols-2">
+                {singer.goals.length > 0 ? (
+                  <div>
+                    <dt className="font-semibold text-[#172023]">Goals</dt>
+                    <dd>{tags(singer.goals)}</dd>
+                  </div>
+                ) : null}
+                {singer.experience_level ? (
+                  <div>
+                    <dt className="font-semibold text-[#172023]">Experience</dt>
+                    <dd>{singer.experience_level}</dd>
+                  </div>
+                ) : null}
+                {singer.availability ? (
+                  <div>
+                    <dt className="font-semibold text-[#172023]">
+                      Availability
+                    </dt>
+                    <dd>{singer.availability}</dd>
+                  </div>
+                ) : null}
+                {travelRadiusLabel(
+                  singer.travel_radius_km,
+                  singer.preferred_distance_unit,
+                ) ? (
+                  <div>
+                    <dt className="font-semibold text-[#172023]">Travel</dt>
+                    <dd>
+                      {travelRadiusLabel(
+                        singer.travel_radius_km,
+                        singer.preferred_distance_unit,
+                      )}
+                    </dd>
+                  </div>
+                ) : null}
+              </dl>
+              <ContactRequestForm
+                returnTo={returnTo}
+                targetId={singer.id}
+                targetKind="singer"
+                targetName={singer.display_name}
+              />
+            </article>
+          ))}
+        </section>
+      </main>
+    </>
   );
 }
