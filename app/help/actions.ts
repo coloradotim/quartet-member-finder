@@ -8,7 +8,10 @@ import {
   feedbackRateLimitWindowStart,
   parseFeedbackFormData,
 } from "@/lib/feedback/feedback-form";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import {
+  createSupabaseAdminClient,
+  createSupabaseServerClient,
+} from "@/lib/supabase/server";
 
 function redirectWithFeedbackStatus(
   status: "auth" | "error" | "sent" | "limited",
@@ -39,16 +42,21 @@ export async function submitHelpFeedback(formData: FormData) {
     redirect(`/sign-in?next=${encodeURIComponent("/help")}`);
   }
 
+  const feedbackClient = createSupabaseAdminClient() ?? supabase;
   const rateLimitWindowStart = feedbackRateLimitWindowStart();
   const headerStore = await headers();
   const userAgent = headerStore.get("user-agent");
-  const { count, error: rateLimitError } = await supabase
+  const { count, error: rateLimitError } = await feedbackClient
     .from("feedback_submissions")
     .select("id", { count: "exact", head: true })
     .eq("submitter_user_id", user.id)
     .gte("created_at", rateLimitWindowStart);
 
   if (rateLimitError) {
+    console.error("Feedback rate-limit lookup failed", {
+      code: rateLimitError.code,
+      message: rateLimitError.message,
+    });
     redirectWithFeedbackStatus("error");
   }
 
@@ -56,7 +64,7 @@ export async function submitHelpFeedback(formData: FormData) {
     redirectWithFeedbackStatus("limited");
   }
 
-  const { error: insertError } = await supabase
+  const { error: insertError } = await feedbackClient
     .from("feedback_submissions")
     .insert({
       context_path: values.contextPath,
@@ -68,6 +76,10 @@ export async function submitHelpFeedback(formData: FormData) {
     });
 
   if (insertError) {
+    console.error("Feedback insert failed", {
+      code: insertError.code,
+      message: insertError.message,
+    });
     redirectWithFeedbackStatus("error");
   }
 
