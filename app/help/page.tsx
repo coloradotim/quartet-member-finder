@@ -67,7 +67,7 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
       {user ? (
         <HelpFeedbackForm status={params.feedback} />
       ) : (
-        <section className="mt-10 border-t border-[#d7cec0] pt-8">
+        <section className="mt-10 border-t border-[#d7cec0] pt-8" id="feedback">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#2f6f73]">
             Feedback
           </p>

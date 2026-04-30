@@ -49,6 +49,12 @@ export const quartetModeDashboardActions: DashboardAction[] = [
 export const supportDashboardActions: DashboardAction[] = [
   {
     description:
+      "Review account-level preferences, re-run onboarding, and find future account-management placeholders.",
+    href: "/app/settings",
+    label: "Account Settings",
+  },
+  {
+    description:
       "Review how profiles, listings, discovery, visibility, and app-mediated contact work.",
     href: "/help",
     label: "Help",
