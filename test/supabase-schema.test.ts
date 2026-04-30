@@ -4,9 +4,7 @@ import { describe, expect, it } from "vitest";
 const migration = readdirSync("supabase/migrations")
   .filter((fileName) => fileName.endsWith(".sql"))
   .sort()
-  .map((fileName) =>
-    readFileSync(`supabase/migrations/${fileName}`, "utf8"),
-  )
+  .map((fileName) => readFileSync(`supabase/migrations/${fileName}`, "utf8"))
   .join("\n\n");
 
 const appTables = [

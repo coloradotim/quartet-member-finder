@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { signOut } from "@/app/auth/actions";
+import { signedInNavigationLinks } from "@/lib/navigation/signed-in-nav";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -40,44 +41,34 @@ export default async function ProtectedAppLayout({
   return (
     <div className="min-h-screen">
       <header className="border-b border-[#d7cec0] bg-[#fffaf2]/90">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <Link className="text-lg font-bold text-[#172023]" href="/app">
-            Quartet Member Finder
-          </Link>
-          <nav aria-label="App navigation" className="flex flex-wrap gap-3">
-            <Link className="text-sm font-semibold text-[#394548]" href="/app">
-              Home
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-6 py-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <Link className="text-lg font-bold text-[#172023]" href="/app">
+              Quartet Member Finder
             </Link>
-            <Link
-              className="text-sm font-semibold text-[#394548]"
-              href="/app/profile"
-            >
-              Singer profile
-            </Link>
-            <Link
-              className="text-sm font-semibold text-[#394548]"
-              href="/app/listings"
-            >
-              Quartet listings
-            </Link>
-            <Link className="text-sm font-semibold text-[#394548]" href="/help">
-              Help
-            </Link>
-            <Link
-              className="text-sm font-semibold text-[#394548]"
-              href="/privacy"
-            >
-              Privacy
-            </Link>
+            <form action={signOut}>
+              <button
+                className="w-fit rounded-md border border-[#d7cec0] px-3 py-2 text-sm font-semibold text-[#172023] hover:bg-white"
+                type="submit"
+              >
+                Sign out
+              </button>
+            </form>
+          </div>
+          <nav
+            aria-label="App navigation"
+            className="flex flex-wrap gap-x-4 gap-y-2"
+          >
+            {signedInNavigationLinks.map((link) => (
+              <Link
+                className="text-sm font-semibold text-[#394548] hover:text-[#174b4f]"
+                href={link.href}
+                key={link.href}
+              >
+                {link.label}
+              </Link>
+            ))}
           </nav>
-          <form action={signOut}>
-            <button
-              className="rounded-md border border-[#d7cec0] px-3 py-2 text-sm font-semibold text-[#172023] hover:bg-white"
-              type="submit"
-            >
-              Sign out
-            </button>
-          </form>
         </div>
       </header>
       <main className="mx-auto w-full max-w-6xl px-6 py-10">{children}</main>
