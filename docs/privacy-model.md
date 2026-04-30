@@ -70,6 +70,27 @@ Quartet listing owners must be able to control whether a quartet listing appears
 
 Hidden/inactive profiles and listings should not be returned in public discovery queries.
 
+## Singer profile management
+
+Signed-in users can manage their own singer profile from the protected app area.
+The MVP profile form stores:
+
+- display name
+- barbershop parts sung
+- goals
+- descriptive experience level
+- availability
+- travel willingness in kilometers
+- short bio
+- public approximate location label
+- country, region, locality, and private postal code when provided
+- search visibility
+
+The postal code field is stored for future matching/search work and should not
+be shown in public discovery results. The public discovery label should stay
+approximate, such as a city/region/country area. Location inputs remain globally
+tolerant and do not require US state, ZIP code, address, or phone formats.
+
 ## Contact model
 
 Initial contact should be mediated by the app.
