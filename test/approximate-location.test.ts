@@ -30,7 +30,7 @@ describe("approximate location helpers", () => {
     const publicLocation = toPublicLocationSummary({
       countryName: "United Kingdom",
       locality: "Manchester",
-      locationLabelPublic: "Manchester, UK area",
+      locationLabelPublic: "  Manchester, UK area  ",
       region: "England",
     });
 
@@ -81,6 +81,13 @@ describe("approximate location helpers", () => {
     expect(travelRadiusLabel(milesToKilometers(50), "mi")).toBe(
       "50 mi / 80 km",
     );
+    expect(formatApproximateDistance(0)).toBe("about 0 km / 0 mi away");
     expect(travelRadiusLabel(null)).toBeNull();
+  });
+
+  it("does not format invalid public distances", () => {
+    expect(formatDistance(-1)).toBeNull();
+    expect(formatDistance(Number.NaN)).toBeNull();
+    expect(formatApproximateDistance(Number.POSITIVE_INFINITY)).toBeNull();
   });
 });

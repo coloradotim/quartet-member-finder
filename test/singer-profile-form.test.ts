@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  BARBERSHOP_PARTS,
   buildPublicLocationLabel,
   inferLocationPrecision,
   parseSingerProfileFormData,
@@ -16,6 +17,12 @@ function formData(entries: Array<[string, string]>) {
 }
 
 describe("singer profile form parsing", () => {
+  it("keeps barbershop part constants explicit and does not rename Lead", () => {
+    expect(BARBERSHOP_PARTS).toEqual(["tenor", "lead", "baritone", "bass"]);
+    expect(BARBERSHOP_PARTS).toContain("lead");
+    expect(BARBERSHOP_PARTS).not.toContain("melody");
+  });
+
   it("accepts globally tolerant location fields without US-only requirements", () => {
     const values = parseSingerProfileFormData(
       formData([
@@ -43,6 +50,7 @@ describe("singer profile form parsing", () => {
     const values = parseSingerProfileFormData(
       formData([
         ["displayName", "Jordan"],
+        ["countryCode", "usa"],
         ["parts", "lead"],
         ["parts", "melody"],
         ["goals", "contest"],
@@ -50,6 +58,7 @@ describe("singer profile form parsing", () => {
       ]),
     );
 
+    expect(values.countryCode).toBeNull();
     expect(values.parts).toEqual(["lead"]);
     expect(values.goals).toEqual(["contest"]);
   });
