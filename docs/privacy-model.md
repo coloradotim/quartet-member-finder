@@ -24,6 +24,13 @@ Public search results must not show:
 - unlisted profile/listing data
 - inactive or hidden profiles/listings
 
+Public singer and quartet discovery pages must query privacy-safe discovery
+views rather than private base tables. Filters may use public country, region,
+locality, part, goal, experience/commitment, availability, and travel
+willingness fields where data exists. Exact coordinates, private postal codes,
+formatted private addresses, email addresses, and phone numbers are not part of
+the public result shape.
+
 ## Global location expectations
 
 Barbershop is global. The app should not assume that all users are in the United States.

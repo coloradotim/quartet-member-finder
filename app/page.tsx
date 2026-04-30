@@ -23,15 +23,21 @@ export default function Home() {
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
             className="rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
-            href="/sign-in"
+            href="/singers"
           >
-            Sign in
+            Find singers
           </Link>
           <Link
             className="rounded-md border border-[#d7cec0] px-4 py-2.5 text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
-            href="/app"
+            href="/quartets"
           >
-            Manage profile
+            Find quartets
+          </Link>
+          <Link
+            className="rounded-md border border-[#d7cec0] px-4 py-2.5 text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
+            href="/sign-in"
+          >
+            Sign in
           </Link>
         </div>
       </section>
