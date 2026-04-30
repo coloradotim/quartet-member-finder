@@ -5,6 +5,10 @@ function source(path: string) {
   return readFileSync(path, "utf8");
 }
 
+function normalizedSource(path: string) {
+  return source(path).replace(/\s+/g, " ");
+}
+
 describe("empty and first-time states", () => {
   it("guides first-time signed-in users from profile and Quartet Mode forms", () => {
     const profilePage = source("app/(protected)/app/profile/page.tsx");
@@ -33,7 +37,7 @@ describe("empty and first-time states", () => {
 
   it("explains sign-in for contact and feedback without exposing private data", () => {
     const contactForm = source("components/contact/contact-request-form.tsx");
-    const helpPage = source("app/help/page.tsx");
+    const helpPage = normalizedSource("app/help/page.tsx");
 
     expect(contactForm).toContain("Contact starts through the app");
     expect(contactForm).toContain("personal email addresses and phone");

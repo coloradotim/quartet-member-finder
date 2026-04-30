@@ -1,8 +1,4 @@
-export const signedInNavigationLinks = [
-  {
-    href: "/app",
-    label: "Home",
-  },
+export const signedInPrimaryNavigationLinks = [
   {
     href: "/app/profile",
     label: "My Singer Profile",
@@ -19,20 +15,24 @@ export const signedInNavigationLinks = [
     href: "/map",
     label: "Map",
   },
+] as const;
+
+export const signedInModeNavigationLinks = [
   {
     href: "/app/listings",
     label: "Quartet Mode",
   },
+] as const;
+
+export const signedInUtilityNavigationLinks = [
   {
     href: "/app/settings",
     label: "Account Settings",
   },
-  {
-    href: "/help",
-    label: "Help",
-  },
-  {
-    href: "/privacy",
-    label: "Privacy",
-  },
+] as const;
+
+export const signedInNavigationLinks = [
+  ...signedInPrimaryNavigationLinks,
+  ...signedInModeNavigationLinks,
+  ...signedInUtilityNavigationLinks,
 ] as const;
