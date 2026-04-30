@@ -30,6 +30,23 @@ Prioritize clarity, trust, privacy, and ease of use. The app should help singers
 - Search should support both singer discovery and quartet discovery.
 - The app should be useful even when profile data is incomplete.
 
+## Global product assumptions
+
+Barbershop is global. Most users may be in the United States and Canada, but the app should not assume a US-only audience.
+
+Location, search, forms, and data models should be globally tolerant from the start.
+
+Avoid hard-coding assumptions such as:
+
+- ZIP code as the only supported location input
+- US state as a required field
+- miles as the only supported distance unit
+- US-only phone-number formatting
+- US-only address parsing
+- country-specific validation unless the country is explicit
+
+The MVP can be English-only, but location handling should support international cities, regions, countries, postal codes, and map/geocoding behavior where practical.
+
 ## Privacy and safety rules
 
 Privacy is a core product requirement.
@@ -37,9 +54,9 @@ Privacy is a core product requirement.
 Do not expose exact home addresses, exact coordinates, private email addresses, or phone numbers in public search results.
 
 Location handling:
-- Users may provide a city, ZIP/postal code, or approximate location.
+- Users may provide a city, ZIP/postal code, postal code, country, or approximate location.
 - The app may store normalized location data needed for distance search.
-- Public UI should show approximate location only, such as “Fort Collins, CO area” or “about 15 miles away.”
+- Public UI should show approximate location only, such as “Fort Collins, CO area,” “Manchester, UK area,” or “about 15 miles / 24 km away.”
 - Map views must use approximate pins, jittered/blurred areas, or regional markers rather than exact home-location pins.
 - Users must be able to hide their profile/listing from search.
 
@@ -59,6 +76,7 @@ Security:
 
 ## Barbershop-specific context
 
+- Barbershop is sung by communities around the world, including the US, Canada, UK, Ireland, Europe, Australia, New Zealand, and elsewhere.
 - Pickup and prospective quartets often form through local chapters, conventions, afterglows, coaching circles, and informal singer networks.
 - Quartet goals vary widely:
   - casual/social singing
@@ -146,6 +164,7 @@ Guardrails:
 - do not use service-role keys in browser code
 - do not expose exact location data in public UI
 - do not expose personal contact info by default
+- do not introduce US-only location, distance, phone, or address assumptions
 - do not bypass failing tests or builds
 - do not bypass branch protection or required checks
 - do not force-merge blocked PRs
