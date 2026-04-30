@@ -272,10 +272,11 @@ request. It must not be exposed to browser code. If Resend or service-role
 configuration is missing, contact requests can still be stored, but notification
 delivery is deferred.
 
-Help-page feedback currently stores authenticated submissions in Supabase rather
-than sending transactional email. Admin review should use service-role/server
-access or a future protected admin surface; feedback must not be exposed through
-public routes or browser-side service-role code.
+Help-page feedback stores authenticated submissions in Supabase and sends a
+Resend notification to the project-team inbox at `cubuff98@gmail.com`. Admin
+review should use service-role/server access or a future protected admin
+surface; feedback must not be exposed through public routes or browser-side
+service-role code.
 
 ## Maps and geocoding
 

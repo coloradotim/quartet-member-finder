@@ -9,6 +9,10 @@ import {
   parseFeedbackFormData,
 } from "@/lib/feedback/feedback-form";
 import {
+  getFeedbackNotificationConfig,
+  sendFeedbackNotification,
+} from "@/lib/feedback/feedback-notification";
+import {
   createSupabaseAdminClient,
   createSupabaseServerClient,
 } from "@/lib/supabase/server";
@@ -64,7 +68,7 @@ export async function submitHelpFeedback(formData: FormData) {
     redirectWithFeedbackStatus("limited");
   }
 
-  const { error: insertError } = await feedbackClient
+  const { data: feedbackSubmission, error: insertError } = await feedbackClient
     .from("feedback_submissions")
     .insert({
       context_path: values.contextPath,
@@ -73,12 +77,36 @@ export async function submitHelpFeedback(formData: FormData) {
       submitter_email_private: user.email ?? null,
       submitter_user_id: user.id,
       user_agent: userAgent ? userAgent.slice(0, 500) : null,
-    });
+    })
+    .select("id")
+    .single();
 
-  if (insertError) {
+  if (insertError || !feedbackSubmission) {
     console.error("Feedback insert failed", {
-      code: insertError.code,
-      message: insertError.message,
+      code: insertError?.code,
+      message: insertError?.message,
+    });
+    redirectWithFeedbackStatus("error");
+  }
+
+  const notificationConfig = getFeedbackNotificationConfig();
+
+  if (!notificationConfig) {
+    console.error("Feedback notification configuration is missing");
+    redirectWithFeedbackStatus("error");
+  }
+
+  try {
+    await sendFeedbackNotification(notificationConfig, {
+      contextPath: values.contextPath,
+      feedbackId: feedbackSubmission.id,
+      feedbackType: values.feedbackType,
+      message: values.message,
+      submitterEmail: user.email ?? null,
+    });
+  } catch (error) {
+    console.error("Feedback notification failed", {
+      message: error instanceof Error ? error.message : "Unknown error",
     });
     redirectWithFeedbackStatus("error");
   }
