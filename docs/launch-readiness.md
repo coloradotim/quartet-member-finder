@@ -118,15 +118,15 @@ Record before launch:
 
 ## Core User Flows
 
-| Status   | Item                                                                                                             | Verification                                                         |
-| -------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| Complete | Onboarding routes signed-in first-time users to a useful first action.                                           | Issue #41; smoke test plan.                                          |
-| Complete | Empty states provide useful next actions.                                                                        | Issue #40; smoke test plan.                                          |
-| Complete | My Singer Profile stores parts, goals, location, visibility, and private postal code separately.                 | `/app/profile`; `docs/privacy-model.md#singer-profile-management`.   |
-| Complete | Quartet Mode stores covered parts and needed parts separately.                                                   | `/app/listings`; `docs/privacy-model.md#quartet-listing-management`. |
-| Complete | Find Singers, Find Quartet Openings, and Map support country, region, locality, part, goal, and non-US examples. | `/singers`, `/quartets`, `/map`.                                     |
-| Manual   | Run the full manual smoke test plan on production before launch.                                                 | `docs/smoke-test-plan.md`.                                           |
-| Manual   | Confirm seed/demo data is not loaded into production.                                                            | `docs/seed-data.md`; Supabase production data review.                |
+| Status   | Item                                                                                                                                                     | Verification                                                         |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Complete | Onboarding routes signed-in first-time users to a useful first action.                                                                                   | Issue #41; smoke test plan.                                          |
+| Complete | Empty states provide useful next actions.                                                                                                                | Issue #40; smoke test plan.                                          |
+| Complete | My Singer Profile stores parts, goals, location, visibility, and private postal code separately.                                                         | `/app/profile`; `docs/privacy-model.md#singer-profile-management`.   |
+| Complete | Quartet Mode stores covered parts and needed parts separately.                                                                                           | `/app/listings`; `docs/privacy-model.md#quartet-listing-management`. |
+| Complete | Find consolidates public discovery into filters, privacy-safe map, and results table; detailed Singer, Quartet Opening, and Map routes remain available. | `/find`, `/singers`, `/quartets`, `/map`.                            |
+| Manual   | Run the full manual smoke test plan on production before launch.                                                                                         | `docs/smoke-test-plan.md`.                                           |
+| Manual   | Confirm seed/demo data is not loaded into production.                                                                                                    | `docs/seed-data.md`; Supabase production data review.                |
 
 ## Accessibility and Mobile
 

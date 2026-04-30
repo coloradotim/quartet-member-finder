@@ -16,8 +16,8 @@ describe("first-run onboarding", () => {
     const text = JSON.stringify(onboardingSections);
 
     expect(text).toContain("My Singer Profile");
-    expect(text).toContain("Find Quartet Openings");
-    expect(text).toContain("Find Singers");
+    expect(text).toContain("Find quartet openings");
+    expect(text).toContain("Find singers");
     expect(text).toContain("Quartet Mode");
     expect(text).toContain("outside the United States");
   });
@@ -27,7 +27,7 @@ describe("first-run onboarding", () => {
       "/app/profile",
     );
     expect(destinationForOnboardingChoice("find-quartet-openings")).toBe(
-      "/quartets",
+      "/find?kind=quartets",
     );
     expect(destinationForOnboardingChoice("quartet-mode-listing")).toBe(
       "/app/listings",

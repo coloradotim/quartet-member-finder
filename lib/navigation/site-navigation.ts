@@ -1,15 +1,7 @@
 export const publicNavigationLinks = [
   {
-    href: "/quartets",
-    label: "Find Quartet Openings",
-  },
-  {
-    href: "/singers",
-    label: "Find Singers",
-  },
-  {
-    href: "/map",
-    label: "Map",
+    href: "/find",
+    label: "Find",
   },
   {
     href: "/sign-in",

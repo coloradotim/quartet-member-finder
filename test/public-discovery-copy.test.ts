@@ -21,8 +21,8 @@ describe("public discovery copy", () => {
   it("frames quartet discovery as openings for missing parts", () => {
     const quartetPage = source("app/quartets/page.tsx");
 
-    expect(quartetPage).toContain("Find Quartet Openings");
-    expect(quartetPage).toContain("groups looking for one or more");
+    expect(quartetPage).toContain("Find quartet openings");
+    expect(quartetPage).toContain("singer looking for groups");
     expect(quartetPage).toContain("No visible quartet openings");
     expect(quartetPage).not.toContain("Find quartets");
   });
@@ -30,8 +30,19 @@ describe("public discovery copy", () => {
   it("frames singer discovery as available singer profiles", () => {
     const singerPage = source("app/singers/page.tsx");
 
-    expect(singerPage).toContain("Find Singers");
-    expect(singerPage).toContain("singers who may be open");
-    expect(singerPage).not.toContain("Find singers");
+    expect(singerPage).toContain("Find singers");
+    expect(singerPage).toContain("representing a quartet");
+    expect(singerPage).toContain("looking for other singers nearby");
+  });
+
+  it("consolidates discovery around filters, map, and table", () => {
+    const findPage = source("app/find/page.tsx");
+
+    expect(findPage).toContain("Search singers and quartet openings");
+    expect(findPage).toContain("Filter discovery results");
+    expect(findPage).toContain("Privacy-safe discovery map");
+    expect(findPage).toContain("Results table");
+    expect(findPage).toContain("Detailed quartet search");
+    expect(findPage).toContain("Detailed singer search");
   });
 });

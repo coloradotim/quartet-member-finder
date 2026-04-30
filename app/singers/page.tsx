@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ContactRequestForm } from "@/components/contact/contact-request-form";
+import { DiscoveryModeNav } from "@/components/discovery/discovery-mode-nav";
 import { PublicSiteHeader } from "@/components/navigation/public-site-header";
 import { captureProductEvent } from "@/lib/analytics/product-analytics";
 import { contactStatusMessage } from "@/lib/contact/contact-status";
@@ -191,14 +192,16 @@ export default async function SingerSearchPage({
       <main className="mx-auto w-full max-w-6xl px-6 py-12">
         <div>
           <h1 className="mt-4 text-3xl font-bold text-[#172023]">
-            Find Singers
+            Find singers
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-[#394548]">
-            Search visible singer profiles for singers who may be open to
-            quartet opportunities, pickup singing, or local connections. Results
+            Use this view when you are representing a quartet that needs a part,
+            or when you are a singer looking for other singers nearby. Results
             show approximate location only.
           </p>
         </div>
+
+        <DiscoveryModeNav activeMode="singers" />
 
         <form
           aria-label="Filter singer profiles"
@@ -339,10 +342,10 @@ export default async function SingerSearchPage({
                   Clear filters
                 </Link>
                 <Link className="font-semibold text-[#2f6f73]" href="/map">
-                  View Map
+                  Switch to map view
                 </Link>
                 <Link className="font-semibold text-[#2f6f73]" href="/quartets">
-                  Find Quartet Openings
+                  Find quartet openings
                 </Link>
               </div>
             </section>

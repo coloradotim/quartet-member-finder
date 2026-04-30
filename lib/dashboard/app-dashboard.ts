@@ -13,21 +13,9 @@ export const singerDashboardActions: DashboardAction[] = [
   },
   {
     description:
-      "Browse quartet openings from groups looking for one or more missing parts.",
-    href: "/quartets",
-    label: "Find Quartet Openings",
-  },
-  {
-    description:
-      "Look for other singers nearby or in a region where you are willing to sing.",
-    href: "/singers",
-    label: "Find Singers",
-  },
-  {
-    description:
-      "Scan approximate discovery locations without exposing exact home addresses or private coordinates.",
-    href: "/map",
-    label: "View Map",
+      "Search quartet openings, singer profiles, and approximate regions from one discovery page.",
+    href: "/find",
+    label: "Find",
   },
 ];
 
@@ -40,9 +28,9 @@ export const quartetModeDashboardActions: DashboardAction[] = [
   },
   {
     description:
-      "Search singer profiles when your quartet is ready to contact someone about a missing part.",
-    href: "/singers",
-    label: "Find Singers",
+      "Search singer profiles and nearby activity when your quartet is ready to contact someone about a missing part.",
+    href: "/find?kind=singers",
+    label: "Find singers",
   },
 ];
 

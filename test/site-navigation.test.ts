@@ -7,9 +7,7 @@ import {
 describe("site navigation", () => {
   it("keeps public discovery and help links available before login", () => {
     expect(publicNavigationLinks).toEqual([
-      { href: "/quartets", label: "Find Quartet Openings" },
-      { href: "/singers", label: "Find Singers" },
-      { href: "/map", label: "Map" },
+      { href: "/find", label: "Find" },
       { href: "/sign-in", label: "Sign in" },
       { href: "/help", label: "Help" },
     ]);

@@ -9,9 +9,10 @@ This pre-launch audit covers the core public and signed-in flows:
 - onboarding
 - My Singer Profile
 - Quartet Mode
-- Find Quartet Openings
-- Find Singers
-- Map
+- Find
+- detailed Quartet Opening search
+- detailed Singer search
+- compatibility Map view
 - contact relay form
 - feedback form
 
@@ -24,7 +25,7 @@ This pre-launch audit covers the core public and signed-in flows:
 - Error and success messages use status or alert semantics where server-rendered feedback appears.
 - Search filters accept global country, region, locality, and long location strings without US-only assumptions.
 - Contact and feedback flows keep personal contact details private and retain app-mediated language.
-- The map remains a privacy-safe approximate regional view and includes text summaries below the visual map.
+- Find keeps filters/search above the privacy-safe approximate map and includes a results table below the visual map.
 
 ## Follow-Up Issues
 

@@ -141,9 +141,9 @@ export default async function ManageListingsPage({
           </p>
           <Link
             className="mt-4 inline-flex font-semibold text-[#2f6f73]"
-            href="/singers"
+            href="/find?kind=singers"
           >
-            Browse Find Singers first
+            Browse singers in Find first
           </Link>
         </section>
       ) : listing.is_visible ? null : (
@@ -152,9 +152,9 @@ export default async function ManageListingsPage({
             This quartet listing is hidden
           </h2>
           <p className="mt-3 text-sm leading-6 text-[#394548]">
-            Hidden listings do not appear in Find Quartet Openings or on the
-            map, so singers cannot discover them yet. Turn on visibility below
-            when the listing is ready.
+            Hidden listings do not appear in Find, detailed quartet search, or
+            the map view, so singers cannot discover them yet. Turn on
+            visibility below when the listing is ready.
           </p>
         </section>
       )}

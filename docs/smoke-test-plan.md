@@ -24,8 +24,8 @@ validation.
 1. Open `/`.
 2. Pass: the page loads without a server error and clearly names Quartet Member
    Finder.
-3. Pass: primary links to Find Quartet Openings, Find Singers, Map, Help,
-   Privacy, My Singer Profile, and Quartet Mode are present.
+3. Pass: primary links to Find, Help, Privacy, My Singer Profile, and Quartet
+   Mode are present.
 4. Fail: the page exposes private email addresses, phone numbers, exact
    coordinates, private postal codes, or raw database IDs.
 
@@ -64,8 +64,8 @@ validation.
 
 1. Sign in and open `/app`.
 2. Pass: the dashboard loads behind authentication.
-3. Pass: it distinguishes My Singer Profile, Find Quartet Openings, Find
-   Singers, Map, Quartet Mode, Account Settings, Help, and Privacy.
+3. Pass: it distinguishes My Singer Profile, Find, Quartet Mode, Account
+   Settings, Help, and Privacy.
 4. Pass: signed-out users visiting `/app` are redirected to sign in.
 5. Fail: dashboard links point to missing routes or expose another user's data.
 
@@ -119,7 +119,20 @@ validation.
 8. Fail: public UI exposes the owner user ID, private postal code, exact
    coordinates, email address, or phone number.
 
-## Find Quartet Openings
+## Find
+
+1. Open `/find`.
+2. Filter by country, region/locality, part, goal, and looking-for mode using
+   data known to exist in the environment.
+3. Pass: valid filters narrow the consolidated results without crashing.
+4. Pass: the approximate map appears above the results table.
+5. Pass: the table distinguishes singer profiles from quartet openings.
+6. Pass: empty results show helpful next actions, including clearing filters.
+7. Fail: hidden or inactive profiles/listings appear in public results.
+8. Fail: public UI exposes owner user IDs, private postal codes, exact
+   coordinates, email addresses, or phone numbers.
+
+## Detailed Quartet Opening Search
 
 1. Open `/quartets`.
 2. Filter by country, region/locality, part, goal, availability, and travel
@@ -129,7 +142,7 @@ validation.
 5. Pass: contact buttons are available for visible listings.
 6. Fail: hidden or inactive listings appear in public results.
 
-## Find Singers
+## Detailed Singer Search
 
 1. Open `/singers`.
 2. Filter by country, region/locality, part, goal, availability, experience, and
@@ -139,7 +152,7 @@ validation.
 5. Pass: contact buttons are available for visible profiles.
 6. Fail: hidden or inactive singer profiles appear in public results.
 
-## Map Discovery
+## Compatibility Map View
 
 1. Open `/map`.
 2. Test filters for United States and at least one non-US location, such as
@@ -198,8 +211,8 @@ validation.
 
 Run these at a narrow mobile viewport, around 390 px wide:
 
-1. Open `/`, `/singers`, `/quartets`, `/map`, `/help`, `/privacy`, and `/app`
-   while signed in where required.
+1. Open `/`, `/find`, `/singers`, `/quartets`, `/map`, `/help`, `/privacy`, and
+   `/app` while signed in where required.
 2. Pass: text does not overlap controls, cards, forms, or navigation.
 3. Pass: forms can be completed without horizontal scrolling.
 4. Pass: contact and feedback text areas are usable.
