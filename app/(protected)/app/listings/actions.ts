@@ -11,6 +11,7 @@ import {
   inferQuartetLocationPrecision,
   parseQuartetListingFormData,
 } from "@/lib/quartets/quartet-listing-form";
+import { distanceUnitForCountry } from "@/lib/location/country-location-defaults";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 function redirectWithListingMessage(
@@ -64,7 +65,10 @@ export async function saveQuartetListing(formData: FormData) {
     name: values.name,
     owner_user_id: user.id,
     postal_code_private: values.postalCodePrivate,
-    preferred_distance_unit: "km",
+    preferred_distance_unit: distanceUnitForCountry(
+      values.countryCode,
+      values.countryName,
+    ),
     region: values.region,
     travel_radius_km: values.travelRadiusKm,
   };

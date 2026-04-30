@@ -5,6 +5,7 @@ import {
   type BarbershopPart,
   type ProfileGoal,
 } from "@/lib/profiles/singer-profile-form";
+import { locationFieldLabelsForCountry } from "@/lib/location/country-location-defaults";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { saveQuartetListing } from "./actions";
 
@@ -94,6 +95,10 @@ export default async function ManageListingsPage({
     parts
       ?.filter((partRow) => partRow.status === "needed")
       .map((partRow) => partRow.part as BarbershopPart) ?? [];
+  const locationLabels = locationFieldLabelsForCountry(
+    listing?.country_code,
+    listing?.country_name,
+  );
 
   return (
     <div>
@@ -236,44 +241,12 @@ export default async function ManageListingsPage({
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-[#172023]">Location</h2>
           <p className="text-sm leading-6 text-[#394548]">
-            Use globally recognizable place names. Postal code is private and
-            public discovery should stay approximate.
+            Start with country so the app can use sensible wording and distance
+            defaults. Public discovery shows your approximate label or
+            city/region/country area. Postal code stays private for future
+            matching; exact addresses and coordinates are not shown.
           </p>
-          <label className="block">
-            <span className="text-sm font-semibold text-[#172023]">
-              Public approximate location
-            </span>
-            <input
-              className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-              defaultValue={fieldValue(listing?.location_label_public)}
-              maxLength={160}
-              name="locationLabelPublic"
-              placeholder="Toronto, ON area"
-            />
-          </label>
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="block">
-              <span className="text-sm font-semibold text-[#172023]">
-                Locality/city
-              </span>
-              <input
-                className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-                defaultValue={fieldValue(listing?.locality)}
-                maxLength={120}
-                name="locality"
-              />
-            </label>
-            <label className="block">
-              <span className="text-sm font-semibold text-[#172023]">
-                Region/admin area
-              </span>
-              <input
-                className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-                defaultValue={fieldValue(listing?.region)}
-                maxLength={120}
-                name="region"
-              />
-            </label>
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
                 Country name
@@ -283,6 +256,7 @@ export default async function ManageListingsPage({
                 defaultValue={fieldValue(listing?.country_name)}
                 maxLength={120}
                 name="countryName"
+                placeholder="Canada"
               />
             </label>
             <label className="block">
@@ -297,10 +271,48 @@ export default async function ManageListingsPage({
                 placeholder="CA"
               />
             </label>
+            <label className="block">
+              <span className="text-sm font-semibold text-[#172023]">
+                {locationLabels.locality}
+              </span>
+              <input
+                className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
+                defaultValue={fieldValue(listing?.locality)}
+                maxLength={120}
+                name="locality"
+              />
+            </label>
+            <label className="block">
+              <span className="text-sm font-semibold text-[#172023]">
+                {locationLabels.region}
+              </span>
+              <input
+                className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
+                defaultValue={fieldValue(listing?.region)}
+                maxLength={120}
+                name="region"
+              />
+            </label>
           </div>
           <label className="block">
             <span className="text-sm font-semibold text-[#172023]">
-              Postal code
+              Public approximate location
+            </span>
+            <input
+              className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
+              defaultValue={fieldValue(listing?.location_label_public)}
+              maxLength={160}
+              name="locationLabelPublic"
+              placeholder="Toronto, ON area"
+            />
+            <span className="mt-2 block text-sm leading-6 text-[#596466]">
+              This is the public label people see. Leave it blank to use
+              city/region/country as an approximate area.
+            </span>
+          </label>
+          <label className="block">
+            <span className="text-sm font-semibold text-[#172023]">
+              Private {locationLabels.postalCode.toLowerCase()}
             </span>
             <input
               className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"

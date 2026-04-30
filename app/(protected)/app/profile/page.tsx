@@ -5,6 +5,7 @@ import {
   type BarbershopPart,
   type ProfileGoal,
 } from "@/lib/profiles/singer-profile-form";
+import { locationFieldLabelsForCountry } from "@/lib/location/country-location-defaults";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { saveSingerProfile } from "./actions";
 
@@ -86,6 +87,10 @@ export default async function ManageProfilePage({
 
   const selectedParts =
     parts?.map((partRow) => partRow.part as BarbershopPart) ?? [];
+  const locationLabels = locationFieldLabelsForCountry(
+    profile?.country_code,
+    profile?.country_name,
+  );
 
   return (
     <div>
@@ -98,15 +103,9 @@ export default async function ManageProfilePage({
         </h1>
         <p className="mt-4 text-base leading-7 text-[#394548]">
           Create the public singer profile that quartets and other singers can
-          discover. Account identity, distance defaults, and onboarding reset
-          live in Account Settings.
+          discover. Location and country also set sensible distance defaults, so
+          you do not need a separate account settings step.
         </p>
-        <Link
-          className="mt-4 inline-flex font-semibold text-[#2f6f73]"
-          href="/app/settings"
-        >
-          Manage account settings
-        </Link>
       </div>
 
       {params.error ? (
@@ -208,46 +207,12 @@ export default async function ManageProfilePage({
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-[#172023]">Location</h2>
           <p className="text-sm leading-6 text-[#394548]">
-            Use globally recognizable place names for your public singer
-            profile. Postal code is private and public discovery should stay
-            approximate. Your default distance display preference lives in
-            Account Settings.
+            Start with country so the app can use sensible wording and distance
+            defaults. Public discovery shows your approximate label or
+            city/region/country area. Postal code stays private for future
+            matching; exact addresses and coordinates are not shown.
           </p>
-          <label className="block">
-            <span className="text-sm font-semibold text-[#172023]">
-              Public approximate location
-            </span>
-            <input
-              className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-              defaultValue={fieldValue(profile?.location_label_public)}
-              maxLength={160}
-              name="locationLabelPublic"
-              placeholder="Manchester, UK area"
-            />
-          </label>
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="block">
-              <span className="text-sm font-semibold text-[#172023]">
-                Locality/city
-              </span>
-              <input
-                className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-                defaultValue={fieldValue(profile?.locality)}
-                maxLength={120}
-                name="locality"
-              />
-            </label>
-            <label className="block">
-              <span className="text-sm font-semibold text-[#172023]">
-                Region/admin area
-              </span>
-              <input
-                className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-                defaultValue={fieldValue(profile?.region)}
-                maxLength={120}
-                name="region"
-              />
-            </label>
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
                 Country name
@@ -257,6 +222,7 @@ export default async function ManageProfilePage({
                 defaultValue={fieldValue(profile?.country_name)}
                 maxLength={120}
                 name="countryName"
+                placeholder="United Kingdom"
               />
             </label>
             <label className="block">
@@ -271,10 +237,48 @@ export default async function ManageProfilePage({
                 placeholder="GB"
               />
             </label>
+            <label className="block">
+              <span className="text-sm font-semibold text-[#172023]">
+                {locationLabels.locality}
+              </span>
+              <input
+                className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
+                defaultValue={fieldValue(profile?.locality)}
+                maxLength={120}
+                name="locality"
+              />
+            </label>
+            <label className="block">
+              <span className="text-sm font-semibold text-[#172023]">
+                {locationLabels.region}
+              </span>
+              <input
+                className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
+                defaultValue={fieldValue(profile?.region)}
+                maxLength={120}
+                name="region"
+              />
+            </label>
           </div>
           <label className="block">
             <span className="text-sm font-semibold text-[#172023]">
-              Postal code
+              Public approximate location
+            </span>
+            <input
+              className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
+              defaultValue={fieldValue(profile?.location_label_public)}
+              maxLength={160}
+              name="locationLabelPublic"
+              placeholder="Manchester, UK area"
+            />
+            <span className="mt-2 block text-sm leading-6 text-[#596466]">
+              This is the public label people see. Leave it blank to use
+              city/region/country as an approximate area.
+            </span>
+          </label>
+          <label className="block">
+            <span className="text-sm font-semibold text-[#172023]">
+              Private {locationLabels.postalCode.toLowerCase()}
             </span>
             <input
               className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"

@@ -42,9 +42,10 @@ Baritone, and Bass unless the product explicitly adds alternate naming later.
 An `account_profiles` row belongs to one authenticated user by `user_id`.
 It also stores first-run onboarding completion/skipped state so new users can be
 guided to a first action after sign-in without choosing a permanent role.
-Account-level preferences and private account identity fields that do not belong
-to My Singer Profile or Quartet Mode also live here, including `display_name`
-and `preferred_distance_unit`.
+First-run onboarding state lives here. `display_name` and
+`preferred_distance_unit` remain in the schema for compatibility, but the active
+product flow now treats country on singer profiles and quartet listings as the
+source for distance defaults.
 
 A `singer_profiles` row belongs to one authenticated user by `user_id`. The
 initial schema enforces one singer profile per user.
@@ -76,11 +77,11 @@ The server creates the account profile row after sign-in when needed. If neither
 completion nor skipped state is present, sign-in routes the user through
 `/app/onboarding` before continuing to the requested app destination.
 
-Account Settings at `/app/settings` writes `display_name` and
-`preferred_distance_unit` on `account_profiles`. These are private account-level
-settings for app identity and distance display. Singer profiles and quartet
-listings keep their own public display/location/travel details for discovery
-rows.
+The legacy `/app/settings` route redirects to My Singer Profile. The app no
+longer asks users to re-run onboarding or choose account-level distance units.
+Singer profiles and quartet listings keep their own public
+display/location/travel details for discovery rows, and save actions infer
+`preferred_distance_unit` from country.
 
 The public discovery routes are:
 
@@ -183,8 +184,9 @@ Application location helpers should treat base-table coordinates and private
 postal/address fields as internal matching data. The reusable public
 transformation returns only `location_label_public`, `locality`, `region`, and
 `country_name` equivalents for display. Public distance strings are rounded and
-formatted in both kilometers and miles, ordered by the user/listing preferred
-distance unit where that field is available.
+formatted in both kilometers and miles, ordered by the profile/listing
+preferred distance unit. Save actions infer that unit from country rather than
+asking for a separate account setting.
 
 Both singer profiles and quartet listings support these globally tolerant
 location fields:

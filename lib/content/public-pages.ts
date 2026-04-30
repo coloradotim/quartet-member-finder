@@ -53,10 +53,10 @@ export const publicHelpSections = [
   },
   {
     body: [
-      "Account Settings are for private account identity, preferred distance display, onboarding reset, and account-level actions.",
-      "My Singer Profile is for public singer details like display name, parts, goals, approximate location, and discovery visibility. Changing Account Settings does not publish your private email address or change what public discovery shows.",
+      "Country is the first location cue because it helps the app use sensible labels, such as ZIP code, postcode, state, province, or region, without strict address validation.",
+      "Country also sets practical distance defaults for singer profiles and quartet listings. You can still keep public location approximate; private postal codes are not shown in discovery.",
     ],
-    heading: "Account Settings Vs Singer Profile",
+    heading: "Location Defaults",
   },
   {
     body: [
