@@ -49,6 +49,23 @@ allow:
 For production, add the deployed app URL and `/auth/callback` URL in the
 Supabase dashboard before enabling sign-in links for users.
 
+Sign-in uses email one-time codes. Configure Supabase email templates to send
+the OTP token and avoid presenting the flow as a magic link in app copy.
+
+## Contact Relay
+
+The contact relay stores authenticated contact requests in Supabase and sends
+recipient notifications through Resend.
+
+Required server-only values for notification delivery:
+
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
+
+The browser submits only target IDs and message text. Recipient email lookup
+must happen in server code after the database resolves the recipient.
+
 ## Maps
 
 The MVP discovery map does not require a map provider. Optional public map

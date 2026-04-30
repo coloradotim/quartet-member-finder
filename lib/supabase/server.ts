@@ -1,6 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
-import { getSupabasePublicConfig } from "@/lib/supabase/env";
+import {
+  getSupabaseAdminConfig,
+  getSupabasePublicConfig,
+} from "@/lib/supabase/env";
 
 export async function createSupabaseServerClient() {
   const config = getSupabasePublicConfig();
@@ -25,6 +29,21 @@ export async function createSupabaseServerClient() {
           // Server Components can read cookies but cannot always write them.
         }
       },
+    },
+  });
+}
+
+export function createSupabaseAdminClient() {
+  const config = getSupabaseAdminConfig();
+
+  if (!config) {
+    return null;
+  }
+
+  return createClient(config.url, config.serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
     },
   });
 }

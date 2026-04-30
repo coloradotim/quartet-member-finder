@@ -1,8 +1,6 @@
 "use server";
 
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { getAppUrl } from "@/lib/supabase/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 function redirectWithMessage(
@@ -10,7 +8,9 @@ function redirectWithMessage(
   key: "error" | "message",
   value: string,
 ): never {
-  redirect(`${path}?${key}=${encodeURIComponent(value)}`);
+  const separator = path.includes("?") ? "&" : "?";
+
+  redirect(`${path}${separator}${key}=${encodeURIComponent(value)}`);
 }
 
 export async function signInWithEmail(formData: FormData) {
@@ -18,6 +18,7 @@ export async function signInWithEmail(formData: FormData) {
     .trim()
     .toLowerCase();
   const next = String(formData.get("next") ?? "/app");
+  const safeNext = next.startsWith("/") ? next : "/app";
 
   if (!email) {
     redirectWithMessage("/sign-in", "error", "Enter an email address.");
@@ -33,28 +34,68 @@ export async function signInWithEmail(formData: FormData) {
     );
   }
 
-  const requestHeaders = await headers();
-  const origin = requestHeaders.get("origin") ?? getAppUrl();
-  const emailRedirectTo = `${origin}/auth/callback?next=${encodeURIComponent(
-    next.startsWith("/") ? next : "/app",
-  )}`;
-
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: {
-      emailRedirectTo,
-    },
   });
 
   if (error) {
     redirectWithMessage("/sign-in", "error", error.message);
   }
 
-  redirectWithMessage(
-    "/sign-in",
-    "message",
-    "Check your email for a sign-in link.",
+  redirect(
+    `/sign-in?email=${encodeURIComponent(email)}&next=${encodeURIComponent(
+      safeNext,
+    )}&message=${encodeURIComponent("Check your email for the one-time code.")}`,
   );
+}
+
+export async function verifyEmailOtp(formData: FormData) {
+  const email = String(formData.get("email") ?? "")
+    .trim()
+    .toLowerCase();
+  const token = String(formData.get("token") ?? "")
+    .trim()
+    .replace(/\s+/g, "");
+  const next = String(formData.get("next") ?? "/app");
+  const safeNext = next.startsWith("/") ? next : "/app";
+
+  if (!email || !token) {
+    redirectWithMessage(
+      `/sign-in?email=${encodeURIComponent(email)}&next=${encodeURIComponent(
+        safeNext,
+      )}`,
+      "error",
+      "Enter the one-time code from your email.",
+    );
+  }
+
+  const supabase = await createSupabaseServerClient();
+
+  if (!supabase) {
+    redirectWithMessage(
+      "/sign-in",
+      "error",
+      "Supabase Auth is not configured for this environment.",
+    );
+  }
+
+  const { error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: "email",
+  });
+
+  if (error) {
+    redirectWithMessage(
+      `/sign-in?email=${encodeURIComponent(email)}&next=${encodeURIComponent(
+        safeNext,
+      )}`,
+      "error",
+      error.message,
+    );
+  }
+
+  redirect(safeNext);
 }
 
 export async function signOut() {
