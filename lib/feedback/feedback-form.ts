@@ -2,7 +2,6 @@ export const FEEDBACK_MESSAGE_MAX_LENGTH = 3000;
 export const FEEDBACK_CONTEXT_MAX_LENGTH = 500;
 export const FEEDBACK_RATE_LIMIT_COUNT = 3;
 export const FEEDBACK_RATE_LIMIT_WINDOW_MINUTES = 60;
-export const FEEDBACK_HONEYPOT_FIELD = "feedbackCompanyUrl";
 
 export const feedbackTypes = ["feedback", "bug", "suggestion"] as const;
 
@@ -38,11 +37,6 @@ export function parseFeedbackFormData(formData: FormData): FeedbackFormValues {
   const contextPath = normalizeFeedbackContext(
     trimToNull(formData.get("contextPath")),
   );
-  const honeypot = trimToNull(formData.get(FEEDBACK_HONEYPOT_FIELD));
-
-  if (honeypot) {
-    throw new Error("Feedback could not be submitted.");
-  }
 
   if (
     feedbackType !== "feedback" &&

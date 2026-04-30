@@ -234,8 +234,8 @@ automation can be added later if the product needs stronger enforcement.
 
 The help-page feedback action applies authenticated-only spam protection:
 three feedback submissions per authenticated submitter per hour, message length
-limits, type validation, route/context normalization, and a hidden honeypot
-field. Feedback is not exposed in public discovery views or public pages.
+limits, type validation, and route/context normalization. Feedback is not
+exposed in public discovery views or public pages.
 
 Phone number handling, if added later, should not assume a US-only format.
 
