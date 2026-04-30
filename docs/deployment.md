@@ -448,6 +448,10 @@ latitude/longitude or private address fields.
 
 ## Production readiness checklist
 
+Use `docs/launch-readiness.md` as the final pre-launch checklist. It links the
+deployment, privacy, Supabase, Resend, smoke test, accessibility, and domain
+verification work into one launch sign-off artifact.
+
 Before public launch:
 
 - CI passes on pull requests
