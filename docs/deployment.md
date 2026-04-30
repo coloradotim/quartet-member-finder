@@ -104,6 +104,10 @@ Supabase schema and Row Level Security changes should be managed by committed mi
 
 Production deploys should not depend on undocumented manual database changes.
 
+Demo data for local development and safe staging/preview validation lives in
+`supabase/seed.sql` and is documented in `docs/seed-data.md`. It is not a
+production migration and must not be run against production data.
+
 Supabase Auth should be configured with the deployed app URL as the site URL and
 the app callback route as an allowed redirect URL:
 
