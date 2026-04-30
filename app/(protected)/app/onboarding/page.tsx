@@ -70,7 +70,10 @@ export default async function OnboardingPage({
       </header>
 
       {params.error ? (
-        <p className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+        <p
+          className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+          role="alert"
+        >
           {params.error}
         </p>
       ) : null}
@@ -92,7 +95,7 @@ export default async function OnboardingPage({
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               {section.choices.map((choice) => (
                 <label
-                  className="block cursor-pointer rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 shadow-sm has-[:checked]:border-[#2f6f73] has-[:checked]:ring-2 has-[:checked]:ring-[#2f6f73]/20"
+                  className="block cursor-pointer rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 shadow-sm has-[:checked]:border-[#2f6f73] has-[:checked]:ring-2 has-[:checked]:ring-[#2f6f73]/20 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[#2f6f73]"
                   key={choice.id}
                 >
                   <input
@@ -116,7 +119,7 @@ export default async function OnboardingPage({
 
         <div className="flex flex-wrap gap-3 border-t border-[#d7cec0] pt-6">
           <button
-            className="rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
+            className="w-full rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c] sm:w-fit"
             type="submit"
           >
             Continue
@@ -126,7 +129,10 @@ export default async function OnboardingPage({
 
       <form action={skipOnboarding}>
         <input name="next" type="hidden" value={next} />
-        <button className="font-semibold text-[#2f6f73]" type="submit">
+        <button
+          className="rounded-md px-2 py-2 font-semibold text-[#2f6f73] hover:bg-white/70"
+          type="submit"
+        >
           Skip for now
         </button>
       </form>

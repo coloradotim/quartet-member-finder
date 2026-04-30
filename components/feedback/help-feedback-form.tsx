@@ -47,6 +47,7 @@ export function HelpFeedbackForm({ status }: HelpFeedbackFormProps) {
               ? "border-[#b7d7ce] bg-[#eef8f4] text-[#174b4f]"
               : "border-red-200 bg-red-50 text-red-800"
           }`}
+          role={isSuccess ? "status" : "alert"}
         >
           {statusMessage}
         </p>
@@ -81,7 +82,7 @@ export function HelpFeedbackForm({ status }: HelpFeedbackFormProps) {
         </label>
 
         <button
-          className="w-fit rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
+          className="w-full rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c] sm:w-fit"
           type="submit"
         >
           Send feedback
