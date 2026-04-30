@@ -58,6 +58,9 @@ npm run build
 Copy `.env.example` to `.env.local` when configuring local services. Keep real
 secrets out of source control.
 
+Testing expectations and the current unit-test structure are documented in
+`docs/testing.md`.
+
 ## Early project notes
 
 Project context, privacy expectations, workflow rules, and implementation

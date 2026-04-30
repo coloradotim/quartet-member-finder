@@ -56,6 +56,21 @@ describe("quartet listing form parsing", () => {
     expect(values.partsNeeded).toEqual(["lead", "baritone"]);
   });
 
+  it("preserves every valid needed part for an incomplete quartet", () => {
+    const values = parseQuartetListingFormData(
+      formData([
+        ["name", "Festival Pickup Quartet"],
+        ["partsCovered", "lead"],
+        ["partsNeeded", "tenor"],
+        ["partsNeeded", "baritone"],
+        ["partsNeeded", "bass"],
+      ]),
+    );
+
+    expect(values.partsCovered).toEqual(["lead"]);
+    expect(values.partsNeeded).toEqual(["tenor", "baritone", "bass"]);
+  });
+
   it("builds an approximate public location without postal code", () => {
     const values = parseQuartetListingFormData(
       formData([

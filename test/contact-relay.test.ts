@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import {
+  CONTACT_MESSAGE_MAX_LENGTH,
   CONTACT_RATE_LIMIT_COUNT,
   CONTACT_RATE_LIMIT_WINDOW_MINUTES,
   buildContactNotificationEmail,
@@ -37,6 +38,26 @@ describe("contact relay helpers", () => {
     );
     expect(normalizeReturnTo("https://example.com")).toBe("/");
     expect(normalizeReturnTo("//example.com")).toBe("/");
+  });
+
+  it("accepts quartet targets and enforces message length", () => {
+    const formData = new FormData();
+    formData.set("targetKind", "quartet");
+    formData.set("targetId", "123e4567-e89b-12d3-a456-426614174000");
+    formData.set("message", "x".repeat(CONTACT_MESSAGE_MAX_LENGTH));
+    formData.set("returnTo", "/quartets?part=bass");
+
+    expect(parseContactRequestFormData(formData)).toEqual({
+      message: "x".repeat(CONTACT_MESSAGE_MAX_LENGTH),
+      returnTo: "/quartets?part=bass",
+      targetId: "123e4567-e89b-12d3-a456-426614174000",
+      targetKind: "quartet",
+    });
+
+    formData.set("message", "x".repeat(CONTACT_MESSAGE_MAX_LENGTH + 1));
+    expect(() => parseContactRequestFormData(formData)).toThrow(
+      `Keep contact messages under ${CONTACT_MESSAGE_MAX_LENGTH} characters.`,
+    );
   });
 
   it("builds recipient notification without revealing direct sender contact", () => {

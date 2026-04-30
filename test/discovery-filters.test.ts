@@ -7,11 +7,17 @@ import {
 describe("discovery filters", () => {
   it("parses allowed part and goal filters", () => {
     const filters = parseDiscoveryFilters({
+      country: "  United Kingdom  ",
+      locality: " Manchester ",
+      region: " Greater Manchester ",
       goal: "contest",
       part: "lead",
       travelRadiusKm: "50",
     });
 
+    expect(filters.country).toBe("United Kingdom");
+    expect(filters.locality).toBe("Manchester");
+    expect(filters.region).toBe("Greater Manchester");
     expect(filters.goal).toBe("contest");
     expect(filters.part).toBe("lead");
     expect(filters.travelRadiusKm).toBe(50);
@@ -29,5 +35,33 @@ describe("discovery filters", () => {
     expect(filters.part).toBeNull();
     expect(filters.travelRadiusKm).toBeNull();
     expect(hasDiscoveryFilters(filters)).toBe(false);
+  });
+
+  it("uses the first submitted query value and keeps global text filters", () => {
+    const filters = parseDiscoveryFilters({
+      country: ["Ireland", "United States"],
+      goal: ["pickup", "contest"],
+      locality: ["Dublin", "Boston"],
+      part: ["tenor", "melody"],
+      travelRadiusKm: ["10000", "25"],
+    });
+
+    expect(filters.country).toBe("Ireland");
+    expect(filters.locality).toBe("Dublin");
+    expect(filters.goal).toBe("pickup");
+    expect(filters.part).toBe("tenor");
+    expect(filters.travelRadiusKm).toBe(10000);
+  });
+
+  it("rejects decimal, negative, and too-large travel radius filters", () => {
+    expect(
+      parseDiscoveryFilters({ travelRadiusKm: "10.5" }).travelRadiusKm,
+    ).toBeNull();
+    expect(
+      parseDiscoveryFilters({ travelRadiusKm: "-1" }).travelRadiusKm,
+    ).toBeNull();
+    expect(
+      parseDiscoveryFilters({ travelRadiusKm: "10001" }).travelRadiusKm,
+    ).toBeNull();
   });
 });
