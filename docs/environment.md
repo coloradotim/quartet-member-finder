@@ -26,6 +26,31 @@ The current scaffold includes `.env.example` with safe placeholder keys:
 
 Do not expose server-only values in browser code.
 
+## GitHub Actions
+
+Pull request CI does not require production secrets. Production deployment uses
+the GitHub `production` environment and the secrets documented in
+`docs/deployment.md`.
+
+GitHub Actions production deployment needs only the values required to validate,
+apply migrations, and deploy through Vercel:
+
+- `NEXT_PUBLIC_APP_URL`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_ACCESS_TOKEN`
+- `SUPABASE_DB_URL`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+- `VERCEL_TOKEN`
+
+Vercel remains the source for runtime-only server secrets during production
+build/deploy:
+
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
+
 ## Supabase Auth
 
 The app uses Supabase Auth for signed-in management pages.

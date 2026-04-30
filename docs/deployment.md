@@ -178,32 +178,131 @@ After DNS is verified:
 
 ## GitHub Actions CI
 
-The repository uses `.github/workflows/ci.yml` for baseline validation on pull
-requests and pushes to `main`.
+The repository uses `.github/workflows/ci.yml` for pull request validation and
+push validation on `main`.
+
+CI has two stable jobs:
+
+- `guardrails`: repository safety checks that do not require secrets.
+- `validate`: Node.js validation that depends on `guardrails`.
 
 Current CI assumptions:
 
 - Node.js 22 is the supported CI runtime.
 - npm is the package manager, with dependency installation through `npm ci`.
 - Dependency caching uses the npm cache support in `actions/setup-node`.
-- Basic validation does not require secrets or deployed service credentials.
+- Pull request validation should not require production deployment credentials.
 
-The CI workflow must fail the build if any of these commands fail:
+The `guardrails` job must fail if:
+
+- a Supabase migration file does not use
+  `YYYYMMDDHHMMSS_descriptive_name.sql`
+- a local `.env` file other than `.env.example` is tracked by git
+- obvious secret values are committed, including Supabase service-role keys,
+  Supabase access tokens, Supabase DB URLs, Resend API keys, or Vercel tokens
+
+The `validate` job must fail if any of these commands fail:
 
 - `npm run lint`
 - `npm run typecheck`
 - `npm run test:run`
+- `npm run format:check`
 - `npm run build`
 
 Before launch, after deployment changes, and after major feature work, run the
 manual smoke test plan in `docs/smoke-test-plan.md` against the relevant local,
 preview, or production environment.
 
+## GitHub Actions production deployment
+
+The repository uses `.github/workflows/production-deploy.yml` for production
+deployment. It runs on pushes to `main` and can also be started manually with
+`workflow_dispatch`.
+
+The production workflow:
+
+1. Uses the GitHub `production` environment.
+2. Uses concurrency group `production-deploy` so production deploys do not
+   overlap.
+3. Installs dependencies with `npm ci`.
+4. Verifies required production build secrets.
+5. Runs lint, typecheck, tests, format check, and a production build.
+6. Detects whether `supabase/migrations/` changed. Manual runs always treat
+   migrations as changed so operators can intentionally re-run migration
+   deployment.
+7. Installs the Supabase CLI and applies migrations only when needed.
+8. Verifies Vercel deployment secrets.
+9. Pulls the Vercel production environment.
+10. Builds Vercel production output with `vercel build --prod`.
+11. Deploys the prebuilt output with `vercel deploy --prebuilt --prod`.
+
+Preview deployments may remain handled by the Vercel/GitHub integration. The
+production workflow is the intended protected production deployment path after
+this pipeline is fully configured. If Vercel's GitHub integration is still
+deploying `main` directly to production, disable production auto-deploys there
+or configure it so GitHub Actions is the source of production deploys while PR
+previews remain available.
+
+### GitHub `production` environment secrets
+
+Create a GitHub environment named `production`, then add these environment
+secrets:
+
+```text
+NEXT_PUBLIC_APP_URL
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+SUPABASE_ACCESS_TOKEN
+SUPABASE_DB_URL
+VERCEL_ORG_ID
+VERCEL_PROJECT_ID
+VERCEL_TOKEN
+```
+
+Secret sources:
+
+- `NEXT_PUBLIC_APP_URL`: canonical production app URL,
+  `https://quartetmemberfinder.org`.
+- `NEXT_PUBLIC_SUPABASE_URL`: Supabase project URL from Supabase Project
+  Settings, API.
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase anonymous public key from Supabase
+  Project Settings, API.
+- `SUPABASE_ACCESS_TOKEN`: Supabase account access token from Supabase Account
+  Settings, Access Tokens. Scope it to the project/deployment operator account
+  where possible.
+- `SUPABASE_DB_URL`: Supabase production Postgres connection string from Project
+  Settings, Database, Connection string. Use a non-pooled connection string
+  accepted by `supabase db push --db-url`. Keep the password in the secret; do
+  not commit it.
+- `VERCEL_ORG_ID`: Vercel team/account ID for the Quartet Member Finder project.
+  It is available from `.vercel/project.json` after `vercel link`, or from the
+  Vercel project settings.
+- `VERCEL_PROJECT_ID`: Vercel project ID for `quartet-member-finder`. It is
+  available from `.vercel/project.json` after `vercel link`, or from the Vercel
+  project settings.
+- `VERCEL_TOKEN`: Vercel account token created from Vercel Account Settings,
+  Tokens, with access to the Quartet Member Finder project.
+
+Runtime-only production values should still live in Vercel Production
+environment variables:
+
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
+
+Those values are pulled by `vercel pull --environment=production` before the
+Vercel production build. They should not be added to GitHub Actions unless a
+future workflow step explicitly needs them.
+
 ## Supabase
 
 Supabase schema and Row Level Security changes should be managed by committed migrations, not dashboard-only edits.
 
 Production deploys should not depend on undocumented manual database changes.
+Production migrations are applied by `.github/workflows/production-deploy.yml`
+using `supabase db push --db-url "$SUPABASE_DB_URL"` after the validation checks
+pass and before the Vercel production deploy. Manual dashboard changes should be
+backfilled into committed migrations before deployment.
 
 Demo data for local development and safe staging/preview validation lives in
 `supabase/seed.sql` and is documented in `docs/seed-data.md`. It is not a

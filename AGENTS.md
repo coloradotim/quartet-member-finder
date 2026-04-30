@@ -137,18 +137,20 @@ When the user asks to `work issue #X`, treat that as instruction to implement Gi
 8. Run `npm run lint`.
 9. Run `npm run typecheck`.
 10. Run `npm run test:run`.
-11. Run `npm run build`.
-12. Commit changes to the feature branch.
-13. Push the branch.
-14. Open a PR that links the issue.
-15. If the repository allows auto-merge, enable auto-merge on the PR.
-16. If all required checks pass and branch protection allows it, allow the PR to merge through the protected-branch/auto-merge path.
-17. If auto-merge or merge is blocked, report the exact blocker, such as a failing check, pending required check, branch protection rule, merge conflict, review requirement, or permissions issue.
+11. Run `npm run format:check`.
+12. Run `npm run build`.
+13. Commit changes to the feature branch.
+14. Push the branch.
+15. Open a PR that links the issue.
+16. If the repository allows auto-merge, enable auto-merge on the PR.
+17. If all required checks pass and branch protection allows it, allow the PR to merge through the protected-branch/auto-merge path.
+18. If auto-merge or merge is blocked, report the exact blocker, such as a failing check, pending required check, branch protection rule, merge conflict, review requirement, or permissions issue.
 
 Before finishing any change:
 - run `npm run lint`
 - run `npm run typecheck`
 - run `npm run test:run`
+- run `npm run format:check`
 - run `npm run build`
 - do not change app behavior unless requested
 - prefer small PRs
@@ -157,6 +159,17 @@ Before finishing any change:
 - if docs or tests are not updated, explain why in the PR
 
 Supabase changes must be captured in repo migrations and docs rather than dashboard-only changes. If a change requires schema, RLS, or data-model updates, add a proper migration and update `docs/supabase-contract.md`.
+
+For Supabase migrations:
+- migration filenames must use `YYYYMMDDHHMMSS_descriptive_name.sql`
+- production migrations are expected to run through `.github/workflows/production-deploy.yml`
+- do not apply production Supabase changes manually unless the workflow is blocked and the user explicitly approves an emergency/manual production operation
+- if a migration is added or changed, mention the migration in the PR summary and verify whether the production workflow has the required GitHub `production` environment secrets
+
+Production deployment:
+- pull request CI validates guardrails, lint, typecheck, tests, formatting, and build
+- production deploys run from GitHub Actions on `main` via `.github/workflows/production-deploy.yml`
+- the production workflow applies Supabase migrations when relevant, pulls Vercel production environment, builds with `vercel build --prod`, and deploys with `vercel deploy --prebuilt --prod`
 
 Guardrails:
 - do not commit directly to `main`
