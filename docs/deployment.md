@@ -114,6 +114,11 @@ The app's protected management routes use Supabase's anonymous public key on the
 server and in browser-safe helpers. Service-role keys must stay server-only and
 are not required for basic sign-in, sign-out, or protected route checks.
 
+Sign-in should use email one-time codes rather than magic links. Supabase email
+templates should include the OTP token so users can paste the code into the app
+sign-in form. The callback route can remain available for compatibility, but
+the app UI should not direct users to a magic-link flow.
+
 ## Resend
 
 Resend should be used for transactional email, including auth-related email where appropriate and the app-mediated contact relay.
@@ -123,6 +128,18 @@ Preferred sender addresses should use the domain once DNS is configured, such as
 - `no-reply@quartetmemberfinder.org`
 - `messages@quartetmemberfinder.org`
 - `support@quartetmemberfinder.org`
+
+The contact relay requires these server-side values in production:
+
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+
+`SUPABASE_SERVICE_ROLE_KEY` is used only in server code to look up the resolved
+recipient email after RLS and the contact-request trigger have accepted the
+request. It must not be exposed to browser code. If Resend or service-role
+configuration is missing, contact requests can still be stored, but notification
+delivery is deferred.
 
 ## Maps and geocoding
 

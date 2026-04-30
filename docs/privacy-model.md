@@ -152,6 +152,20 @@ The MVP contact flow should:
 
 Do not publicly display phone numbers or email addresses by default.
 
+Public singer and quartet cards may show app-mediated contact forms, but those
+forms must submit only the target type, target ID, return path, and message.
+They must not include recipient email addresses or phone numbers. The server
+inserts `contact_requests` as the authenticated sender, lets the database
+trigger resolve the private recipient from a visible target, and then uses
+server-only Supabase service-role access to find the recipient email for the
+Resend notification. If Resend or service-role configuration is missing, the
+request may be stored for audit but email delivery is deferred.
+
+Contact notifications should not reveal the sender’s direct email address by
+default. They should tell the recipient a signed-in user sent the request and
+allow the recipient to decide whether to respond or share direct contact
+information later.
+
 ## Abuse and safety considerations
 
 Future work may include:

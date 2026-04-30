@@ -109,6 +109,14 @@ from the visible target singer profile or quartet listing, overwriting
 client-provided recipient values and rejecting unavailable or self-contact
 targets.
 
+The contact relay server action should insert `contact_requests` with the
+authenticated sender ID and either `singer_profile_id` or `quartet_listing_id`.
+It should not accept recipient email or recipient user IDs from the browser.
+After the insert, server-only service-role access may read the resolved
+`recipient_user_id` and look up the recipient auth email for a Resend
+notification. Successful notification delivery may update the request status to
+`delivered`; requests remain auditable even if email configuration is missing.
+
 ## Location data expectations
 
 The database may store coordinates or geocoded data needed for search, but
@@ -175,6 +183,10 @@ The MVP contact flow should use app-mediated contact with Resend notifications.
 - message body
 - status
 - created and updated timestamps
+
+The app applies a basic sender-side rate limit before insert: five contact
+requests per authenticated sender per hour. Database-side rate limiting or abuse
+automation can be added later if the product needs stronger enforcement.
 
 Phone number handling, if added later, should not assume a US-only format.
 

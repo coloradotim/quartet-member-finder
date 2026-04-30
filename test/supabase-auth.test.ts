@@ -9,9 +9,11 @@ describe("Supabase public env helpers", () => {
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "");
 
-    const { getSupabasePublicConfig } = await import("@/lib/supabase/env");
+    const { getSupabaseAdminConfig, getSupabasePublicConfig } =
+      await import("@/lib/supabase/env");
 
     expect(getSupabasePublicConfig()).toBeNull();
+    expect(getSupabaseAdminConfig()).toBeNull();
   });
 
   it("uses only public Supabase values for client configuration", async () => {
@@ -19,10 +21,16 @@ describe("Supabase public env helpers", () => {
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "anon-key");
     vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "service-role-key");
 
-    const { getSupabasePublicConfig } = await import("@/lib/supabase/env");
+    const { getSupabaseAdminConfig, getSupabasePublicConfig } =
+      await import("@/lib/supabase/env");
 
     expect(getSupabasePublicConfig()).toEqual({
       anonKey: "anon-key",
+      url: "https://example.supabase.co",
+    });
+    expect(getSupabaseAdminConfig()).toEqual({
+      anonKey: "anon-key",
+      serviceRoleKey: "service-role-key",
       url: "https://example.supabase.co",
     });
   });

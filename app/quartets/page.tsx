@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { ContactRequestForm } from "@/components/contact/contact-request-form";
+import { contactStatusMessage } from "@/lib/contact/contact-status";
 import {
   approximateLocationLabel,
   toPublicLocationSummary,
@@ -54,11 +56,45 @@ function tags(values: string[]) {
   return values.map((value) => value.replaceAll("_", " ")).join(", ");
 }
 
+function returnToPath(params: Record<string, string | string[] | undefined>) {
+  const query = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(params)) {
+    if (key === "contact") {
+      continue;
+    }
+
+    const normalized = Array.isArray(value) ? value[0] : value;
+
+    if (normalized) {
+      query.set(key, normalized);
+    }
+  }
+
+  const queryString = query.toString();
+
+  return queryString ? `/quartets?${queryString}` : "/quartets";
+}
+
+function contactBannerClass(tone: "error" | "notice" | "success") {
+  if (tone === "error") {
+    return "mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800";
+  }
+
+  if (tone === "success") {
+    return "mt-6 rounded-lg border border-[#b7d7ce] bg-[#eef8f4] p-4 text-sm text-[#174b4f]";
+  }
+
+  return "mt-6 rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-4 text-sm text-[#394548]";
+}
+
 export default async function QuartetSearchPage({
   searchParams,
 }: SearchPageProps) {
   const params = await searchParams;
   const filters = parseDiscoveryFilters(params);
+  const returnTo = returnToPath(params);
+  const contactStatus = contactStatusMessage(params.contact);
   const supabase = await createSupabaseServerClient();
 
   let quartets: QuartetDiscoveryRow[] = [];
@@ -236,6 +272,12 @@ export default async function QuartetSearchPage({
         </div>
       </form>
 
+      {contactStatus ? (
+        <p className={contactBannerClass(contactStatus.tone)}>
+          {contactStatus.text}
+        </p>
+      ) : null}
+
       {errorMessage ? (
         <p className="mt-8 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
           {errorMessage}
@@ -319,6 +361,12 @@ export default async function QuartetSearchPage({
                 </div>
               ) : null}
             </dl>
+            <ContactRequestForm
+              returnTo={returnTo}
+              targetId={quartet.id}
+              targetKind="quartet"
+              targetName={quartet.name}
+            />
           </article>
         ))}
       </section>
