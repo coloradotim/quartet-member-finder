@@ -8,5 +8,7 @@ describe("app metadata", () => {
 
   it("keeps privacy in the core promise", () => {
     expect(PRODUCT_PROMISE).toContain("private");
+    expect(PRODUCT_PROMISE).toContain("Find quartet openings");
+    expect(PRODUCT_PROMISE).toContain("available singers");
   });
 });
