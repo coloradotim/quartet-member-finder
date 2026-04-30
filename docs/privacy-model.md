@@ -25,11 +25,11 @@ Public search results must not show:
 - inactive or hidden profiles/listings
 
 Public singer and quartet discovery pages must query privacy-safe discovery
-views rather than private base tables. Filters may use public country, region,
-locality, voicing-aware part, goal, experience/commitment, availability, and travel
-willingness fields where data exists. Exact coordinates, private postal codes,
-formatted private addresses, email addresses, and phone numbers are not part of
-the public result shape.
+views rather than private base tables. Filters may use public country, city,
+region when available, voicing-aware part, goal, experience/commitment,
+availability, and travel willingness fields where data exists. Exact
+coordinates, private postal codes, formatted private addresses, email addresses,
+and phone numbers are not part of the public result shape.
 
 ## Global location expectations
 
@@ -50,29 +50,30 @@ The MVP can be English-only, but location and distance handling should be global
 
 ## Location handling
 
-Users may enter a city, postal code, country, or approximate location.
+Users enter a country, city, and ZIP/postal code where useful. Forms avoid
+country-code and admin-area language.
 
 The app may store normalized location data to support distance search, but public UI should only expose approximate location.
 
 Private geocoded data should be transformed into a public location summary
-before display. Public summaries may contain only a user-provided public label,
-locality, region, and country. They must not contain exact latitude, longitude,
-private postal code, formatted private address, or other precise address
-components. If an explicit public label is present, use it as the display label;
-otherwise build an approximate label from locality, region, and country, such as
-“Dublin, Leinster, Ireland area.”
+before display. Public summaries may contain only locality/city, region when
+available, and country. They must not contain exact latitude, longitude, private
+postal code, formatted private address, or other precise address components.
+Until automatic geocoding is added, country plus city and ZIP/postal code are
+enough for the current approximate map/search approach because the map uses
+country/region anchors and public city/country labels rather than exact pins.
 
-Distance helpers may use exact coordinates internally for matching, but public
-distance display should be rounded and approximate, such as “about 15 mi / 24 km
-away.” Travel willingness and distance display should support both kilometers
-and miles without assuming a US-only default.
+Distance helpers may use exact coordinates internally for matching later, but
+public distance display should be rounded and approximate. Find defaults
+distance display to miles and offers a miles/kilometers picker. Profile and
+listing forms do not ask users to choose a unit.
 
 Acceptable user-facing examples:
 
 - “Fort Collins, CO area”
 - “Toronto, ON area”
 - “Manchester, UK area”
-- “about 15 miles / 24 km away”
+- “about 15 mi / 24 km away”
 - “Northern Colorado”
 
 Avoid exact map pins. Map interfaces should use one of the following:
@@ -107,16 +108,15 @@ The MVP profile form stores:
 - goals
 - descriptive experience level
 - availability
-- travel willingness in kilometers
+- travel willingness, entered in miles and stored internally as kilometers
 - short bio
-- public approximate location label
-- country, region, locality, and private postal code when provided
+- country, city/locality, and private ZIP/postal code when provided
 - search visibility
 
 The postal code field is stored for future matching/search work and should not
 be shown in public discovery results. The public discovery label should stay
-approximate, such as a city/region/country area. Location inputs remain globally
-tolerant and do not require US state, ZIP code, address, or phone formats.
+approximate, such as a city/country area. Location inputs remain globally
+tolerant and do not require US state, exact address, or phone formats.
 
 ## Quartet listing management
 
@@ -130,10 +130,9 @@ MVP listing form stores:
 - goals
 - experience or commitment level
 - rehearsal expectations
-- travel willingness in kilometers
+- travel willingness, entered in miles and stored internally as kilometers
 - short description
-- public approximate location label
-- country, region, locality, and private postal code when provided
+- country, city/locality, and private ZIP/postal code when provided
 - search visibility
 
 The listing form keeps covered and needed parts distinct and tied to the
@@ -217,7 +216,7 @@ information.
 ## Onboarding model
 
 First-run onboarding first asks signed-in users for basic profile context:
-display name, country, and approximate location. It then asks what they want to
+display name, country, city, and ZIP/postal code. It then asks what they want to
 do first, not what role they permanently are. A user may use the app as a singer
 and in Quartet Mode.
 

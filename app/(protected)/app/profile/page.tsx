@@ -4,7 +4,10 @@ import {
   PROFILE_GOALS,
   type ProfileGoal,
 } from "@/lib/profiles/singer-profile-form";
-import { locationFieldLabelsForCountry } from "@/lib/location/country-location-defaults";
+import {
+  countryOptions,
+  kilometersToRoundedMiles,
+} from "@/lib/location/country-location-defaults";
 import {
   VOICINGS,
   partsByVoicing,
@@ -18,7 +21,6 @@ import { saveSingerProfile } from "./actions";
 type SingerProfileRow = {
   availability: string | null;
   bio: string | null;
-  country_code: string | null;
   country_name: string | null;
   display_name: string;
   experience_level: string | null;
@@ -26,9 +28,7 @@ type SingerProfileRow = {
   id: string;
   is_visible: boolean;
   locality: string | null;
-  location_label_public: string | null;
   postal_code_private: string | null;
-  region: string | null;
   travel_radius_km: number | null;
 };
 
@@ -78,7 +78,7 @@ export default async function ManageProfilePage({
       ? await supabase
           .from("singer_profiles")
           .select(
-            "id, availability, bio, country_code, country_name, display_name, experience_level, goals, is_visible, locality, location_label_public, postal_code_private, region, travel_radius_km",
+            "id, availability, bio, country_name, display_name, experience_level, goals, is_visible, locality, postal_code_private, travel_radius_km",
           )
           .eq("user_id", user.id)
           .maybeSingle<SingerProfileRow>()
@@ -94,10 +94,7 @@ export default async function ManageProfilePage({
 
   const selectedParts =
     parts?.map((partRow) => `${partRow.voicing}:${partRow.part}`) ?? [];
-  const locationLabels = locationFieldLabelsForCountry(
-    profile?.country_code,
-    profile?.country_name,
-  );
+  const selectedCountry = profile?.country_name ?? "United States";
 
   return (
     <div>
@@ -253,41 +250,38 @@ export default async function ManageProfilePage({
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-[#172023]">Location</h2>
           <p className="text-sm leading-6 text-[#394548]">
-            Start with country so the app can use sensible wording and distance
-            defaults. Public discovery shows your approximate label or
-            city/region/country area. Postal code stays private for future
-            matching; exact addresses and coordinates are not shown.
+            Used only to place you approximately on the map and support
+            location-based search. Your ZIP/postal code is not shown publicly,
+            and public discovery shows an approximate area, not your exact
+            location.
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
-                Country name
+                Country
                 <span className="font-normal text-[#596466]"> Optional</span>
               </span>
-              <input
+              <select
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-                defaultValue={fieldValue(profile?.country_name)}
-                maxLength={120}
+                defaultValue={selectedCountry}
                 name="countryName"
-                placeholder="United Kingdom"
-              />
+              >
+                {countryOptions.map((country) => (
+                  <option key={country.name} value={country.name}>
+                    {country.name}
+                  </option>
+                ))}
+                {selectedCountry &&
+                !countryOptions.some(
+                  (country) => country.name === selectedCountry,
+                ) ? (
+                  <option value={selectedCountry}>{selectedCountry}</option>
+                ) : null}
+              </select>
             </label>
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
-                Country code
-                <span className="font-normal text-[#596466]"> Optional</span>
-              </span>
-              <input
-                className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base uppercase text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-                defaultValue={fieldValue(profile?.country_code)}
-                maxLength={2}
-                name="countryCode"
-                placeholder="GB"
-              />
-            </label>
-            <label className="block">
-              <span className="text-sm font-semibold text-[#172023]">
-                {locationLabels.locality}
+                City
                 <span className="font-normal text-[#596466]"> Optional</span>
               </span>
               <input
@@ -299,46 +293,20 @@ export default async function ManageProfilePage({
             </label>
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
-                {locationLabels.region}
+                ZIP/postal code
                 <span className="font-normal text-[#596466]"> Optional</span>
               </span>
               <input
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-                defaultValue={fieldValue(profile?.region)}
-                maxLength={120}
-                name="region"
+                defaultValue={fieldValue(profile?.postal_code_private)}
+                maxLength={40}
+                name="postalCodePrivate"
               />
+              <FieldNote>
+                Your ZIP/postal code is never shown publicly.
+              </FieldNote>
             </label>
           </div>
-          <label className="block">
-            <span className="text-sm font-semibold text-[#172023]">
-              Public approximate location
-              <span className="font-normal text-[#596466]"> Optional</span>
-            </span>
-            <input
-              className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-              defaultValue={fieldValue(profile?.location_label_public)}
-              maxLength={160}
-              name="locationLabelPublic"
-              placeholder="Manchester, UK area"
-            />
-            <FieldNote>
-              This is the public label people see. Leave it blank to use
-              city/region/country as an approximate area.
-            </FieldNote>
-          </label>
-          <label className="block">
-            <span className="text-sm font-semibold text-[#172023]">
-              Private {locationLabels.postalCode.toLowerCase()}
-              <span className="font-normal text-[#596466]"> Optional</span>
-            </span>
-            <input
-              className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-              defaultValue={fieldValue(profile?.postal_code_private)}
-              maxLength={40}
-              name="postalCodePrivate"
-            />
-          </label>
         </section>
 
         <section className="space-y-4">
@@ -386,15 +354,17 @@ export default async function ManageProfilePage({
             </label>
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
-                Travel willingness in km
+                Travel willingness in miles
                 <span className="font-normal text-[#596466]"> Optional</span>
               </span>
               <input
                 aria-describedby="travel-radius-help"
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-                defaultValue={fieldValue(profile?.travel_radius_km)}
+                defaultValue={kilometersToRoundedMiles(
+                  profile?.travel_radius_km,
+                )}
                 min={0}
-                name="travelRadiusKm"
+                name="travelRadiusMiles"
                 type="number"
               />
               <FieldNote id="travel-radius-help">

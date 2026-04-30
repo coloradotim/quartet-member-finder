@@ -72,8 +72,8 @@ validation.
 ## First-Run Onboarding
 
 1. Sign in with a test account that has not completed onboarding.
-2. Pass: onboarding first asks for display name and optional country or
-   approximate location before asking what to do first.
+2. Pass: onboarding first asks for display name plus optional country, city, and
+   ZIP/postal code before asking what to do first.
 3. Pass: display name is clearly required and the location fields are clearly
    optional.
 4. Pass: workflow options are plain language and do not imply a permanent role.
@@ -90,11 +90,9 @@ validation.
    - parts: TTBB Lead and SATB Soprano / Mixed Tenor
    - goals: Pickup and Learning
    - country: United Kingdom
-   - region: England
-   - locality: Manchester
-   - private postal code: `M1 TEST`
-   - public location label: `Manchester, UK area`
-   - travel radius: `40`
+   - city: Manchester
+   - ZIP/postal code: `M1 TEST`
+   - travel radius: `25` miles
    - visible: on
 3. Pass: saving succeeds and the form reloads with the saved values.
 4. Pass: `/singers?country=United+Kingdom&locality=Manchester&part=TTBB%3ALead`
@@ -116,11 +114,9 @@ validation.
    - needed parts: TTBB Lead and Baritone
    - goals: Regular Rehearsal and Contest
    - country: Ireland
-   - region: Leinster
-   - locality: Dublin
-   - private postal code: `D02 TEST`
-   - public location label: `Dublin, Ireland area`
-   - travel radius: `50`
+   - city: Dublin
+   - ZIP/postal code: `D02 TEST`
+   - travel radius: `30` miles
    - visible: on
 3. Pass: saving succeeds and covered/needed parts remain distinct.
 4. Pass: `/quartets?country=Ireland&locality=Dublin&part=TTBB%3ALead` includes
@@ -138,12 +134,14 @@ validation.
 1. Open `/find`.
 2. Filter by country, region/locality, part, goal, and looking-for mode using
    data known to exist in the environment.
-3. Pass: valid filters narrow the consolidated results without crashing.
-4. Pass: the approximate map appears above the results table.
-5. Pass: the table distinguishes singer profiles from quartet openings.
-6. Pass: empty results show helpful next actions, including clearing filters.
-7. Fail: hidden or inactive profiles/listings appear in public results.
-8. Fail: public UI exposes owner user IDs, private postal codes, exact
+3. Pass: the distance-unit picker defaults to Miles and can be changed to
+   Kilometers for travel-radius display.
+4. Pass: valid filters narrow the consolidated results without crashing.
+5. Pass: the approximate map appears above the results table.
+6. Pass: the table distinguishes singer profiles from quartet openings.
+7. Pass: empty results show helpful next actions, including clearing filters.
+8. Fail: hidden or inactive profiles/listings appear in public results.
+9. Fail: public UI exposes owner user IDs, private postal codes, exact
    coordinates, email addresses, or phone numbers.
 
 ## Detailed Quartet Opening Search

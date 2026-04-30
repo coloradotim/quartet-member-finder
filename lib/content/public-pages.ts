@@ -64,7 +64,8 @@ export const publicHelpSections = [
   {
     body: [
       "Country is the first location cue because it helps the app use sensible labels, such as ZIP code, postcode, state, province, or region, without strict address validation.",
-      "Country also sets practical distance defaults for singer profiles and quartet listings. You can still keep public location approximate; private postal codes are not shown in discovery.",
+      "Profile and listing forms ask for country, city, and ZIP/postal code instead of country codes or admin-area fields. ZIP/postal codes are not shown in discovery.",
+      "Find defaults distance display to miles and lets you switch to kilometers when that is more useful.",
     ],
     heading: "Location Defaults",
   },
@@ -121,7 +122,7 @@ export const publicPrivacySections = [
   {
     body: [
       "Barbershop is global, and the app should be useful outside the United States and Canada. Location handling is approximate and globally tolerant by design.",
-      "The app should not require US-only fields like ZIP code or state to make basic discovery useful.",
+      "The app should not require US-only fields like state or exact street address to make basic discovery useful.",
     ],
     heading: "Global Use",
   },

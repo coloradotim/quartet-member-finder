@@ -7,6 +7,7 @@ type LocationFieldLabels = {
 };
 
 const countryNameAliases: Record<string, string> = {
+  australia: "AU",
   britain: "GB",
   canada: "CA",
   england: "GB",
@@ -21,7 +22,27 @@ const countryNameAliases: Record<string, string> = {
   wales: "GB",
 };
 
-const mileCountries = new Set(["GB", "LR", "MM", "UK", "US"]);
+export const countryOptions = [
+  { code: "US", name: "United States" },
+  { code: "CA", name: "Canada" },
+  { code: "GB", name: "United Kingdom" },
+  { code: "IE", name: "Ireland" },
+  { code: "AU", name: "Australia" },
+  { code: "NZ", name: "New Zealand" },
+  { code: "DE", name: "Germany" },
+  { code: "NL", name: "Netherlands" },
+  { code: "SE", name: "Sweden" },
+  { code: "ZA", name: "South Africa" },
+  { code: "", name: "Other / not listed" },
+] as const;
+
+const countryCodesByName = Object.fromEntries(
+  countryOptions
+    .filter((country) => country.code)
+    .map((country) => [country.name.toLowerCase(), country.code]),
+);
+
+const mileCountries = new Set(["CA", "GB", "LR", "MM", "UK", "US"]);
 
 const labelOverrides: Record<string, LocationFieldLabels> = {
   AU: {
@@ -75,7 +96,9 @@ function normalizeCountryCodeValue(countryCode: string | null | undefined) {
 export function countryCodeFromName(countryName: string | null | undefined) {
   const normalized = countryName?.trim().toLowerCase();
 
-  return normalized ? (countryNameAliases[normalized] ?? null) : null;
+  return normalized
+    ? (countryCodesByName[normalized] ?? countryNameAliases[normalized] ?? null)
+    : null;
 }
 
 export function effectiveCountryCode(
@@ -93,7 +116,11 @@ export function distanceUnitForCountry(
 ): DistanceUnit {
   const effectiveCode = effectiveCountryCode(countryCode, countryName);
 
-  return effectiveCode && mileCountries.has(effectiveCode) ? "mi" : "km";
+  if (!effectiveCode) {
+    return "mi";
+  }
+
+  return mileCountries.has(effectiveCode) ? "mi" : "km";
 }
 
 export function locationFieldLabelsForCountry(
@@ -105,4 +132,18 @@ export function locationFieldLabelsForCountry(
   return effectiveCode && labelOverrides[effectiveCode]
     ? labelOverrides[effectiveCode]
     : defaultLocationFieldLabels;
+}
+
+export function kilometersToRoundedMiles(
+  kilometers: number | null | undefined,
+) {
+  if (kilometers == null) {
+    return "";
+  }
+
+  return String(Math.round(kilometers / 1.609344));
+}
+
+export function milesToRoundedKilometers(miles: number) {
+  return Math.round(miles * 1.609344);
 }

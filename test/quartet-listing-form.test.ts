@@ -20,9 +20,7 @@ describe("quartet listing form parsing", () => {
     const values = parseQuartetListingFormData(
       formData([
         ["name", "Harbour Lights"],
-        ["countryCode", "ca"],
         ["countryName", "Canada"],
-        ["region", "Ontario"],
         ["locality", "Toronto"],
         ["postalCodePrivate", "M5V"],
         ["voicing", "TTBB"],
@@ -30,7 +28,7 @@ describe("quartet listing form parsing", () => {
         ["partsCovered", "TTBB:Bass"],
         ["partsNeeded", "TTBB:Tenor"],
         ["goals", "regular_rehearsal"],
-        ["travelRadiusKm", "75"],
+        ["travelRadiusMiles", "50"],
       ]),
     );
 
@@ -42,7 +40,7 @@ describe("quartet listing form parsing", () => {
     ]);
     expect(values.partsNeeded).toEqual([{ part: "Tenor", voicing: "TTBB" }]);
     expect(values.goals).toEqual(["regular_rehearsal"]);
-    expect(values.travelRadiusKm).toBe(75);
+    expect(values.travelRadiusKm).toBe(80);
   });
 
   it("keeps needed parts distinct from covered parts", () => {
@@ -89,14 +87,13 @@ describe("quartet listing form parsing", () => {
       formData([
         ["name", "Afterglow Four"],
         ["countryName", "Australia"],
-        ["region", "Victoria"],
         ["locality", "Melbourne"],
         ["postalCodePrivate", "3000"],
       ]),
     );
 
     expect(buildQuartetPublicLocationLabel(values)).toBe(
-      "Melbourne, Victoria, Australia area",
+      "Melbourne, Australia area",
     );
     expect(buildQuartetPublicLocationLabel(values)).not.toContain("3000");
     expect(inferQuartetLocationPrecision(values)).toBe("postal_code");

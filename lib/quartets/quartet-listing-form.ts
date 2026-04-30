@@ -3,7 +3,7 @@ import {
   normalizeCountryCode,
   normalizeOptionalText,
   parseAllowedList,
-  parseTravelRadiusKm,
+  parseTravelRadiusMilesAsKm,
   parseVoicingPartList,
   type ProfileGoal,
 } from "@/lib/profiles/singer-profile-form";
@@ -12,6 +12,7 @@ import {
   type VoicingPartSelection,
   isVoicing,
 } from "@/lib/parts/voicings";
+import { countryCodeFromName } from "@/lib/location/country-location-defaults";
 
 export type QuartetListingFormValues = {
   availability: string | null;
@@ -54,6 +55,7 @@ export function parseQuartetListingFormData(
   formData: FormData,
 ): QuartetListingFormValues {
   const name = normalizeOptionalText(formData.get("name"));
+  const countryName = normalizeOptionalText(formData.get("countryName"));
 
   if (!name) {
     throw new Error("Listing name is required.");
@@ -72,8 +74,10 @@ export function parseQuartetListingFormData(
 
   return {
     availability: normalizeOptionalText(formData.get("availability")),
-    countryCode: normalizeCountryCode(formData.get("countryCode")),
-    countryName: normalizeOptionalText(formData.get("countryName")),
+    countryCode:
+      normalizeCountryCode(formData.get("countryCode")) ??
+      countryCodeFromName(countryName),
+    countryName,
     description: normalizeOptionalText(formData.get("description")),
     experienceLevel: normalizeOptionalText(formData.get("experienceLevel")),
     goals: parseAllowedList(formData.getAll("goals"), PROFILE_GOALS),
@@ -88,7 +92,9 @@ export function parseQuartetListingFormData(
     partsNeeded,
     postalCodePrivate: normalizeOptionalText(formData.get("postalCodePrivate")),
     region: normalizeOptionalText(formData.get("region")),
-    travelRadiusKm: parseTravelRadiusKm(formData.get("travelRadiusKm")),
+    travelRadiusKm: parseTravelRadiusMilesAsKm(
+      formData.get("travelRadiusMiles") ?? formData.get("travelRadiusKm"),
+    ),
     voicing,
   };
 }

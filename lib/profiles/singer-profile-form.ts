@@ -2,6 +2,10 @@ import {
   parseVoicingPartValue,
   type VoicingPartSelection,
 } from "@/lib/parts/voicings";
+import {
+  countryCodeFromName,
+  milesToRoundedKilometers,
+} from "@/lib/location/country-location-defaults";
 
 export const PROFILE_GOALS = [
   "casual",
@@ -66,6 +70,22 @@ export function parseTravelRadiusKm(value: FormDataEntryValue | null) {
   return radius;
 }
 
+export function parseTravelRadiusMilesAsKm(value: FormDataEntryValue | null) {
+  const normalized = normalizeOptionalText(value);
+
+  if (!normalized) {
+    return null;
+  }
+
+  const radius = Number(normalized);
+
+  if (!Number.isInteger(radius) || radius < 0 || radius > 10000) {
+    return null;
+  }
+
+  return milesToRoundedKilometers(radius);
+}
+
 export function parseAllowedList<T extends string>(
   values: FormDataEntryValue[],
   allowedValues: readonly T[],
@@ -88,6 +108,7 @@ export function parseSingerProfileFormData(
   formData: FormData,
 ): SingerProfileFormValues {
   const displayName = normalizeOptionalText(formData.get("displayName"));
+  const countryName = normalizeOptionalText(formData.get("countryName"));
 
   if (!displayName) {
     throw new Error("Display name is required.");
@@ -96,8 +117,10 @@ export function parseSingerProfileFormData(
   return {
     availability: normalizeOptionalText(formData.get("availability")),
     bio: normalizeOptionalText(formData.get("bio")),
-    countryCode: normalizeCountryCode(formData.get("countryCode")),
-    countryName: normalizeOptionalText(formData.get("countryName")),
+    countryCode:
+      normalizeCountryCode(formData.get("countryCode")) ??
+      countryCodeFromName(countryName),
+    countryName,
     displayName,
     experienceLevel: normalizeOptionalText(formData.get("experienceLevel")),
     goals: parseAllowedList(formData.getAll("goals"), PROFILE_GOALS),
@@ -109,7 +132,9 @@ export function parseSingerProfileFormData(
     parts: parseVoicingPartList(formData.getAll("parts")),
     postalCodePrivate: normalizeOptionalText(formData.get("postalCodePrivate")),
     region: normalizeOptionalText(formData.get("region")),
-    travelRadiusKm: parseTravelRadiusKm(formData.get("travelRadiusKm")),
+    travelRadiusKm: parseTravelRadiusMilesAsKm(
+      formData.get("travelRadiusMiles") ?? formData.get("travelRadiusKm"),
+    ),
   };
 }
 

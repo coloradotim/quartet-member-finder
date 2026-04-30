@@ -4,14 +4,16 @@ import {
   PROFILE_GOALS,
   type ProfileGoal,
 } from "@/lib/profiles/singer-profile-form";
-import { locationFieldLabelsForCountry } from "@/lib/location/country-location-defaults";
+import {
+  countryOptions,
+  kilometersToRoundedMiles,
+} from "@/lib/location/country-location-defaults";
 import { type Voicing } from "@/lib/parts/voicings";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { saveQuartetListing } from "./actions";
 
 type QuartetListingRow = {
   availability: string | null;
-  country_code: string | null;
   country_name: string | null;
   description: string | null;
   experience_level: string | null;
@@ -19,10 +21,8 @@ type QuartetListingRow = {
   id: string;
   is_visible: boolean;
   locality: string | null;
-  location_label_public: string | null;
   name: string;
   postal_code_private: string | null;
-  region: string | null;
   travel_radius_km: number | null;
 };
 
@@ -64,7 +64,7 @@ export default async function ManageListingsPage({
       ? await supabase
           .from("quartet_listings")
           .select(
-            "id, availability, country_code, country_name, description, experience_level, goals, is_visible, locality, location_label_public, name, postal_code_private, region, travel_radius_km",
+            "id, availability, country_name, description, experience_level, goals, is_visible, locality, name, postal_code_private, travel_radius_km",
           )
           .eq("owner_user_id", user.id)
           .order("created_at", { ascending: true })
@@ -90,10 +90,7 @@ export default async function ManageListingsPage({
     parts
       ?.filter((partRow) => partRow.status === "needed")
       .map((partRow) => `${partRow.voicing}:${partRow.part}`) ?? [];
-  const locationLabels = locationFieldLabelsForCountry(
-    listing?.country_code,
-    listing?.country_name,
-  );
+  const selectedCountry = listing?.country_name ?? "United States";
 
   return (
     <div>
@@ -198,40 +195,35 @@ export default async function ManageListingsPage({
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-[#172023]">Location</h2>
           <p className="text-sm leading-6 text-[#394548]">
-            Start with country so the app can use sensible wording and distance
-            defaults. Public discovery shows your approximate label or
-            city/region/country area. Postal code stays private for future
-            matching; exact addresses and coordinates are not shown.
+            Used only to place this listing approximately on the map and support
+            location-based search. ZIP/postal code is not shown publicly, and
+            discovery shows an approximate area, not an exact address.
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
-                Country name
+                Country
               </span>
-              <input
+              <select
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-                defaultValue={fieldValue(listing?.country_name)}
-                maxLength={120}
+                defaultValue={selectedCountry}
                 name="countryName"
-                placeholder="Canada"
-              />
+              >
+                {countryOptions.map((country) => (
+                  <option key={country.name} value={country.name}>
+                    {country.name}
+                  </option>
+                ))}
+                {selectedCountry &&
+                !countryOptions.some(
+                  (country) => country.name === selectedCountry,
+                ) ? (
+                  <option value={selectedCountry}>{selectedCountry}</option>
+                ) : null}
+              </select>
             </label>
             <label className="block">
-              <span className="text-sm font-semibold text-[#172023]">
-                Country code
-              </span>
-              <input
-                className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base uppercase text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-                defaultValue={fieldValue(listing?.country_code)}
-                maxLength={2}
-                name="countryCode"
-                placeholder="CA"
-              />
-            </label>
-            <label className="block">
-              <span className="text-sm font-semibold text-[#172023]">
-                {locationLabels.locality}
-              </span>
+              <span className="text-sm font-semibold text-[#172023]">City</span>
               <input
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
                 defaultValue={fieldValue(listing?.locality)}
@@ -241,43 +233,19 @@ export default async function ManageListingsPage({
             </label>
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
-                {locationLabels.region}
+                ZIP/postal code
               </span>
               <input
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-                defaultValue={fieldValue(listing?.region)}
-                maxLength={120}
-                name="region"
+                defaultValue={fieldValue(listing?.postal_code_private)}
+                maxLength={40}
+                name="postalCodePrivate"
               />
+              <span className="mt-2 block text-sm leading-6 text-[#596466]">
+                ZIP/postal code is not shown publicly.
+              </span>
             </label>
           </div>
-          <label className="block">
-            <span className="text-sm font-semibold text-[#172023]">
-              Public approximate location
-            </span>
-            <input
-              className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-              defaultValue={fieldValue(listing?.location_label_public)}
-              maxLength={160}
-              name="locationLabelPublic"
-              placeholder="Toronto, ON area"
-            />
-            <span className="mt-2 block text-sm leading-6 text-[#596466]">
-              This is the public label people see. Leave it blank to use
-              city/region/country as an approximate area.
-            </span>
-          </label>
-          <label className="block">
-            <span className="text-sm font-semibold text-[#172023]">
-              Private {locationLabels.postalCode.toLowerCase()}
-            </span>
-            <input
-              className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-              defaultValue={fieldValue(listing?.postal_code_private)}
-              maxLength={40}
-              name="postalCodePrivate"
-            />
-          </label>
         </section>
 
         <section className="space-y-4">
@@ -312,13 +280,15 @@ export default async function ManageListingsPage({
             </label>
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
-                Travel willingness in km
+                Travel willingness in miles
               </span>
               <input
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-                defaultValue={fieldValue(listing?.travel_radius_km)}
+                defaultValue={kilometersToRoundedMiles(
+                  listing?.travel_radius_km,
+                )}
                 min={0}
-                name="travelRadiusKm"
+                name="travelRadiusMiles"
                 type="number"
               />
             </label>

@@ -5,7 +5,10 @@ import {
   buildDiscoveryMapMarkers,
   type DiscoveryMapItem,
 } from "@/lib/location/map-markers";
-import { approximateLocationLabel } from "@/lib/location/approximate-location";
+import {
+  approximateLocationLabel,
+  travelRadiusLabel,
+} from "@/lib/location/approximate-location";
 import {
   groupVoicingParts,
   voicingPartOptions,
@@ -24,6 +27,7 @@ type SingerFindRow = {
   location_label_public: string | null;
   parts: string[];
   region: string | null;
+  travel_radius_km: number | null;
 };
 
 type QuartetFindRow = {
@@ -36,6 +40,7 @@ type QuartetFindRow = {
   name: string;
   parts_needed: string[];
   region: string | null;
+  travel_radius_km: number | null;
 };
 
 type FindPageProps = {
@@ -45,6 +50,7 @@ type FindPageProps = {
 type FindResult = DiscoveryMapItem & {
   detailHref: string;
   intentLabel: string;
+  travelRadiusKm: number | null;
 };
 
 const kindOptions = [
@@ -63,6 +69,11 @@ const goalOptions = [
   ["contest", "Contest"],
   ["paid_gigs", "Paid gigs"],
   ["learning", "Learning"],
+];
+
+const distanceUnitOptions = [
+  ["mi", "Miles"],
+  ["km", "Kilometers"],
 ];
 
 const filterControlClass =
@@ -143,7 +154,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
       let query = supabase
         .from("singer_discovery_profiles")
         .select(
-          "id, display_name, parts, goals, country_code, country_name, region, locality, location_label_public",
+          "id, display_name, parts, goals, country_code, country_name, region, locality, location_label_public, travel_radius_km",
         )
         .order("updated_at", { ascending: false });
 
@@ -188,6 +199,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
             name: singer.display_name,
             parts: singer.parts,
             region: singer.region,
+            travelRadiusKm: singer.travel_radius_km,
           })),
         ];
       }
@@ -197,7 +209,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
       let query = supabase
         .from("quartet_discovery_listings")
         .select(
-          "id, name, parts_needed, goals, country_code, country_name, region, locality, location_label_public",
+          "id, name, parts_needed, goals, country_code, country_name, region, locality, location_label_public, travel_radius_km",
         )
         .order("updated_at", { ascending: false });
 
@@ -242,6 +254,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
             name: quartet.name,
             parts: quartet.parts_needed,
             region: quartet.region,
+            travelRadiusKm: quartet.travel_radius_km,
           })),
         ];
       }
@@ -355,7 +368,21 @@ export default async function FindPage({ searchParams }: FindPageProps) {
               ))}
             </select>
           </label>
-          <div className="flex flex-col gap-3 sm:col-span-2 sm:flex-row sm:items-end lg:col-span-4">
+          <label className="block">
+            <span className="text-sm font-semibold">Distance units</span>
+            <select
+              className={filterControlClass}
+              defaultValue={filters.distanceUnit}
+              name="distanceUnit"
+            >
+              {distanceUnitOptions.map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <div className="flex flex-col gap-3 sm:col-span-2 sm:flex-row sm:items-end lg:col-span-3">
             <button
               className="rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
               type="submit"
@@ -451,6 +478,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
                     <th className="px-4 py-3 font-bold">Type</th>
                     <th className="px-4 py-3 font-bold">Parts</th>
                     <th className="px-4 py-3 font-bold">Approximate area</th>
+                    <th className="px-4 py-3 font-bold">Travel</th>
                     <th className="px-4 py-3 font-bold">Next step</th>
                   </tr>
                 </thead>
@@ -471,6 +499,12 @@ export default async function FindPage({ searchParams }: FindPageProps) {
                       </td>
                       <td className="px-4 py-3 text-[#394548]">
                         {locationLabel(result)}
+                      </td>
+                      <td className="px-4 py-3 text-[#394548]">
+                        {travelRadiusLabel(
+                          result.travelRadiusKm,
+                          filters.distanceUnit,
+                        ) ?? "Not listed"}
                       </td>
                       <td className="px-4 py-3">
                         <Link
