@@ -174,7 +174,8 @@ invited to sign in before sending feedback.
 Signed-in users can submit private feedback, bug reports, or suggestions from
 the help page. The browser sends only the feedback type, message, and current
 route context. The server action attaches the authenticated user ID and auth
-email when available, then stores the submission in Supabase.
+email when available, stores the submission in Supabase, and sends a Resend
+notification to the project-team inbox at `cubuff98@gmail.com`.
 
 Feedback submissions are not public content and are not included in discovery
 views, search results, maps, or public profile/listing UI. Regular authenticated

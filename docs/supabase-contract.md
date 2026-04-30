@@ -149,6 +149,9 @@ The feedback table is private. Anonymous users have no direct table grants.
 Authenticated users may insert their own feedback and read only their own
 feedback rows so the server action can apply a basic sender-side rate limit.
 Service-role/admin access is required for cross-user review, triage, or export.
+After storage succeeds, the server action sends a Resend notification to
+`cubuff98@gmail.com` with the feedback type, message, submitter auth email when
+available, context path, and feedback row ID.
 
 ## Location data expectations
 

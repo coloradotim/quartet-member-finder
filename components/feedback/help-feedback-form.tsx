@@ -7,7 +7,7 @@ type HelpFeedbackFormProps = {
 
 function feedbackStatusMessage(status?: string) {
   if (status === "sent") {
-    return "Thanks for the note. Your feedback was sent.";
+    return "Thanks for the note. Your feedback was emailed to the project team.";
   }
 
   if (status === "limited") {
