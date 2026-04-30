@@ -24,6 +24,10 @@ export const signedInNavigationLinks = [
     label: "Quartet Mode",
   },
   {
+    href: "/app/settings",
+    label: "Account Settings",
+  },
+  {
     href: "/help",
     label: "Help",
   },

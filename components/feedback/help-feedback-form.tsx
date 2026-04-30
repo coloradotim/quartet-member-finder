@@ -26,7 +26,7 @@ export function HelpFeedbackForm({ status }: HelpFeedbackFormProps) {
   const isSuccess = status === "sent";
 
   return (
-    <section className="mt-10 border-t border-[#d7cec0] pt-8">
+    <section className="mt-10 border-t border-[#d7cec0] pt-8" id="feedback">
       <div>
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#2f6f73]">
           Feedback

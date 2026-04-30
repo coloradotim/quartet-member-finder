@@ -196,6 +196,17 @@ The onboarding copy reminds users that exact locations are not shown publicly,
 location fields should work outside the United States, and first contact starts
 through the app.
 
+## Account settings model
+
+Account Settings are separate from My Singer Profile and Quartet Mode. They are
+for app-level preferences and account-level actions that should not change
+public discovery content by accident.
+
+The initial settings page lets a signed-in user save an account-level preferred
+distance unit and reset first-run onboarding. Future export, deactivation, and
+delete actions are shown only as placeholders until the product has clear
+privacy and data-retention behavior for them.
+
 ## Abuse and safety considerations
 
 Future work may include:

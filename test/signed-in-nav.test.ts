@@ -10,6 +10,7 @@ describe("signed-in navigation", () => {
       "Find Singers",
       "Map",
       "Quartet Mode",
+      "Account Settings",
       "Help",
       "Privacy",
     ]);
@@ -23,6 +24,7 @@ describe("signed-in navigation", () => {
       { href: "/singers", label: "Find Singers" },
       { href: "/map", label: "Map" },
       { href: "/app/listings", label: "Quartet Mode" },
+      { href: "/app/settings", label: "Account Settings" },
       { href: "/help", label: "Help" },
       { href: "/privacy", label: "Privacy" },
     ]);
