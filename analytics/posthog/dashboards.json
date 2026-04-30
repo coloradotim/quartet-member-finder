@@ -1,0 +1,237 @@
+{
+  "version": 1,
+  "tags": ["quartet-member-finder", "managed-in-repo"],
+  "dashboards": [
+    {
+      "key": "product-health",
+      "name": "Quartet Member Finder - Product Health",
+      "description": "Core usage, analytics readiness, feedback, and route health.",
+      "insights": [
+        {
+          "key": "daily-active-users",
+          "name": "Daily active users",
+          "description": "Distinct signed-in users seen each day.",
+          "type": "trend",
+          "display": "ActionsLineGraph",
+          "dateFrom": "-30d",
+          "series": [{ "event": "user_logged_in", "math": "dau" }]
+        },
+        {
+          "key": "analytics-client-ready",
+          "name": "Analytics client ready",
+          "description": "Browser sessions where the configured analytics client accepted its first app event.",
+          "type": "trend",
+          "display": "BoldNumber",
+          "dateFrom": "-30d",
+          "series": [{ "event": "analytics_client_ready" }]
+        },
+        {
+          "key": "weekly-active-users",
+          "name": "Weekly active users",
+          "description": "Distinct signed-in users seen each week.",
+          "type": "trend",
+          "display": "ActionsLineGraph",
+          "dateFrom": "-12w",
+          "interval": "week",
+          "series": [{ "event": "user_logged_in", "math": "weekly_active" }]
+        },
+        {
+          "key": "top-routes",
+          "name": "Top routes",
+          "description": "Route visits grouped by normalized app route.",
+          "type": "trend",
+          "display": "ActionsBar",
+          "dateFrom": "-30d",
+          "breakdown": "route",
+          "series": [{ "event": "app_route_viewed" }]
+        },
+        {
+          "key": "feedback-submissions",
+          "name": "Feedback submissions",
+          "description": "Feedback sent successfully by type.",
+          "type": "trend",
+          "display": "ActionsBar",
+          "dateFrom": "-30d",
+          "breakdown": "feedback_type",
+          "series": [{ "event": "feedback_submitted" }]
+        }
+      ]
+    },
+    {
+      "key": "launch-funnel",
+      "name": "Quartet Member Finder - Launch Funnel",
+      "description": "From visiting the app to useful singer and quartet listing creation.",
+      "insights": [
+        {
+          "key": "singer-activation-funnel",
+          "name": "Singer activation funnel",
+          "description": "Visit, authenticate, complete onboarding, and save a singer profile.",
+          "type": "funnel",
+          "dateFrom": "-30d",
+          "series": [
+            { "event": "app_route_viewed" },
+            { "event": "user_logged_in" },
+            { "event": "onboarding_completed" },
+            { "event": "singer_profile_saved" }
+          ]
+        },
+        {
+          "key": "quartet-activation-funnel",
+          "name": "Quartet activation funnel",
+          "description": "Visit, authenticate, complete onboarding, and save a quartet listing.",
+          "type": "funnel",
+          "dateFrom": "-30d",
+          "series": [
+            { "event": "app_route_viewed" },
+            { "event": "user_logged_in" },
+            { "event": "onboarding_completed" },
+            { "event": "quartet_listing_saved" }
+          ]
+        },
+        {
+          "key": "launch-funnel-browser",
+          "name": "Launch funnel by browser",
+          "description": "Core launch funnel broken down by browser.",
+          "type": "funnel",
+          "dateFrom": "-30d",
+          "breakdown": "$browser",
+          "series": [
+            { "event": "app_route_viewed" },
+            { "event": "user_logged_in" },
+            { "event": "onboarding_completed" },
+            { "event": "singer_profile_saved" }
+          ]
+        },
+        {
+          "key": "launch-funnel-device",
+          "name": "Launch funnel by device",
+          "description": "Core launch funnel broken down by device type.",
+          "type": "funnel",
+          "dateFrom": "-30d",
+          "breakdown": "$device_type",
+          "series": [
+            { "event": "app_route_viewed" },
+            { "event": "user_logged_in" },
+            { "event": "onboarding_completed" },
+            { "event": "singer_profile_saved" }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "discovery-contact",
+      "name": "Quartet Member Finder - Discovery & Contact",
+      "description": "Whether users find relevant singers/quartets and turn discovery into app-mediated contact.",
+      "insights": [
+        {
+          "key": "discovery-searches-by-kind",
+          "name": "Discovery searches by kind",
+          "description": "Singer search vs quartet opening search, excluding private query values.",
+          "type": "trend",
+          "display": "ActionsLineGraph",
+          "dateFrom": "-30d",
+          "breakdown": "kind",
+          "series": [{ "event": "discovery_search_submitted" }]
+        },
+        {
+          "key": "map-views-by-kind",
+          "name": "Map views by result type",
+          "description": "Whether the privacy-safe map is used for singers, quartet openings, or both.",
+          "type": "trend",
+          "display": "ActionsLineGraph",
+          "dateFrom": "-30d",
+          "breakdown": "kind",
+          "series": [{ "event": "map_viewed" }]
+        },
+        {
+          "key": "discovery-to-contact-funnel",
+          "name": "Discovery to contact funnel",
+          "description": "Search or map discovery leading to app-mediated contact request submission.",
+          "type": "funnel",
+          "dateFrom": "-30d",
+          "series": [
+            { "event": "discovery_search_submitted" },
+            { "event": "contact_request_submitted" }
+          ]
+        },
+        {
+          "key": "contact-requests-by-target",
+          "name": "Contact requests by target",
+          "description": "App-mediated contact volume by singer/quartet target.",
+          "type": "trend",
+          "display": "ActionsBar",
+          "dateFrom": "-30d",
+          "breakdown": "target_kind",
+          "series": [{ "event": "contact_request_submitted" }]
+        },
+        {
+          "key": "contact-requests-by-status",
+          "name": "Contact requests by status",
+          "description": "Contact request delivery outcomes such as sent or stored.",
+          "type": "trend",
+          "display": "ActionsBar",
+          "dateFrom": "-30d",
+          "breakdown": "status",
+          "series": [{ "event": "contact_request_submitted" }]
+        }
+      ]
+    },
+    {
+      "key": "operations-privacy",
+      "name": "Quartet Member Finder - Operations & Privacy",
+      "description": "Launch density, visibility, privacy-safe feedback, and mobile/browser compatibility.",
+      "insights": [
+        {
+          "key": "visible-singer-profiles",
+          "name": "Visible singer profiles saved",
+          "description": "Profiles saved with visibility enabled; useful for launch density.",
+          "type": "trend",
+          "display": "BoldNumber",
+          "dateFrom": "-30d",
+          "properties": [{ "key": "visibility_enabled", "value": true }],
+          "series": [{ "event": "singer_profile_saved" }]
+        },
+        {
+          "key": "visible-quartet-listings",
+          "name": "Visible quartet listings saved",
+          "description": "Quartet listings saved with visibility enabled; useful for launch density.",
+          "type": "trend",
+          "display": "BoldNumber",
+          "dateFrom": "-30d",
+          "properties": [{ "key": "visibility_enabled", "value": true }],
+          "series": [{ "event": "quartet_listing_saved" }]
+        },
+        {
+          "key": "key-actions-by-browser",
+          "name": "Key actions by browser",
+          "description": "Profile, listing, search, and contact activity grouped by browser.",
+          "type": "trend",
+          "display": "ActionsBar",
+          "dateFrom": "-30d",
+          "breakdown": "$browser",
+          "series": [
+            { "event": "singer_profile_saved" },
+            { "event": "quartet_listing_saved" },
+            { "event": "discovery_search_submitted" },
+            { "event": "contact_request_submitted" }
+          ]
+        },
+        {
+          "key": "key-actions-by-device",
+          "name": "Key actions by device",
+          "description": "Profile, listing, search, and contact activity grouped by device type.",
+          "type": "trend",
+          "display": "ActionsBar",
+          "dateFrom": "-30d",
+          "breakdown": "$device_type",
+          "series": [
+            { "event": "singer_profile_saved" },
+            { "event": "quartet_listing_saved" },
+            { "event": "discovery_search_submitted" },
+            { "event": "contact_request_submitted" }
+          ]
+        }
+      ]
+    }
+  ]
+}

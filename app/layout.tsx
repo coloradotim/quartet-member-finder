@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AnalyticsPageTracker } from "@/components/analytics/analytics-page-tracker";
 import { SiteFooter } from "@/components/navigation/site-footer";
 import "./globals.css";
 
@@ -16,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <AnalyticsPageTracker />
         <div className="flex min-h-screen flex-col">
           <div className="flex-1">{children}</div>
           <SiteFooter />

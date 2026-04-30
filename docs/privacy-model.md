@@ -182,6 +182,36 @@ views, search results, maps, or public profile/listing UI. Regular authenticated
 users cannot read other users' feedback. Admin/service-role access is required
 for cross-user review or triage.
 
+## Product analytics model
+
+The app may use PostHog for privacy-safe product analytics so the project can
+understand launch usage, onboarding completion, discovery activity, contact
+requests, and feedback submission without reading private user content.
+
+Analytics is optional and disabled when PostHog environment variables are not
+configured. When enabled, browser tracking sends route-view events through an
+internal app endpoint, and server actions send high-level funnel events after
+successful actions.
+
+Allowed analytics properties are intentionally narrow, such as route area,
+public route path, result counts, filter-presence booleans, target kind,
+visibility enabled flags, generic status, feedback type, and onboarding choice.
+
+Analytics must not send:
+
+- email addresses
+- display names
+- profile bio or quartet listing descriptions
+- contact request or feedback message text
+- postal codes
+- exact latitude or longitude
+- phone numbers
+- raw private ownership or recipient identifiers
+
+Signed-in server events may use a pseudonymous hash of the authenticated user ID
+so funnel steps can be understood without identifying users by direct personal
+information.
+
 ## Onboarding model
 
 First-run onboarding asks signed-in users what they want to do first, not what

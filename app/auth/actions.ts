@@ -1,17 +1,21 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import {
+  captureProductEvent,
+  pseudonymousAnalyticsUserId,
+} from "@/lib/analytics/product-analytics";
 import { firstSignInDestination } from "@/lib/onboarding/account-onboarding";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 function redirectWithMessage(
-  path: string,
+  route: string,
   key: "error" | "message",
   value: string,
 ): never {
-  const separator = path.includes("?") ? "&" : "?";
+  const separator = route.includes("?") ? "&" : "?";
 
-  redirect(`${path}${separator}${key}=${encodeURIComponent(value)}`);
+  redirect(`${route}${separator}${key}=${encodeURIComponent(value)}`);
 }
 
 export async function signInWithEmail(formData: FormData) {
@@ -103,6 +107,15 @@ export async function verifyEmailOtp(formData: FormData) {
   if (!user) {
     redirect(safeNext);
   }
+
+  await captureProductEvent(
+    "user_logged_in",
+    {
+      route: "/sign-in",
+      route_area: "auth",
+    },
+    { distinctId: pseudonymousAnalyticsUserId(user.id) },
+  );
 
   redirect(await firstSignInDestination(supabase, user, safeNext));
 }

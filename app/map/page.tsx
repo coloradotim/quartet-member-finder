@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PublicSiteHeader } from "@/components/navigation/public-site-header";
+import { captureProductEvent } from "@/lib/analytics/product-analytics";
 import {
   buildDiscoveryMapMarkers,
   type DiscoveryMapItem,
@@ -70,6 +71,21 @@ function selectedKind(value: string | string[] | undefined) {
   const rawValue = Array.isArray(value) ? value[0] : value;
 
   return rawValue === "singers" || rawValue === "quartets" ? rawValue : "both";
+}
+
+function filterAnalyticsProperties(
+  filters: ReturnType<typeof parseDiscoveryFilters>,
+) {
+  const flags = {
+    has_country_filter: Boolean(filters.country),
+    has_goal_filter: Boolean(filters.goal),
+    has_locality_filter: Boolean(filters.locality),
+    has_part_filter: Boolean(filters.part),
+    has_region_filter: Boolean(filters.region),
+  };
+  const filterCount = Object.values(flags).filter(Boolean).length;
+
+  return { filterCount, flags };
 }
 
 function tags(values: string[]) {
@@ -211,6 +227,16 @@ export default async function DiscoveryMapPage({ searchParams }: MapPageProps) {
   }
 
   const markers = buildDiscoveryMapMarkers(mapItems);
+  const { filterCount, flags } = filterAnalyticsProperties(filters);
+
+  await captureProductEvent("map_viewed", {
+    ...flags,
+    filter_count: filterCount,
+    kind,
+    route: "/map",
+    result_count: mapItems.length,
+    route_area: "map",
+  });
 
   return (
     <>

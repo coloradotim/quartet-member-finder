@@ -67,6 +67,8 @@ Expected variables will likely include:
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_POSTHOG_KEY` optional product analytics key
+- `NEXT_PUBLIC_POSTHOG_HOST` optional PostHog ingest host
 - `SUPABASE_SERVICE_ROLE_KEY` for server-only administrative scripts, never browser code
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
@@ -339,6 +341,12 @@ environment variables:
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
 
+Optional product analytics values may also live in Vercel Production
+environment variables:
+
+- `NEXT_PUBLIC_POSTHOG_KEY`
+- `NEXT_PUBLIC_POSTHOG_HOST`
+
 Those values are pulled by `vercel pull --environment=production` before the
 Vercel production build. They should not be added to GitHub Actions unless a
 future workflow step explicitly needs them.
@@ -445,6 +453,17 @@ Geocoding provider secrets, if any, must be server-only. Browser-rendered map
 props should contain approximate public labels, regional anchors, rounded
 distances, or jittered/blurred marker positions, never exact private
 latitude/longitude or private address fields.
+
+## Product analytics
+
+PostHog product analytics is optional. Set `NEXT_PUBLIC_POSTHOG_KEY` in Vercel
+Production to enable it, and set `NEXT_PUBLIC_POSTHOG_HOST` if the project uses
+a non-default PostHog region.
+
+The app sends only allowlisted privacy-safe product events through
+`/api/analytics` or trusted server actions. Do not configure session replay,
+autocapture of form fields, advertising pixels, or direct user identification
+without a separate privacy review and documentation update.
 
 ## Production readiness checklist
 

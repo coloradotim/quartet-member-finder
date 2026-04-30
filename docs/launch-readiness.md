@@ -59,14 +59,15 @@ Record before launch:
 
 ## Environment Variables and Secrets
 
-| Status   | Item                                                                          | Verification                                                                      |
-| -------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| Complete | Required GitHub deployment secrets are documented.                            | `docs/deployment.md#github-production-deployment-secrets`; `docs/environment.md`. |
-| Complete | Runtime-only server secrets stay in Vercel Production, not browser code.      | `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`.               |
-| Complete | Browser-exposed values are limited to public `NEXT_PUBLIC_*` configuration.   | `.env.example`; `docs/environment.md`.                                            |
-| Manual   | Confirm GitHub has production workflow secrets for deployment.                | GitHub repository or `production` environment secrets.                            |
-| Manual   | Confirm Vercel Production has runtime secrets for contact and feedback email. | Vercel project environment variables.                                             |
-| Manual   | Confirm no real `.env` file or secret value is tracked by git.                | CI guardrails and local `git status`.                                             |
+| Status   | Item                                                                                                                                    | Verification                                                                      |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Complete | Required GitHub deployment secrets are documented.                                                                                      | `docs/deployment.md#github-production-deployment-secrets`; `docs/environment.md`. |
+| Complete | Runtime-only server secrets stay in Vercel Production, not browser code.                                                                | `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`.               |
+| Complete | Browser-exposed values are limited to public `NEXT_PUBLIC_*` configuration.                                                             | `.env.example`; `docs/environment.md`.                                            |
+| Manual   | Confirm GitHub has production workflow secrets for deployment.                                                                          | GitHub repository or `production` environment secrets.                            |
+| Manual   | Confirm Vercel Production has runtime secrets for contact and feedback email.                                                           | Vercel project environment variables.                                             |
+| Manual   | If analytics is desired for launch, confirm Vercel Production has `NEXT_PUBLIC_POSTHOG_KEY` and the correct `NEXT_PUBLIC_POSTHOG_HOST`. | Vercel project environment variables and PostHog project settings.                |
+| Manual   | Confirm no real `.env` file or secret value is tracked by git.                                                                          | CI guardrails and local `git status`.                                             |
 
 ## Supabase Database, RLS, and Auth
 
@@ -104,6 +105,16 @@ Record before launch:
 | Complete | Hidden singer profiles and quartet listings are excluded from public discovery.                                             | Discovery views and smoke tests.                     |
 | Manual   | Run the final privacy sweep against public pages and page source.                                                           | `docs/smoke-test-plan.md#final-privacy-sweep`.       |
 | Manual   | Confirm public pages do not imply real-time chat, formal moderation, or public direct contact details.                      | `/help` and `/privacy` copy review.                  |
+
+## Product Analytics
+
+| Status    | Item                                                                                                                           | Verification                                          |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- |
+| Complete  | Product analytics is disabled when PostHog configuration is missing.                                                           | `lib/analytics/product-analytics.ts`; `.env.example`. |
+| Complete  | Analytics events use an allowlist and sanitize properties before forwarding to PostHog.                                        | `lib/analytics/product-analytics.ts`; tests.          |
+| Complete  | Analytics avoids email addresses, names, message text, postal codes, exact coordinates, and raw private ownership identifiers. | `docs/privacy-model.md#product-analytics-model`.      |
+| Manual    | Confirm PostHog receives page-view and funnel events in production if analytics is enabled.                                    | PostHog dashboard after smoke test.                   |
+| Follow-up | Add richer analytics dashboards or funnels after launch behavior clarifies what matters.                                       | PostHog product analysis, not app code.               |
 
 ## Core User Flows
 

@@ -3,6 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
+  captureProductEvent,
+  pseudonymousAnalyticsUserId,
+} from "@/lib/analytics/product-analytics";
+import {
   CONTACT_RATE_LIMIT_COUNT,
   contactRateLimitWindowStart,
   getContactRelayConfig,
@@ -136,6 +140,16 @@ export async function sendContactRequest(formData: FormData) {
 
   if (!admin || !relayConfig) {
     revalidatePath(values.returnTo);
+    await captureProductEvent(
+      "contact_request_submitted",
+      {
+        route: values.returnTo.split("?")[0] || values.returnTo,
+        route_area: "discovery",
+        status: "stored",
+        target_kind: values.targetKind,
+      },
+      { distinctId: pseudonymousAnalyticsUserId(user.id) },
+    );
     redirectWithContactStatus(values.returnTo, "stored");
   }
 
@@ -144,6 +158,16 @@ export async function sendContactRequest(formData: FormData) {
 
   if (recipientError || !recipient.user?.email) {
     revalidatePath(values.returnTo);
+    await captureProductEvent(
+      "contact_request_submitted",
+      {
+        route: values.returnTo.split("?")[0] || values.returnTo,
+        route_area: "discovery",
+        status: "stored",
+        target_kind: values.targetKind,
+      },
+      { distinctId: pseudonymousAnalyticsUserId(user.id) },
+    );
     redirectWithContactStatus(values.returnTo, "stored");
   }
 
@@ -161,9 +185,29 @@ export async function sendContactRequest(formData: FormData) {
       .eq("id", contactRequest.id);
   } catch {
     revalidatePath(values.returnTo);
+    await captureProductEvent(
+      "contact_request_submitted",
+      {
+        route: values.returnTo.split("?")[0] || values.returnTo,
+        route_area: "discovery",
+        status: "stored",
+        target_kind: values.targetKind,
+      },
+      { distinctId: pseudonymousAnalyticsUserId(user.id) },
+    );
     redirectWithContactStatus(values.returnTo, "stored");
   }
 
   revalidatePath(values.returnTo);
+  await captureProductEvent(
+    "contact_request_submitted",
+    {
+      route: values.returnTo.split("?")[0] || values.returnTo,
+      route_area: "discovery",
+      status: "sent",
+      target_kind: values.targetKind,
+    },
+    { distinctId: pseudonymousAnalyticsUserId(user.id) },
+  );
   redirectWithContactStatus(values.returnTo, "sent");
 }
