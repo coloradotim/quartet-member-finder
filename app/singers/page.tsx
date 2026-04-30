@@ -288,9 +288,27 @@ export default async function SingerSearchPage({
 
       <section className="mt-8 grid gap-4">
         {singers.length === 0 && !errorMessage ? (
-          <p className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 text-[#394548]">
-            No visible singer profiles match these filters yet.
-          </p>
+          <section className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 text-[#394548]">
+            <h2 className="text-xl font-bold text-[#172023]">
+              No visible singer profiles match these filters yet
+            </h2>
+            <p className="mt-3 text-sm leading-6">
+              Try clearing filters, widening the country/region/locality, or
+              checking the map. Early on, some singers may still be creating My
+              Singer Profile or keeping it hidden.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-4">
+              <Link className="font-semibold text-[#2f6f73]" href="/singers">
+                Clear filters
+              </Link>
+              <Link className="font-semibold text-[#2f6f73]" href="/map">
+                View Map
+              </Link>
+              <Link className="font-semibold text-[#2f6f73]" href="/quartets">
+                Find Quartet Openings
+              </Link>
+            </div>
+          </section>
         ) : null}
 
         {singers.map((singer) => (

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   BARBERSHOP_PARTS,
   PROFILE_GOALS,
@@ -121,6 +122,36 @@ export default async function ManageListingsPage({
           {params.message}
         </p>
       ) : null}
+
+      {!listing ? (
+        <section className="mt-8 max-w-3xl rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5">
+          <h2 className="text-xl font-bold text-[#172023]">
+            Start Quartet Mode
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-[#394548]">
+            Quartet Mode is for a quartet or prospective quartet looking for
+            singers. Create a listing with covered parts, missing parts, and an
+            approximate location so singers can judge whether it might fit.
+          </p>
+          <Link
+            className="mt-4 inline-flex font-semibold text-[#2f6f73]"
+            href="/singers"
+          >
+            Browse Find Singers first
+          </Link>
+        </section>
+      ) : listing.is_visible ? null : (
+        <section className="mt-8 max-w-3xl rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5">
+          <h2 className="text-xl font-bold text-[#172023]">
+            This quartet listing is hidden
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-[#394548]">
+            Hidden listings do not appear in Find Quartet Openings or on the
+            map, so singers cannot discover them yet. Turn on visibility below
+            when the listing is ready.
+          </p>
+        </section>
+      )}
 
       <form action={saveQuartetListing} className="mt-8 max-w-3xl space-y-8">
         <input name="listingId" type="hidden" value={fieldValue(listing?.id)} />

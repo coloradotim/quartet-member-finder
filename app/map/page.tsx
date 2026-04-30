@@ -356,9 +356,27 @@ export default async function DiscoveryMapPage({ searchParams }: MapPageProps) {
 
       <section className="mt-8 grid gap-4 md:grid-cols-2">
         {markers.length === 0 && !errorMessage ? (
-          <p className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 text-[#394548] md:col-span-2">
-            No visible public locations match these filters yet.
-          </p>
+          <section className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 text-[#394548] md:col-span-2">
+            <h2 className="text-xl font-bold text-[#172023]">
+              No approximate map regions match these filters yet
+            </h2>
+            <p className="mt-3 text-sm leading-6">
+              The map only shows visible singer profiles and quartet openings
+              with approximate public location data. Try clearing filters or
+              searching Find Singers and Find Quartet Openings directly.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-4">
+              <Link className="font-semibold text-[#2f6f73]" href="/map">
+                Clear filters
+              </Link>
+              <Link className="font-semibold text-[#2f6f73]" href="/singers">
+                Find Singers
+              </Link>
+              <Link className="font-semibold text-[#2f6f73]" href="/quartets">
+                Find Quartet Openings
+              </Link>
+            </div>
+          </section>
         ) : null}
 
         {markers.map((marker) => (
