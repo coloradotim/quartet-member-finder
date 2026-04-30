@@ -230,13 +230,19 @@ through the app.
 ## Account settings model
 
 Account Settings are separate from My Singer Profile and Quartet Mode. They are
-for app-level preferences and account-level actions that should not change
-public discovery content by accident.
+for private account identity, app-level preferences, first-run setup, and
+account-level actions that should not change public discovery content by
+accident.
 
-The initial settings page lets a signed-in user save an account-level preferred
-distance unit and reset first-run onboarding. Future export, deactivation, and
-delete actions are shown only as placeholders until the product has clear
-privacy and data-retention behavior for them.
+The settings page lets a signed-in user save an account display name, save an
+account-level preferred distance unit, see sign-in email context, and reset
+first-run onboarding. Future export, deactivation, and delete actions are shown
+only as placeholders until the product has clear privacy and data-retention
+behavior for them.
+
+My Singer Profile remains the place for public singer discovery data: public
+display name, parts, goals, experience, availability, approximate location,
+private postal code for future matching, and search visibility.
 
 ## Abuse and safety considerations
 

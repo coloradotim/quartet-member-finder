@@ -42,8 +42,9 @@ Baritone, and Bass unless the product explicitly adds alternate naming later.
 An `account_profiles` row belongs to one authenticated user by `user_id`.
 It also stores first-run onboarding completion/skipped state so new users can be
 guided to a first action after sign-in without choosing a permanent role.
-Account-level preferences that do not belong to My Singer Profile or Quartet
-Mode also live here, including `preferred_distance_unit`.
+Account-level preferences and private account identity fields that do not belong
+to My Singer Profile or Quartet Mode also live here, including `display_name`
+and `preferred_distance_unit`.
 
 A `singer_profiles` row belongs to one authenticated user by `user_id`. The
 initial schema enforces one singer profile per user.
@@ -75,10 +76,11 @@ The server creates the account profile row after sign-in when needed. If neither
 completion nor skipped state is present, sign-in routes the user through
 `/app/onboarding` before continuing to the requested app destination.
 
-Account Settings at `/app/settings` writes `preferred_distance_unit` on
-`account_profiles`. This is an app/account preference for future distance
-displays. Singer profiles and quartet listings keep their own
-`preferred_distance_unit` values for discovery rows.
+Account Settings at `/app/settings` writes `display_name` and
+`preferred_distance_unit` on `account_profiles`. These are private account-level
+settings for app identity and distance display. Singer profiles and quartet
+listings keep their own public display/location/travel details for discovery
+rows.
 
 The public discovery routes are:
 

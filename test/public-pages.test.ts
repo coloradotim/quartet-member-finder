@@ -20,6 +20,7 @@ describe("public help and privacy content", () => {
     expect(helpText).toContain("Find is the main discovery page");
     expect(helpText).toContain("results table");
     expect(helpText).toContain("Location And Privacy");
+    expect(helpText).toContain("Account Settings Vs Singer Profile");
     expect(helpText).toContain("Contact");
     expect(helpText).toContain("Signed-in users can send private feedback");
     expect(helpText).toContain("does not replace personal judgment");

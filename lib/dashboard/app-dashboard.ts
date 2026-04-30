@@ -37,7 +37,7 @@ export const quartetModeDashboardActions: DashboardAction[] = [
 export const supportDashboardActions: DashboardAction[] = [
   {
     description:
-      "Review account-level preferences, re-run onboarding, and find future account-management placeholders.",
+      "Review private account identity, preferred distance units, first-run setup, and future account-management placeholders.",
     href: "/app/settings",
     label: "Account Settings",
   },

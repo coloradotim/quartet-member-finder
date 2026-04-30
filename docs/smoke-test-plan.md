@@ -191,13 +191,15 @@ validation.
 ## Account Settings
 
 1. Open `/app/settings`.
-2. Change preferred distance unit between kilometers and miles.
-3. Pass: saving succeeds and the selected account-level preference remains
+2. Pass: the page distinguishes Account Settings, My Singer Profile, and
+   Quartet Mode.
+3. Change account display name and preferred distance unit.
+4. Pass: saving succeeds and the selected account-level preferences remain
    selected.
-4. Click re-run onboarding.
-5. Pass: onboarding state is cleared and the app routes to onboarding with a
+5. Click re-run onboarding.
+6. Pass: onboarding state is cleared and the app routes to onboarding with a
    safe return path.
-6. Fail: Account Settings duplicates singer profile or quartet listing fields
+7. Fail: Account Settings duplicates singer profile or quartet listing fields
    instead of staying account-level.
 
 ## Sign-Out
