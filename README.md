@@ -61,6 +61,9 @@ secrets out of source control.
 Testing expectations and the current unit-test structure are documented in
 `docs/testing.md`.
 
+Local and staging demo data is documented in `docs/seed-data.md`; the seed file
+is intentionally opt-in and must not be run against production.
+
 ## Early project notes
 
 Project context, privacy expectations, workflow rules, and implementation
