@@ -56,12 +56,7 @@ export function HelpFeedbackForm({ status }: HelpFeedbackFormProps) {
         <input name="contextPath" type="hidden" value="/help" />
         <label className="hidden">
           Website
-          <input
-            autoComplete="off"
-            name="website"
-            tabIndex={-1}
-            type="text"
-          />
+          <input autoComplete="off" name="website" tabIndex={-1} type="text" />
         </label>
 
         <label className="block">
