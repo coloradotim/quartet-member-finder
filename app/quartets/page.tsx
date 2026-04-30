@@ -9,6 +9,11 @@ import {
   toPublicLocationSummary,
   travelRadiusLabel,
 } from "@/lib/location/approximate-location";
+import {
+  groupVoicingParts,
+  voicingPartOptions,
+  voicingPartValue,
+} from "@/lib/parts/voicings";
 import { parseDiscoveryFilters } from "@/lib/search/discovery-filters";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -33,13 +38,7 @@ type SearchPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-const partOptions = [
-  ["", "Any needed part"],
-  ["tenor", "Tenor"],
-  ["lead", "Lead"],
-  ["baritone", "Baritone"],
-  ["bass", "Bass"],
-];
+const partOptions = voicingPartOptions("Any needed voicing / part");
 
 const goalOptions = [
   ["", "Any goal"],
@@ -60,6 +59,10 @@ function textValue(value: string | null) {
 
 function tags(values: string[]) {
   return values.map((value) => value.replaceAll("_", " ")).join(", ");
+}
+
+function partsLabel(values: string[]) {
+  return groupVoicingParts(values) || "No parts listed";
 }
 
 function returnToPath(params: Record<string, string | string[] | undefined>) {
@@ -147,7 +150,9 @@ export default async function QuartetSearchPage({
     }
 
     if (filters.part) {
-      query = query.contains("parts_needed", [filters.part]);
+      query = query.contains("parts_needed", [
+        voicingPartValue(filters.part.voicing, filters.part.part),
+      ]);
     }
 
     if (filters.goal) {
@@ -239,7 +244,11 @@ export default async function QuartetSearchPage({
             <span className="text-sm font-semibold">Needed part</span>
             <select
               className={filterControlClass}
-              defaultValue={textValue(filters.part)}
+              defaultValue={
+                filters.part
+                  ? voicingPartValue(filters.part.voicing, filters.part.part)
+                  : ""
+              }
               name="part"
             >
               {partOptions.map(([value, label]) => (
@@ -374,7 +383,7 @@ export default async function QuartetSearchPage({
                   </p>
                 </div>
                 <p className="text-sm font-semibold text-[#2f6f73]">
-                  Seeking {tags(quartet.parts_needed)}
+                  Seeking {partsLabel(quartet.parts_needed)}
                 </p>
               </div>
               {quartet.description ? (
@@ -386,7 +395,7 @@ export default async function QuartetSearchPage({
                 {quartet.parts_covered.length > 0 ? (
                   <div>
                     <dt className="font-semibold text-[#172023]">Covered</dt>
-                    <dd>{tags(quartet.parts_covered)}</dd>
+                    <dd>{partsLabel(quartet.parts_covered)}</dd>
                   </div>
                 ) : null}
                 {quartet.goals.length > 0 ? (

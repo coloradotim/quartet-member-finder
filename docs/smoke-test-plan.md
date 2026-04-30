@@ -74,7 +74,7 @@ validation.
 1. Open `/app/profile`.
 2. Create or edit a singer profile with:
    - display name: `Smoke Test Singer`
-   - parts: Lead and Baritone
+   - parts: TTBB Lead and SATB Soprano / Mixed Tenor
    - goals: Pickup and Learning
    - country: United Kingdom
    - region: England
@@ -84,7 +84,7 @@ validation.
    - travel radius: `40`
    - visible: on
 3. Pass: saving succeeds and the form reloads with the saved values.
-4. Pass: `/singers?country=United+Kingdom&locality=Manchester&part=lead`
+4. Pass: `/singers?country=United+Kingdom&locality=Manchester&part=TTBB%3ALead`
    includes the profile when visible.
 5. Pass: public singer results show approximate location only, such as
    `Manchester, UK area`, and do not show `M1 TEST`.
@@ -98,8 +98,9 @@ validation.
 1. Open `/app/listings`.
 2. Create or edit a quartet listing with:
    - name: `Smoke Test Quartet`
-   - covered parts: Tenor and Bass
-   - needed parts: Lead and Baritone
+   - voicing: TTBB
+   - covered parts: TTBB Tenor and Bass
+   - needed parts: TTBB Lead and Baritone
    - goals: Regular Rehearsal and Contest
    - country: Ireland
    - region: Leinster
@@ -109,8 +110,8 @@ validation.
    - travel radius: `50`
    - visible: on
 3. Pass: saving succeeds and covered/needed parts remain distinct.
-4. Pass: `/quartets?country=Ireland&locality=Dublin&part=lead` includes the
-   listing when visible.
+4. Pass: `/quartets?country=Ireland&locality=Dublin&part=TTBB%3ALead` includes
+   the listing when visible.
 5. Pass: public quartet results show parts covered, parts needed, goals, and
    approximate location only.
 6. Set visibility off and save.

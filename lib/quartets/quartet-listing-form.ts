@@ -1,12 +1,17 @@
 import {
-  BARBERSHOP_PARTS,
   PROFILE_GOALS,
   normalizeCountryCode,
   normalizeOptionalText,
+  parseAllowedList,
   parseTravelRadiusKm,
-  type BarbershopPart,
+  parseVoicingPartList,
   type ProfileGoal,
 } from "@/lib/profiles/singer-profile-form";
+import {
+  type Voicing,
+  type VoicingPartSelection,
+  isVoicing,
+} from "@/lib/parts/voicings";
 
 export type QuartetListingFormValues = {
   availability: string | null;
@@ -20,31 +25,29 @@ export type QuartetListingFormValues = {
   locality: string | null;
   locationLabelPublic: string | null;
   name: string;
-  partsCovered: BarbershopPart[];
-  partsNeeded: BarbershopPart[];
+  partsCovered: VoicingPartSelection[];
+  partsNeeded: VoicingPartSelection[];
   postalCodePrivate: string | null;
   region: string | null;
   travelRadiusKm: number | null;
+  voicing: Voicing;
 };
 
-function parseAllowedList<T extends string>(
-  values: FormDataEntryValue[],
-  allowedValues: readonly T[],
+function removePartsAlreadyNeeded(
+  covered: VoicingPartSelection[],
+  needed: VoicingPartSelection[],
 ) {
-  const allowed = new Set<string>(allowedValues);
+  const neededParts = new Set(
+    needed.map((part) => `${part.voicing}:${part.part}`),
+  );
 
-  return values
-    .filter((value): value is string => typeof value === "string")
-    .filter((value): value is T => allowed.has(value));
+  return covered.filter(
+    (part) => !neededParts.has(`${part.voicing}:${part.part}`),
+  );
 }
 
-function removePartsAlreadyNeeded(
-  covered: BarbershopPart[],
-  needed: BarbershopPart[],
-) {
-  const neededParts = new Set(needed);
-
-  return covered.filter((part) => !neededParts.has(part));
+function selectedVoicing(value: FormDataEntryValue | null) {
+  return typeof value === "string" && isVoicing(value) ? value : "TTBB";
 }
 
 export function parseQuartetListingFormData(
@@ -56,12 +59,14 @@ export function parseQuartetListingFormData(
     throw new Error("Listing name is required.");
   }
 
-  const partsNeeded = parseAllowedList(
+  const voicing = selectedVoicing(formData.get("voicing"));
+  const partsNeeded = parseVoicingPartList(
     formData.getAll("partsNeeded"),
-    BARBERSHOP_PARTS,
-  );
+  ).filter((part) => part.voicing === voicing);
   const partsCovered = removePartsAlreadyNeeded(
-    parseAllowedList(formData.getAll("partsCovered"), BARBERSHOP_PARTS),
+    parseVoicingPartList(formData.getAll("partsCovered")).filter(
+      (part) => part.voicing === voicing,
+    ),
     partsNeeded,
   );
 
@@ -84,6 +89,7 @@ export function parseQuartetListingFormData(
     postalCodePrivate: normalizeOptionalText(formData.get("postalCodePrivate")),
     region: normalizeOptionalText(formData.get("region")),
     travelRadiusKm: parseTravelRadiusKm(formData.get("travelRadiusKm")),
+    voicing,
   };
 }
 

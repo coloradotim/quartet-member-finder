@@ -25,9 +25,10 @@ describe("quartet listing form parsing", () => {
         ["region", "Ontario"],
         ["locality", "Toronto"],
         ["postalCodePrivate", "M5V"],
-        ["partsCovered", "lead"],
-        ["partsCovered", "bass"],
-        ["partsNeeded", "tenor"],
+        ["voicing", "TTBB"],
+        ["partsCovered", "TTBB:Lead"],
+        ["partsCovered", "TTBB:Bass"],
+        ["partsNeeded", "TTBB:Tenor"],
         ["goals", "regular_rehearsal"],
         ["travelRadiusKm", "75"],
       ]),
@@ -35,8 +36,11 @@ describe("quartet listing form parsing", () => {
 
     expect(values.countryCode).toBe("CA");
     expect(values.postalCodePrivate).toBe("M5V");
-    expect(values.partsCovered).toEqual(["lead", "bass"]);
-    expect(values.partsNeeded).toEqual(["tenor"]);
+    expect(values.partsCovered).toEqual([
+      { part: "Lead", voicing: "TTBB" },
+      { part: "Bass", voicing: "TTBB" },
+    ]);
+    expect(values.partsNeeded).toEqual([{ part: "Tenor", voicing: "TTBB" }]);
     expect(values.goals).toEqual(["regular_rehearsal"]);
     expect(values.travelRadiusKm).toBe(75);
   });
@@ -45,30 +49,39 @@ describe("quartet listing form parsing", () => {
     const values = parseQuartetListingFormData(
       formData([
         ["name", "Chord Project"],
-        ["partsCovered", "lead"],
-        ["partsCovered", "bass"],
-        ["partsNeeded", "lead"],
-        ["partsNeeded", "baritone"],
+        ["voicing", "SATB"],
+        ["partsCovered", "SATB:Alto"],
+        ["partsCovered", "SATB:Bass"],
+        ["partsNeeded", "SATB:Alto"],
+        ["partsNeeded", "SATB:Tenor"],
       ]),
     );
 
-    expect(values.partsCovered).toEqual(["bass"]);
-    expect(values.partsNeeded).toEqual(["lead", "baritone"]);
+    expect(values.partsCovered).toEqual([{ part: "Bass", voicing: "SATB" }]);
+    expect(values.partsNeeded).toEqual([
+      { part: "Alto", voicing: "SATB" },
+      { part: "Tenor", voicing: "SATB" },
+    ]);
   });
 
   it("preserves every valid needed part for an incomplete quartet", () => {
     const values = parseQuartetListingFormData(
       formData([
         ["name", "Festival Pickup Quartet"],
-        ["partsCovered", "lead"],
-        ["partsNeeded", "tenor"],
-        ["partsNeeded", "baritone"],
-        ["partsNeeded", "bass"],
+        ["voicing", "SSAA"],
+        ["partsCovered", "SSAA:Alto 1"],
+        ["partsNeeded", "SSAA:Soprano 1"],
+        ["partsNeeded", "SSAA:Soprano 2"],
+        ["partsNeeded", "SSAA:Alto 2"],
       ]),
     );
 
-    expect(values.partsCovered).toEqual(["lead"]);
-    expect(values.partsNeeded).toEqual(["tenor", "baritone", "bass"]);
+    expect(values.partsCovered).toEqual([{ part: "Alto 1", voicing: "SSAA" }]);
+    expect(values.partsNeeded).toEqual([
+      { part: "Soprano 1", voicing: "SSAA" },
+      { part: "Soprano 2", voicing: "SSAA" },
+      { part: "Alto 2", voicing: "SSAA" },
+    ]);
   });
 
   it("builds an approximate public location without postal code", () => {

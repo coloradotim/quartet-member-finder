@@ -6,6 +6,11 @@ import {
   type DiscoveryMapItem,
 } from "@/lib/location/map-markers";
 import { approximateLocationLabel } from "@/lib/location/approximate-location";
+import {
+  groupVoicingParts,
+  voicingPartOptions,
+  voicingPartValue,
+} from "@/lib/parts/voicings";
 import { parseDiscoveryFilters } from "@/lib/search/discovery-filters";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -48,13 +53,7 @@ const kindOptions = [
   ["singers", "Singers"],
 ];
 
-const partOptions = [
-  ["", "Any part"],
-  ["tenor", "Tenor"],
-  ["lead", "Lead"],
-  ["baritone", "Baritone"],
-  ["bass", "Bass"],
-];
+const partOptions = voicingPartOptions("Any voicing / part");
 
 const goalOptions = [
   ["", "Any goal"],
@@ -79,8 +78,8 @@ function selectedKind(value: string | string[] | undefined) {
   return rawValue === "singers" || rawValue === "quartets" ? rawValue : "both";
 }
 
-function tags(values: string[]) {
-  return values.map((value) => value.replaceAll("_", " ")).join(", ");
+function partsLabel(values: string[]) {
+  return groupVoicingParts(values) || "Any";
 }
 
 function locationLabel(item: FindResult) {
@@ -161,7 +160,9 @@ export default async function FindPage({ searchParams }: FindPageProps) {
       }
 
       if (filters.part) {
-        query = query.contains("parts", [filters.part]);
+        query = query.contains("parts", [
+          voicingPartValue(filters.part.voicing, filters.part.part),
+        ]);
       }
 
       if (filters.goal) {
@@ -213,7 +214,9 @@ export default async function FindPage({ searchParams }: FindPageProps) {
       }
 
       if (filters.part) {
-        query = query.contains("parts_needed", [filters.part]);
+        query = query.contains("parts_needed", [
+          voicingPartValue(filters.part.voicing, filters.part.part),
+        ]);
       }
 
       if (filters.goal) {
@@ -324,7 +327,11 @@ export default async function FindPage({ searchParams }: FindPageProps) {
             <span className="text-sm font-semibold">Part</span>
             <select
               className={filterControlClass}
-              defaultValue={textValue(filters.part)}
+              defaultValue={
+                filters.part
+                  ? voicingPartValue(filters.part.voicing, filters.part.part)
+                  : ""
+              }
               name="part"
             >
               {partOptions.map(([value, label]) => (
@@ -398,7 +405,9 @@ export default async function FindPage({ searchParams }: FindPageProps) {
                   {marker.count} {markerKindLabel(marker)}
                 </p>
                 {marker.parts.length > 0 ? (
-                  <p className="mt-1 text-[#596466]">{tags(marker.parts)}</p>
+                  <p className="mt-1 text-[#596466]">
+                    {partsLabel(marker.parts)}
+                  </p>
                 ) : null}
               </div>
             ))}
@@ -458,7 +467,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
                         {result.intentLabel}
                       </td>
                       <td className="px-4 py-3 text-[#394548]">
-                        {result.parts.length > 0 ? tags(result.parts) : "Any"}
+                        {partsLabel(result.parts)}
                       </td>
                       <td className="px-4 py-3 text-[#394548]">
                         {locationLabel(result)}
@@ -495,7 +504,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
                 </p>
                 {marker.parts.length > 0 ? (
                   <p className="mt-3 text-sm font-semibold text-[#2f6f73]">
-                    {tags(marker.parts)}
+                    {partsLabel(marker.parts)}
                   </p>
                 ) : null}
               </article>

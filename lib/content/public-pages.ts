@@ -9,6 +9,7 @@ export const publicHelpSections = [
   {
     body: [
       "A singer profile describes who you are as a singer: your name, parts, goals, experience, availability, travel willingness, and approximate location.",
+      "Parts are grouped by voicing, so TTBB Tenor, SATB Tenor, and SSAA part labels stay distinct in discovery.",
       "You choose whether the profile appears in public discovery. Hidden profiles stay out of singer search and the map.",
     ],
     heading: "Singer Profiles",
@@ -16,7 +17,7 @@ export const publicHelpSections = [
   {
     body: [
       "A quartet listing is for a quartet or prospective quartet that has some parts covered and is looking for one or more singers.",
-      "Listings keep covered parts and needed parts separate so searchers can quickly understand what the group needs.",
+      "Listings keep covered parts and needed parts separate within the quartet's voicing so searchers can quickly understand what the group needs.",
     ],
     heading: "Quartet Listings",
   },
@@ -24,6 +25,7 @@ export const publicHelpSections = [
     body: [
       "Find is the main discovery page. It combines filters, a privacy-safe regional map, and a results table for quartet openings and singer profiles.",
       "Use the looking-for filter to focus on quartet openings when you are a singer, or singer profiles when you are representing a quartet or looking for other singers.",
+      "Part filters include voicing context, including TTBB, SSAA, and SATB / mixed labels.",
       "The map is part of Find rather than a separate first step. It helps you scan approximate activity, then the table below gives names, parts, type, and next-step links.",
       "Detailed singer and quartet search pages remain available from Find when you need more specific filters like availability, experience, or travel willingness.",
       "Search results are useful even when a profile is incomplete, but more complete profiles are easier for others to evaluate.",

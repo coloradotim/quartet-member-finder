@@ -13,29 +13,36 @@ It includes these data areas:
 
 - `account_profiles`: authenticated-user display metadata.
 - `singer_profiles`: one singer profile per authenticated owner.
-- `singer_profile_parts`: one or more barbershop parts for a singer.
+- `singer_profile_parts`: one or more voicing-aware barbershop parts for a singer.
 - `quartet_listings`: incomplete quartet listings owned by one authenticated user.
-- `quartet_listing_parts`: parts currently covered or needed by a quartet.
+- `quartet_listing_parts`: voicing-aware parts currently covered or needed by a quartet.
 - `contact_requests`: app-mediated first-contact messages.
 - `feedback_submissions`: private authenticated-user feedback from the help page.
 - `singer_discovery_profiles`: privacy-safe singer discovery view.
 - `quartet_discovery_listings`: privacy-safe quartet discovery view.
 
-The schema also defines enums for barbershop parts, distance units, location
-precision, quartet part status, and contact request status.
+The schema also defines enums for distance units, location precision, quartet
+part status, and contact request status. Earlier migrations created a
+barbershop part enum; current part storage uses text plus voicing constraints so
+TTBB, SATB, and SSAA part names can stay distinct.
 
 ## Part model
 
-Barbershop parts are represented as:
+Barbershop parts are represented with explicit voicing context. The app stores
+the canonical `voicing` and `part` together in `singer_profile_parts` and
+`quartet_listing_parts`.
 
-- `tenor`
-- `lead`
-- `baritone`
-- `bass`
+Supported MVP voicings and parts are:
 
-Display code may title-case those values, but the database intentionally uses
-stable lowercase enum values. SSAA barbershop listings still use Tenor, Lead,
-Baritone, and Bass unless the product explicitly adds alternate naming later.
+- TTBB: `Tenor`, `Lead`, `Baritone`, `Bass`
+- SATB: `Soprano`, `Alto`, `Tenor`, `Bass`
+- SSAA: `Soprano 1`, `Soprano 2`, `Alto 1`, `Alto 2`
+
+Voicing context is meaningful. `TTBB` `Tenor` and `SATB` `Tenor` are not treated
+as interchangeable discovery values. SATB UI may show mixed-barbershop helper
+labels, such as “Soprano / Mixed Tenor,” while storing the canonical SATB part.
+Discovery views expose searchable public arrays as `Voicing:Part` strings, for
+example `TTBB:Lead` or `SATB:Soprano`.
 
 ## Ownership model
 
@@ -91,7 +98,7 @@ The public discovery routes are:
 - `/quartets`, backed by `quartet_discovery_listings`
 - `/map`, backed by both discovery views as a compatibility map view
 
-These routes may filter on public location fields, part, goals,
+These routes may filter on public location fields, voicing-aware part, goals,
 experience/commitment, availability, and travel willingness. They should not
 read private base-table location or contact fields.
 

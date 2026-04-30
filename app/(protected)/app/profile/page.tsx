@@ -1,11 +1,16 @@
 import Link from "next/link";
 import {
-  BARBERSHOP_PARTS,
   PROFILE_GOALS,
-  type BarbershopPart,
   type ProfileGoal,
 } from "@/lib/profiles/singer-profile-form";
 import { locationFieldLabelsForCountry } from "@/lib/location/country-location-defaults";
+import {
+  VOICINGS,
+  partsByVoicing,
+  partLabel,
+  voicingLabels,
+  voicingPartValue,
+} from "@/lib/parts/voicings";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { saveSingerProfile } from "./actions";
 
@@ -31,13 +36,6 @@ type ManageProfilePageProps = {
     error?: string;
     message?: string;
   }>;
-};
-
-const partLabels: Record<BarbershopPart, string> = {
-  baritone: "Baritone",
-  bass: "Bass",
-  lead: "Lead",
-  tenor: "Tenor",
 };
 
 const goalLabels: Record<ProfileGoal, string> = {
@@ -81,12 +79,12 @@ export default async function ManageProfilePage({
     supabase && profile
       ? await supabase
           .from("singer_profile_parts")
-          .select("part")
+          .select("part, voicing")
           .eq("singer_profile_id", profile.id)
       : { data: [] };
 
   const selectedParts =
-    parts?.map((partRow) => partRow.part as BarbershopPart) ?? [];
+    parts?.map((partRow) => `${partRow.voicing}:${partRow.part}`) ?? [];
   const locationLabels = locationFieldLabelsForCountry(
     profile?.country_code,
     profile?.country_name,
@@ -186,20 +184,42 @@ export default async function ManageProfilePage({
 
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-[#172023]">Parts Sung</h2>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {BARBERSHOP_PARTS.map((part) => (
-              <label
-                className="flex items-center gap-3 rounded-md border border-[#d7cec0] bg-[#fffaf2] px-3 py-2"
-                key={part}
+          <p className="text-sm leading-6 text-[#394548]">
+            Select every part you sing, grouped by voicing. TTBB Tenor and SATB
+            Tenor are different discovery contexts.
+          </p>
+          <div className="grid gap-4">
+            {VOICINGS.map((voicing) => (
+              <fieldset
+                className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-4"
+                key={voicing}
               >
-                <input
-                  defaultChecked={checked(part, selectedParts)}
-                  name="parts"
-                  type="checkbox"
-                  value={part}
-                />
-                <span className="font-semibold">{partLabels[part]}</span>
-              </label>
+                <legend className="font-bold text-[#172023]">
+                  {voicingLabels[voicing]}
+                </legend>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  {partsByVoicing[voicing].map((part) => {
+                    const value = voicingPartValue(voicing, part);
+
+                    return (
+                      <label
+                        className="flex items-center gap-3 rounded-md border border-[#d7cec0] bg-white px-3 py-2"
+                        key={value}
+                      >
+                        <input
+                          defaultChecked={checked(value, selectedParts)}
+                          name="parts"
+                          type="checkbox"
+                          value={value}
+                        />
+                        <span className="font-semibold">
+                          {partLabel(voicing, part)}
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </fieldset>
             ))}
           </div>
         </section>

@@ -9,6 +9,11 @@ import {
   toPublicLocationSummary,
   travelRadiusLabel,
 } from "@/lib/location/approximate-location";
+import {
+  groupVoicingParts,
+  voicingPartOptions,
+  voicingPartValue,
+} from "@/lib/parts/voicings";
 import { parseDiscoveryFilters } from "@/lib/search/discovery-filters";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -31,13 +36,7 @@ type SearchPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-const partOptions = [
-  ["", "Any part"],
-  ["tenor", "Tenor"],
-  ["lead", "Lead"],
-  ["baritone", "Baritone"],
-  ["bass", "Bass"],
-];
+const partOptions = voicingPartOptions("Any voicing / part");
 
 const goalOptions = [
   ["", "Any goal"],
@@ -58,6 +57,10 @@ function textValue(value: string | null) {
 
 function tags(values: string[]) {
   return values.map((value) => value.replaceAll("_", " ")).join(", ");
+}
+
+function partsLabel(values: string[]) {
+  return groupVoicingParts(values) || "No parts listed";
 }
 
 function returnToPath(params: Record<string, string | string[] | undefined>) {
@@ -145,7 +148,9 @@ export default async function SingerSearchPage({
     }
 
     if (filters.part) {
-      query = query.contains("parts", [filters.part]);
+      query = query.contains("parts", [
+        voicingPartValue(filters.part.voicing, filters.part.part),
+      ]);
     }
 
     if (filters.goal) {
@@ -238,7 +243,11 @@ export default async function SingerSearchPage({
             <span className="text-sm font-semibold">Part</span>
             <select
               className={filterControlClass}
-              defaultValue={textValue(filters.part)}
+              defaultValue={
+                filters.part
+                  ? voicingPartValue(filters.part.voicing, filters.part.part)
+                  : ""
+              }
               name="part"
             >
               {partOptions.map(([value, label]) => (
@@ -373,7 +382,7 @@ export default async function SingerSearchPage({
                   </p>
                 </div>
                 <p className="text-sm font-semibold text-[#2f6f73]">
-                  {tags(singer.parts)}
+                  {partsLabel(singer.parts)}
                 </p>
               </div>
               <dl className="mt-4 grid gap-3 text-sm text-[#394548] sm:grid-cols-2">

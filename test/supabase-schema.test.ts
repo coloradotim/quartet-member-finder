@@ -68,4 +68,22 @@ describe("initial Supabase schema migration", () => {
       privateFieldPattern,
     );
   });
+
+  it("stores and exposes parts with explicit voicing context", () => {
+    expect(migration).toContain(
+      "add column voicing text not null default 'TTBB'",
+    );
+    expect(migration).toContain(
+      "add constraint singer_profile_parts_voicing_part_check",
+    );
+    expect(migration).toContain(
+      "add constraint quartet_listing_parts_voicing_part_check",
+    );
+    expect(migration).toContain(
+      "singer_profile_parts.voicing || ':' || singer_profile_parts.part",
+    );
+    expect(migration).toContain(
+      "quartet_listing_parts.voicing || ':' || quartet_listing_parts.part",
+    );
+  });
 });
