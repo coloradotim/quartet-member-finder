@@ -10,6 +10,7 @@ export const publicHelpSections = [
     body: [
       "A singer profile describes who you are as a singer: your name, parts, goals, experience, availability, travel willingness, and approximate location.",
       "Parts are grouped by voicing, so TTBB Tenor, SATB Tenor, and SSAA part labels stay distinct in discovery.",
+      "Only display name is required; the optional details help others decide whether a contact request makes sense.",
       "You choose whether the profile appears in public discovery. Hidden profiles stay out of singer search and the map.",
     ],
     heading: "Singer Profiles",
