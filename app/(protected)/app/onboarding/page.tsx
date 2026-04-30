@@ -6,7 +6,7 @@ import {
   getOnboardingStatus,
   onboardingIsDone,
 } from "@/lib/onboarding/account-onboarding";
-import { locationFieldLabelsForCountry } from "@/lib/location/country-location-defaults";
+import { countryOptions } from "@/lib/location/country-location-defaults";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type OnboardingPageProps = {
@@ -20,11 +20,10 @@ type AccountProfileStarterRow = {
 };
 
 type SingerProfileStarterRow = {
-  country_code: string | null;
   country_name: string | null;
   display_name: string;
   locality: string | null;
-  location_label_public: string | null;
+  postal_code_private: string | null;
 };
 
 export default async function OnboardingPage({
@@ -64,16 +63,11 @@ export default async function OnboardingPage({
 
   const { data: singerProfile } = await supabase
     .from("singer_profiles")
-    .select(
-      "display_name, country_code, country_name, locality, location_label_public",
-    )
+    .select("display_name, country_name, locality, postal_code_private")
     .eq("user_id", user.id)
     .maybeSingle<SingerProfileStarterRow>();
 
-  const locationLabels = locationFieldLabelsForCountry(
-    singerProfile?.country_code,
-    singerProfile?.country_name,
-  );
+  const selectedCountry = singerProfile?.country_name ?? "United States";
 
   return (
     <div className="space-y-8">
@@ -141,33 +135,30 @@ export default async function OnboardingPage({
             </label>
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
-                Country name
+                Country
                 <span className="font-normal text-[#596466]"> Optional</span>
               </span>
-              <input
+              <select
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-                defaultValue={singerProfile?.country_name ?? ""}
-                maxLength={120}
+                defaultValue={selectedCountry}
                 name="countryName"
-                placeholder="Canada"
-              />
+              >
+                {countryOptions.map((country) => (
+                  <option key={country.name} value={country.name}>
+                    {country.name}
+                  </option>
+                ))}
+                {selectedCountry &&
+                !countryOptions.some(
+                  (country) => country.name === selectedCountry,
+                ) ? (
+                  <option value={selectedCountry}>{selectedCountry}</option>
+                ) : null}
+              </select>
             </label>
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
-                Country code
-                <span className="font-normal text-[#596466]"> Optional</span>
-              </span>
-              <input
-                className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base uppercase text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-                defaultValue={singerProfile?.country_code ?? ""}
-                maxLength={2}
-                name="countryCode"
-                placeholder="CA"
-              />
-            </label>
-            <label className="block">
-              <span className="text-sm font-semibold text-[#172023]">
-                {locationLabels.locality}
+                City
                 <span className="font-normal text-[#596466]"> Optional</span>
               </span>
               <input
@@ -179,16 +170,19 @@ export default async function OnboardingPage({
             </label>
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
-                Public approximate location
+                ZIP/postal code
                 <span className="font-normal text-[#596466]"> Optional</span>
               </span>
               <input
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
-                defaultValue={singerProfile?.location_label_public ?? ""}
-                maxLength={160}
-                name="locationLabelPublic"
-                placeholder="Toronto, ON area"
+                defaultValue={singerProfile?.postal_code_private ?? ""}
+                maxLength={40}
+                name="postalCodePrivate"
               />
+              <span className="mt-2 block text-sm leading-6 text-[#596466]">
+                Your ZIP/postal code is used for future approximate matching and
+                is not shown publicly.
+              </span>
             </label>
           </div>
         </section>

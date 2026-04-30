@@ -16,14 +16,16 @@ describe("onboarding page flow", () => {
       pageSource.indexOf("Step 2"),
     );
     expect(pageSource).toContain("Display name");
-    expect(pageSource).toContain("Country name");
-    expect(pageSource).toContain("Public approximate location");
+    expect(pageSource).toContain("Country");
+    expect(pageSource).toContain("ZIP/postal code");
+    expect(pageSource).not.toContain("Country code");
     expect(pageSource).toContain("Save and continue");
   });
 
   it("saves a hidden starter singer profile instead of publishing onboarding context", () => {
     expect(actionSource).toContain('.from("singer_profiles")');
     expect(actionSource).toContain("is_visible: false");
+    expect(actionSource).toContain("postal_code_private");
     expect(actionSource).toContain("Display%20name%20is%20required");
   });
 });

@@ -83,8 +83,8 @@ First-run onboarding writes these `account_profiles` fields:
 The server creates the account profile row after sign-in when needed. If neither
 completion nor skipped state is present, sign-in routes the user through
 `/app/onboarding`. Current onboarding collects display name and optional
-country/approximate location before asking what workflow the user wants to open
-first. Completing onboarding also creates or updates a hidden starter
+country/city/ZIP or postal code before asking what workflow the user wants to
+open first. Completing onboarding also creates or updates a hidden starter
 `singer_profiles` row with that basic context so profile defaults are available
 without publishing the user in discovery.
 
@@ -177,7 +177,7 @@ public queries should expose only approximate location information.
 The schema should be globally tolerant. Do not require US-only fields such as state or ZIP code. Prefer fields that can support international location data, such as:
 
 - country code or country name
-- region/admin area when available
+- region/admin area when available internally or from future geocoding
 - locality/city when available
 - postal code when available
 - formatted approximate location label
@@ -189,15 +189,16 @@ Current pattern:
 - Store private normalized location fields in base tables.
 - Expose privacy-safe search fields through views or controlled RPC functions.
 - Return approximate distance/region rather than exact coordinates for public discovery.
-- Support both miles and kilometers in UI/helper logic where practical.
+- Support both miles and kilometers in Find display. Miles are the default
+  user-facing unit; stored travel radius values remain kilometers.
 
 Application location helpers should treat base-table coordinates and private
-postal/address fields as internal matching data. The reusable public
-transformation returns only `location_label_public`, `locality`, `region`, and
-`country_name` equivalents for display. Public distance strings are rounded and
-formatted in both kilometers and miles, ordered by the profile/listing
-preferred distance unit. Save actions infer that unit from country rather than
-asking for a separate account setting.
+postal/address fields as internal matching data. User-facing profile/listing
+forms ask for country, city, and ZIP/postal code; they do not expose country
+code or admin-area fields. The reusable public transformation returns only
+`location_label_public`, `locality`, `region`, and `country_name` equivalents
+for display. Find can display travel-radius values in miles or kilometers, with
+miles as the default, while storage remains in kilometers.
 
 Both singer profiles and quartet listings support these globally tolerant
 location fields:

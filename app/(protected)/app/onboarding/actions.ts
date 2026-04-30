@@ -13,7 +13,10 @@ import {
   ensureAccountProfileForOnboarding,
   type AuthUserForOnboarding,
 } from "@/lib/onboarding/account-onboarding";
-import { distanceUnitForCountry } from "@/lib/location/country-location-defaults";
+import {
+  countryCodeFromName,
+  distanceUnitForCountry,
+} from "@/lib/location/country-location-defaults";
 import {
   buildPublicLocationLabel,
   inferLocationPrecision,
@@ -58,15 +61,18 @@ export async function completeOnboarding(formData: FormData) {
     email: user.email,
     id: user.id,
   };
+  const countryName = normalizeOptionalText(formData.get("countryName"));
   const starterProfile = {
-    countryCode: normalizeCountryCode(formData.get("countryCode")),
-    countryName: normalizeOptionalText(formData.get("countryName")),
+    countryCode:
+      normalizeCountryCode(formData.get("countryCode")) ??
+      countryCodeFromName(countryName),
+    countryName,
     displayName,
     locality: normalizeOptionalText(formData.get("locality")),
     locationLabelPublic: normalizeOptionalText(
       formData.get("locationLabelPublic"),
     ),
-    postalCodePrivate: null,
+    postalCodePrivate: normalizeOptionalText(formData.get("postalCodePrivate")),
     region: null,
   };
 
@@ -96,6 +102,7 @@ export async function completeOnboarding(formData: FormData) {
       locality: starterProfile.locality,
       location_label_public: buildPublicLocationLabel(starterProfile),
       location_precision: inferLocationPrecision(starterProfile),
+      postal_code_private: starterProfile.postalCodePrivate,
       preferred_distance_unit: distanceUnitForCountry(
         starterProfile.countryCode,
         starterProfile.countryName,

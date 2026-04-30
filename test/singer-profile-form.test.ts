@@ -34,15 +34,13 @@ describe("singer profile form parsing", () => {
     const values = parseSingerProfileFormData(
       formData([
         ["displayName", "Priya"],
-        ["countryCode", "gb"],
         ["countryName", "United Kingdom"],
-        ["region", "Greater Manchester"],
         ["locality", "Manchester"],
         ["postalCodePrivate", "M1 1AE"],
         ["parts", "TTBB:Lead"],
         ["parts", "SATB:Soprano"],
         ["goals", "pickup"],
-        ["travelRadiusKm", "40"],
+        ["travelRadiusMiles", "25"],
       ]),
     );
 
@@ -60,7 +58,7 @@ describe("singer profile form parsing", () => {
     const values = parseSingerProfileFormData(
       formData([
         ["displayName", "Jordan"],
-        ["countryCode", "usa"],
+        ["countryName", "Other / not listed"],
         ["parts", "TTBB:Lead"],
         ["parts", "melody"],
         ["goals", "contest"],
@@ -78,15 +76,12 @@ describe("singer profile form parsing", () => {
       formData([
         ["displayName", "Ari"],
         ["countryName", "Canada"],
-        ["region", "Ontario"],
         ["locality", "Toronto"],
         ["postalCodePrivate", "M5V"],
       ]),
     );
 
-    expect(buildPublicLocationLabel(values)).toBe(
-      "Toronto, Ontario, Canada area",
-    );
+    expect(buildPublicLocationLabel(values)).toBe("Toronto, Canada area");
     expect(buildPublicLocationLabel(values)).not.toContain("M5V");
     expect(inferLocationPrecision(values)).toBe("postal_code");
   });

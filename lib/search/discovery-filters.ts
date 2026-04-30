@@ -6,10 +6,12 @@ import {
   parseVoicingPartValue,
   type VoicingPartSelection,
 } from "@/lib/parts/voicings";
+import type { DistanceUnit } from "@/lib/location/approximate-location";
 
 export type DiscoveryFilters = {
   availability: string | null;
   country: string | null;
+  distanceUnit: DistanceUnit;
   experience: string | null;
   goal: ProfileGoal | null;
   locality: string | null;
@@ -23,6 +25,10 @@ function normalizeSearchText(value: string | string[] | undefined) {
   const normalized = rawValue?.trim();
 
   return normalized ? normalized : null;
+}
+
+function parseDistanceUnit(value: string | string[] | undefined): DistanceUnit {
+  return normalizeSearchText(value) === "km" ? "km" : "mi";
 }
 
 function parseAllowedValue<T extends string>(
@@ -60,6 +66,7 @@ export function parseDiscoveryFilters(
   return {
     availability: normalizeSearchText(searchParams.availability),
     country: normalizeSearchText(searchParams.country),
+    distanceUnit: parseDistanceUnit(searchParams.distanceUnit),
     experience: normalizeSearchText(searchParams.experience),
     goal: parseAllowedValue(searchParams.goal, PROFILE_GOALS),
     locality: normalizeSearchText(searchParams.locality),
@@ -70,5 +77,7 @@ export function parseDiscoveryFilters(
 }
 
 export function hasDiscoveryFilters(filters: DiscoveryFilters) {
-  return Object.values(filters).some((value) => value !== null);
+  return Object.entries(filters).some(
+    ([key, value]) => key !== "distanceUnit" && value !== null,
+  );
 }

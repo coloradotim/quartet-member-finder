@@ -12,6 +12,7 @@ describe("discovery filters", () => {
       region: " Greater Manchester ",
       goal: "contest",
       part: "SATB:Soprano",
+      distanceUnit: "km",
       travelRadiusKm: "50",
     });
 
@@ -20,6 +21,7 @@ describe("discovery filters", () => {
     expect(filters.region).toBe("Greater Manchester");
     expect(filters.goal).toBe("contest");
     expect(filters.part).toEqual({ part: "Soprano", voicing: "SATB" });
+    expect(filters.distanceUnit).toBe("km");
     expect(filters.travelRadiusKm).toBe(50);
     expect(hasDiscoveryFilters(filters)).toBe(true);
   });
@@ -34,6 +36,7 @@ describe("discovery filters", () => {
     expect(filters.goal).toBeNull();
     expect(filters.part).toBeNull();
     expect(filters.travelRadiusKm).toBeNull();
+    expect(filters.distanceUnit).toBe("mi");
     expect(hasDiscoveryFilters(filters)).toBe(false);
   });
 
@@ -43,6 +46,7 @@ describe("discovery filters", () => {
       goal: ["pickup", "contest"],
       locality: ["Dublin", "Boston"],
       part: ["TTBB:Tenor", "melody"],
+      distanceUnit: ["km", "mi"],
       travelRadiusKm: ["10000", "25"],
     });
 
@@ -50,6 +54,7 @@ describe("discovery filters", () => {
     expect(filters.locality).toBe("Dublin");
     expect(filters.goal).toBe("pickup");
     expect(filters.part).toEqual({ part: "Tenor", voicing: "TTBB" });
+    expect(filters.distanceUnit).toBe("km");
     expect(filters.travelRadiusKm).toBe(10000);
   });
 

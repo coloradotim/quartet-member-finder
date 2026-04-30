@@ -21,7 +21,14 @@ describe("profile form guidance copy", () => {
     expect(profilePage).toContain("experienced chapter singer");
     expect(profilePage).toContain("weeknights or weekends");
     expect(profilePage).toContain("how far you would travel");
+    expect(profilePage).toContain("Travel willingness in miles");
     expect(profilePage).toContain("profile is not");
     expect(profilePage).toContain("ready for people to find");
+  });
+
+  it("uses simple location fields without exposing country code input", () => {
+    expect(profilePage).toContain("ZIP/postal code");
+    expect(profilePage).toContain("not shown publicly");
+    expect(profilePage).not.toContain("Country code");
   });
 });
