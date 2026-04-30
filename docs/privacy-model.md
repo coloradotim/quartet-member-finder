@@ -91,6 +91,27 @@ be shown in public discovery results. The public discovery label should stay
 approximate, such as a city/region/country area. Location inputs remain globally
 tolerant and do not require US state, ZIP code, address, or phone formats.
 
+## Quartet listing management
+
+Signed-in users can manage a quartet listing from the protected app area. The
+MVP listing form stores:
+
+- listing or quartet name
+- parts currently covered
+- parts needed
+- goals
+- experience or commitment level
+- rehearsal expectations
+- travel willingness in kilometers
+- short description
+- public approximate location label
+- country, region, locality, and private postal code when provided
+- search visibility
+
+The listing form keeps covered and needed parts distinct so public discovery can
+clearly show what the quartet has and what it is seeking. Postal code remains
+private listing data and should not be shown in public listing discovery.
+
 ## Contact model
 
 Initial contact should be mediated by the app.
