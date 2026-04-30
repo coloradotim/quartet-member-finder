@@ -171,6 +171,14 @@ Production deployment:
 - production deploys run from GitHub Actions on `main` via `.github/workflows/production-deploy.yml`
 - the production workflow applies Supabase migrations when relevant, pulls Vercel production environment, builds with `vercel build --prod`, and deploys with `vercel deploy --prebuilt --prod`
 
+Repository settings:
+- `main` is expected to be protected
+- required PR checks are `guardrails`, `validate`, and `Vercel`
+- normal PRs should use squash merge
+- merge commits and rebase merges should remain disabled unless explicitly re-enabled for a specific reason
+- auto-merge may be enabled after the diff and deployment implications are reviewed
+- direct pushes to `main` should be blocked by branch protection where practical
+
 Guardrails:
 - do not commit directly to `main`
 - do not commit secrets
