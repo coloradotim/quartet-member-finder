@@ -6,14 +6,16 @@ function source(path: string) {
 }
 
 describe("public discovery copy", () => {
-  it("makes the singer-first path obvious on the public home page", () => {
+  it("makes the first-time path obvious on the public home page", () => {
     const homePage = source("app/page.tsx");
 
-    expect(homePage).toContain("Find Quartet Openings");
-    expect(homePage).toContain("Find Singers");
-    expect(homePage).toContain("My Singer Profile");
-    expect(homePage).toContain("Quartet Mode");
-    expect(homePage).toContain("Start as a singer");
+    expect(homePage).toContain("Sign in to get started");
+    expect(homePage).toContain("First time here? Read Help");
+    expect(homePage).toContain("Who it helps");
+    expect(homePage).toContain("Singers looking for quartet openings");
+    expect(homePage).toContain("Public discovery is open before you sign in.");
+    expect(homePage).toContain("approximate locations");
+    expect(homePage).toContain("first contact happens");
   });
 
   it("frames quartet discovery as openings for missing parts", () => {
