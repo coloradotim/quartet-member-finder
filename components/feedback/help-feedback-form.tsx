@@ -1,5 +1,8 @@
 import { submitHelpFeedback } from "@/app/help/actions";
-import { FEEDBACK_MESSAGE_MAX_LENGTH } from "@/lib/feedback/feedback-form";
+import {
+  FEEDBACK_HONEYPOT_FIELD,
+  FEEDBACK_MESSAGE_MAX_LENGTH,
+} from "@/lib/feedback/feedback-form";
 
 type HelpFeedbackFormProps = {
   status?: string;
@@ -54,9 +57,14 @@ export function HelpFeedbackForm({ status }: HelpFeedbackFormProps) {
 
       <form action={submitHelpFeedback} className="mt-5 grid gap-4">
         <input name="contextPath" type="hidden" value="/help" />
-        <label className="hidden">
-          Website
-          <input autoComplete="off" name="website" tabIndex={-1} type="text" />
+        <label aria-hidden="true" className="hidden">
+          Leave this field blank
+          <input
+            autoComplete="new-password"
+            name={FEEDBACK_HONEYPOT_FIELD}
+            tabIndex={-1}
+            type="text"
+          />
         </label>
 
         <label className="block">

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  FEEDBACK_HONEYPOT_FIELD,
   FEEDBACK_RATE_LIMIT_COUNT,
   FEEDBACK_RATE_LIMIT_WINDOW_MINUTES,
   feedbackRateLimitWindowStart,
@@ -33,7 +34,7 @@ describe("feedback form helpers", () => {
     );
 
     formData.set("feedbackType", "feedback");
-    formData.set("website", "https://spam.example");
+    formData.set(FEEDBACK_HONEYPOT_FIELD, "https://spam.example");
 
     expect(() => parseFeedbackFormData(formData)).toThrow(
       "Feedback could not be submitted.",
