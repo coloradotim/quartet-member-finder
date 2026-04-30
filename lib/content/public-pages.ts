@@ -63,7 +63,7 @@ export const publicHelpSections = [
   },
   {
     body: [
-      "Once the feedback form exists, signed-in users should find it at /app/feedback. Until then, use the project issue tracker or contact the project owner directly.",
+      "Signed-in users can send private feedback, bug reports, and suggestions from this help page. Feedback is tied to the signed-in account server-side and is not shown publicly.",
     ],
     heading: "Feedback",
   },

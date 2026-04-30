@@ -1,10 +1,13 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const migration = readFileSync(
-  "supabase/migrations/20260430023000_initial_schema_and_rls.sql",
-  "utf8",
-);
+const migration = readdirSync("supabase/migrations")
+  .filter((fileName) => fileName.endsWith(".sql"))
+  .sort()
+  .map((fileName) =>
+    readFileSync(`supabase/migrations/${fileName}`, "utf8"),
+  )
+  .join("\n\n");
 
 const appTables = [
   "account_profiles",
@@ -13,6 +16,7 @@ const appTables = [
   "quartet_listings",
   "quartet_listing_parts",
   "contact_requests",
+  "feedback_submissions",
 ];
 
 function viewDefinition(viewName: string) {

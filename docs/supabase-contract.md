@@ -17,6 +17,7 @@ It includes these data areas:
 - `quartet_listings`: incomplete quartet listings owned by one authenticated user.
 - `quartet_listing_parts`: parts currently covered or needed by a quartet.
 - `contact_requests`: app-mediated first-contact messages.
+- `feedback_submissions`: private authenticated-user feedback from the help page.
 - `singer_discovery_profiles`: privacy-safe singer discovery view.
 - `quartet_discovery_listings`: privacy-safe quartet discovery view.
 
@@ -82,6 +83,8 @@ RLS should enforce:
 - private fields are not exposed in public discovery views
 - contact requests require an authenticated sender
 - recipients can read contact requests addressed to them or to listings they own
+- feedback submissions require an authenticated submitter and are not readable by
+  other regular users
 
 Do not rely only on client-side filtering for visibility, privacy, or ownership checks.
 
@@ -116,6 +119,17 @@ After the insert, server-only service-role access may read the resolved
 `recipient_user_id` and look up the recipient auth email for a Resend
 notification. Successful notification delivery may update the request status to
 `delivered`; requests remain auditable even if email configuration is missing.
+
+Help-page feedback inserts are authenticated-only. The server action writes
+`feedback_submissions` with the authenticated user ID and, when available, the
+signed-in auth email from the server session. Browser submissions may provide
+only the feedback type, message, and current route/context. They must not provide
+the submitter user ID, submitter email, status, or other ownership fields.
+
+The feedback table is private. Anonymous users have no direct table grants.
+Authenticated users may insert their own feedback and read only their own
+feedback rows so the server action can apply a basic sender-side rate limit.
+Service-role/admin access is required for cross-user review, triage, or export.
 
 ## Location data expectations
 
@@ -187,6 +201,22 @@ The MVP contact flow should use app-mediated contact with Resend notifications.
 The app applies a basic sender-side rate limit before insert: five contact
 requests per authenticated sender per hour. Database-side rate limiting or abuse
 automation can be added later if the product needs stronger enforcement.
+
+`feedback_submissions` supports private product feedback:
+
+- submitter user
+- server-captured submitter email when available
+- feedback type: feedback, bug, or suggestion
+- message body
+- current route/context when available
+- user agent when available
+- status
+- created and updated timestamps
+
+The help-page feedback action applies authenticated-only spam protection:
+three feedback submissions per authenticated submitter per hour, message length
+limits, type validation, route/context normalization, and a hidden honeypot
+field. Feedback is not exposed in public discovery views or public pages.
 
 Phone number handling, if added later, should not assume a US-only format.
 
