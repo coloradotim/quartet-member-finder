@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   BARBERSHOP_PARTS,
   PROFILE_GOALS,
@@ -113,6 +114,36 @@ export default async function ManageProfilePage({
           {params.message}
         </p>
       ) : null}
+
+      {!profile ? (
+        <section className="mt-8 max-w-3xl rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5">
+          <h2 className="text-xl font-bold text-[#172023]">
+            Create My Singer Profile
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-[#394548]">
+            A singer profile helps quartet openings and other singers find you.
+            Start with your parts, goals, and approximate location; you can keep
+            it hidden until you are ready.
+          </p>
+          <Link
+            className="mt-4 inline-flex font-semibold text-[#2f6f73]"
+            href="/quartets"
+          >
+            Browse Find Quartet Openings first
+          </Link>
+        </section>
+      ) : profile.is_visible ? null : (
+        <section className="mt-8 max-w-3xl rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5">
+          <h2 className="text-xl font-bold text-[#172023]">
+            Your profile is hidden
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-[#394548]">
+            Hidden profiles do not appear in Find Singers or on the map. Turn on
+            the visibility checkbox below when you want discovery to show your
+            public singer details.
+          </p>
+        </section>
+      )}
 
       <form action={saveSingerProfile} className="mt-8 max-w-3xl space-y-8">
         <section className="space-y-4">

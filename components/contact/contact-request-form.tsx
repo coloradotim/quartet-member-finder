@@ -22,6 +22,11 @@ export function ContactRequestForm({
       <input name="returnTo" type="hidden" value={returnTo} />
       <input name="targetId" type="hidden" value={targetId} />
       <input name="targetKind" type="hidden" value={targetKind} />
+      <p className="mb-3 text-sm leading-6 text-[#394548]">
+        Contact starts through the app so personal email addresses and phone
+        numbers stay private until both people choose to share them. You will be
+        asked to sign in if you are not already signed in.
+      </p>
       <label className="block">
         <span className="text-sm font-semibold text-[#172023]">
           Contact {targetName}

@@ -289,9 +289,27 @@ export default async function QuartetSearchPage({
 
       <section className="mt-8 grid gap-4">
         {quartets.length === 0 && !errorMessage ? (
-          <p className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 text-[#394548]">
-            No visible quartet openings match these filters yet.
-          </p>
+          <section className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 text-[#394548]">
+            <h2 className="text-xl font-bold text-[#172023]">
+              No visible quartet openings match these filters yet
+            </h2>
+            <p className="mt-3 text-sm leading-6">
+              Try clearing filters, widening the country/region/locality, or
+              checking the map. Some quartets may not have turned on discovery
+              for their Quartet Mode listing yet.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-4">
+              <Link className="font-semibold text-[#2f6f73]" href="/quartets">
+                Clear filters
+              </Link>
+              <Link className="font-semibold text-[#2f6f73]" href="/map">
+                View Map
+              </Link>
+              <Link className="font-semibold text-[#2f6f73]" href="/singers">
+                Find Singers
+              </Link>
+            </div>
+          </section>
         ) : null}
 
         {quartets.map((quartet) => (

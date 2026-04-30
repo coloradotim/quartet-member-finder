@@ -75,8 +75,9 @@ export default async function HelpPage({ searchParams }: HelpPageProps) {
             Send feedback after signing in
           </h2>
           <p className="mt-3 max-w-2xl text-base leading-7 text-[#394548]">
-            Signed-in users can send private feedback, bug reports, and
-            suggestions from this page.
+            Sign in if you want to send private feedback, bug reports, or
+            suggestions. Keeping feedback tied to an account helps prevent spam
+            and gives the project team a way to follow up.
           </p>
           <Link
             className="mt-4 inline-flex rounded-md bg-[#174b4f] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#10393c]"
