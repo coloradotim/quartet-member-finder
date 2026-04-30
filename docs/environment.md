@@ -12,6 +12,13 @@ The app will need environment variables for:
 - Resend sender email
 - map/geocoding provider configuration
 
-Expected local development values should be documented as the app scaffold is created.
+The current scaffold includes `.env.example` with safe placeholder keys:
+
+- `NEXT_PUBLIC_APP_URL`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
 
 Do not expose server-only values in browser code.

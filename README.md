@@ -4,16 +4,17 @@ Quartet Member Finder helps barbershop singers and incomplete quartets find each
 
 The app is intended to support privacy-conscious discovery, approximate location search, singer profiles, quartet listings, and safe first contact between people who may want to sing together.
 
-## Planned stack
+## Stack
 
 - Next.js App Router
 - TypeScript
 - Tailwind CSS
-- Supabase Auth/Postgres/Row Level Security
-- Resend transactional email
+- ESLint and Prettier
 - Vercel deployments from GitHub
 - Vitest for unit tests
 - GitHub Actions for CI
+- Planned: Supabase Auth/Postgres/Row Level Security
+- Planned: Resend transactional email
 
 ## Product goals
 
@@ -31,6 +32,33 @@ Use this local repo path for Codex work:
 /Users/timpeterson/Documents/Codex/quartet-member-finder
 ```
 
+## Local setup
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Validate the project:
+
+```bash
+npm run lint
+npm run typecheck
+npm run test:run
+npm run build
+```
+
+Copy `.env.example` to `.env.local` when configuring local services. Keep real
+secrets out of source control.
+
 ## Early project notes
 
-This repository is being rebuilt from scratch. Project context, privacy expectations, workflow rules, and implementation guardrails are captured in `AGENTS.md` and the `docs/` folder.
+Project context, privacy expectations, workflow rules, and implementation
+guardrails are captured in `AGENTS.md` and the `docs/` folder.
