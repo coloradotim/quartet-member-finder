@@ -26,6 +26,9 @@ Codex/local development path:
 - Vercel: web hosting, preview deployments, production deployment
 - Supabase: auth, database, Row Level Security
 - Resend: transactional email and contact relay notifications
+- Map provider: provider-agnostic MVP map now; MapLibre with
+  OpenStreetMap-compatible raster or vector tiles is the preferred future
+  provider approach when richer panning/zooming is needed
 - Namecheap: domain registrar for `quartetmemberfinder.org`
 
 ## Global location expectations
@@ -120,6 +123,26 @@ Preferred sender addresses should use the domain once DNS is configured, such as
 - `no-reply@quartetmemberfinder.org`
 - `messages@quartetmemberfinder.org`
 - `support@quartetmemberfinder.org`
+
+## Maps and geocoding
+
+The current public discovery map does not require a third-party map or geocoder
+environment variable. It uses public discovery-view location summaries and
+country/region anchors to render approximate regional markers.
+
+When interactive tiles or geocoding are added, use a provider-compatible
+MapLibre setup rather than sending exact home coordinates to the browser.
+Provider configuration should be optional and documented in `.env.example`.
+Expected future public configuration values are:
+
+- `NEXT_PUBLIC_MAP_TILE_URL_TEMPLATE`
+- `NEXT_PUBLIC_MAP_ATTRIBUTION`
+- `NEXT_PUBLIC_MAP_STYLE_URL` when using a hosted vector style
+
+Geocoding provider secrets, if any, must be server-only. Browser-rendered map
+props should contain approximate public labels, regional anchors, rounded
+distances, or jittered/blurred marker positions, never exact private
+latitude/longitude or private address fields.
 
 ## Production readiness checklist
 

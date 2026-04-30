@@ -20,6 +20,9 @@ The current scaffold includes `.env.example` with safe placeholder keys:
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
+- `NEXT_PUBLIC_MAP_TILE_URL_TEMPLATE` optional future map tile template
+- `NEXT_PUBLIC_MAP_ATTRIBUTION` optional future map attribution
+- `NEXT_PUBLIC_MAP_STYLE_URL` optional future hosted map style
 
 Do not expose server-only values in browser code.
 
@@ -45,3 +48,10 @@ allow:
 
 For production, add the deployed app URL and `/auth/callback` URL in the
 Supabase dashboard before enabling sign-in links for users.
+
+## Maps
+
+The MVP discovery map does not require a map provider. Optional public map
+values are reserved for a future MapLibre/OpenStreetMap-compatible tile setup.
+Geocoding secrets, if later needed, should be server-only and must not use the
+`NEXT_PUBLIC_` prefix.

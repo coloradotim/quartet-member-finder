@@ -130,9 +130,14 @@ export default async function QuartetSearchPage({
             Results show approximate location only.
           </p>
         </div>
-        <Link className="font-semibold text-[#2f6f73]" href="/singers">
-          Find singers
-        </Link>
+        <div className="flex gap-4">
+          <Link className="font-semibold text-[#2f6f73]" href="/singers">
+            Find singers
+          </Link>
+          <Link className="font-semibold text-[#2f6f73]" href="/map">
+            View map
+          </Link>
+        </div>
       </div>
 
       <form className="mt-8 grid gap-4 rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-4 sm:grid-cols-2 lg:grid-cols-4">
