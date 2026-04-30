@@ -33,7 +33,8 @@ the GitHub `production` environment and the secrets documented in
 `docs/deployment.md`.
 
 GitHub Actions production deployment needs only the values required to validate,
-apply migrations, and deploy through Vercel:
+apply migrations, and deploy through Vercel. Store them as repository secrets or
+as `production` environment secrets when environment-level protection is in use:
 
 - `NEXT_PUBLIC_APP_URL`
 - `NEXT_PUBLIC_SUPABASE_URL`

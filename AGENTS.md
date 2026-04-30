@@ -164,7 +164,7 @@ For Supabase migrations:
 - migration filenames must use `YYYYMMDDHHMMSS_descriptive_name.sql`
 - production migrations are expected to run through `.github/workflows/production-deploy.yml`
 - do not apply production Supabase changes manually unless the workflow is blocked and the user explicitly approves an emergency/manual production operation
-- if a migration is added or changed, mention the migration in the PR summary and verify whether the production workflow has the required GitHub `production` environment secrets
+- if a migration is added or changed, mention the migration in the PR summary and verify whether the production workflow has the required GitHub repository or `production` environment secrets
 
 Production deployment:
 - pull request CI validates guardrails, lint, typecheck, tests, formatting, and build

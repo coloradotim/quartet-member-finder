@@ -243,10 +243,13 @@ deploying `main` directly to production, disable production auto-deploys there
 or configure it so GitHub Actions is the source of production deploys while PR
 previews remain available.
 
-### GitHub `production` environment secrets
+### GitHub production deployment secrets
 
-Create a GitHub environment named `production`, then add these environment
-secrets:
+Create a GitHub environment named `production` so production deploys have a
+distinct environment gate and audit trail.
+
+Add these as either repository secrets or, preferably, `production` environment
+secrets if environment-level protection is enabled:
 
 ```text
 NEXT_PUBLIC_APP_URL
@@ -258,6 +261,11 @@ VERCEL_ORG_ID
 VERCEL_PROJECT_ID
 VERCEL_TOKEN
 ```
+
+Repository secrets are available to the production workflow. Environment
+secrets are more tightly scoped and should be used if the repository later adds
+production approval rules or wants to prevent non-production jobs from seeing
+deployment credentials.
 
 Secret sources:
 
