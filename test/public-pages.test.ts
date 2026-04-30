@@ -19,7 +19,7 @@ describe("public help and privacy content", () => {
     expect(helpText).toContain("Search");
     expect(helpText).toContain("Location And Privacy");
     expect(helpText).toContain("Contact");
-    expect(helpText).toContain("/app/feedback");
+    expect(helpText).toContain("Signed-in users can send private feedback");
     expect(helpText).toContain("does not replace personal judgment");
     expect(helpText).not.toMatch(/24\/7 moderation|background checks/i);
   });

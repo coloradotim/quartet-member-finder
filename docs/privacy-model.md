@@ -166,6 +166,21 @@ default. They should tell the recipient a signed-in user sent the request and
 allow the recipient to decide whether to respond or share direct contact
 information later.
 
+## Feedback model
+
+The public help page stays readable before login. Signed-out visitors are
+invited to sign in before sending feedback.
+
+Signed-in users can submit private feedback, bug reports, or suggestions from
+the help page. The browser sends only the feedback type, message, current route
+context, and a spam honeypot field. The server action attaches the authenticated
+user ID and auth email when available, then stores the submission in Supabase.
+
+Feedback submissions are not public content and are not included in discovery
+views, search results, maps, or public profile/listing UI. Regular authenticated
+users cannot read other users' feedback. Admin/service-role access is required
+for cross-user review or triage.
+
 ## Abuse and safety considerations
 
 Future work may include:
@@ -173,7 +188,10 @@ Future work may include:
 - reporting inappropriate profiles/messages
 - blocking users
 - rate limits on contact messages
+- admin feedback triage tools
 - audit logs for contact attempts
 - admin tools for handling abuse reports
 
-The MVP should at least avoid public exposure of private location/contact data and should avoid unauthenticated contact spam.
+The MVP should at least avoid public exposure of private location/contact data,
+avoid unauthenticated contact spam, and rate-limit authenticated feedback
+submissions.
