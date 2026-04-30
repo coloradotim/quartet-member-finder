@@ -54,6 +54,19 @@ Users may enter a city, postal code, country, or approximate location.
 
 The app may store normalized location data to support distance search, but public UI should only expose approximate location.
 
+Private geocoded data should be transformed into a public location summary
+before display. Public summaries may contain only a user-provided public label,
+locality, region, and country. They must not contain exact latitude, longitude,
+private postal code, formatted private address, or other precise address
+components. If an explicit public label is present, use it as the display label;
+otherwise build an approximate label from locality, region, and country, such as
+“Dublin, Leinster, Ireland area.”
+
+Distance helpers may use exact coordinates internally for matching, but public
+distance display should be rounded and approximate, such as “about 15 mi / 24 km
+away.” Travel willingness and distance display should support both kilometers
+and miles without assuming a US-only default.
+
 Acceptable user-facing examples:
 
 - “Fort Collins, CO area”

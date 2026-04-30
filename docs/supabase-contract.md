@@ -130,6 +130,13 @@ Current pattern:
 - Return approximate distance/region rather than exact coordinates for public discovery.
 - Support both miles and kilometers in UI/helper logic where practical.
 
+Application location helpers should treat base-table coordinates and private
+postal/address fields as internal matching data. The reusable public
+transformation returns only `location_label_public`, `locality`, `region`, and
+`country_name` equivalents for display. Public distance strings are rounded and
+formatted in both kilometers and miles, ordered by the user/listing preferred
+distance unit where that field is available.
+
 Both singer profiles and quartet listings support these globally tolerant
 location fields:
 
