@@ -1,9 +1,10 @@
 import Link from "next/link";
 import {
   approximateLocationLabel,
-  parseDiscoveryFilters,
+  toPublicLocationSummary,
   travelRadiusLabel,
-} from "@/lib/search/discovery-filters";
+} from "@/lib/location/approximate-location";
+import { parseDiscoveryFilters } from "@/lib/search/discovery-filters";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type QuartetDiscoveryRow = {
@@ -254,7 +255,14 @@ export default async function QuartetSearchPage({
                   {quartet.name}
                 </h2>
                 <p className="mt-1 text-sm text-[#596466]">
-                  {approximateLocationLabel(quartet)}
+                  {approximateLocationLabel(
+                    toPublicLocationSummary({
+                      countryName: quartet.country_name,
+                      locality: quartet.locality,
+                      locationLabelPublic: quartet.location_label_public,
+                      region: quartet.region,
+                    }),
+                  )}
                 </p>
               </div>
               <p className="text-sm font-semibold text-[#2f6f73]">
@@ -291,10 +299,18 @@ export default async function QuartetSearchPage({
                   <dd>{quartet.availability}</dd>
                 </div>
               ) : null}
-              {travelRadiusLabel(quartet.travel_radius_km) ? (
+              {travelRadiusLabel(
+                quartet.travel_radius_km,
+                quartet.preferred_distance_unit,
+              ) ? (
                 <div>
                   <dt className="font-semibold text-[#172023]">Travel</dt>
-                  <dd>{travelRadiusLabel(quartet.travel_radius_km)}</dd>
+                  <dd>
+                    {travelRadiusLabel(
+                      quartet.travel_radius_km,
+                      quartet.preferred_distance_unit,
+                    )}
+                  </dd>
                 </div>
               ) : null}
             </dl>

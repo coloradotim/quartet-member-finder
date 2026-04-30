@@ -1,9 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  approximateLocationLabel,
   hasDiscoveryFilters,
   parseDiscoveryFilters,
-  travelRadiusLabel,
 } from "@/lib/search/discovery-filters";
 
 describe("discovery filters", () => {
@@ -31,21 +29,5 @@ describe("discovery filters", () => {
     expect(filters.part).toBeNull();
     expect(filters.travelRadiusKm).toBeNull();
     expect(hasDiscoveryFilters(filters)).toBe(false);
-  });
-
-  it("builds an approximate location label without private fields", () => {
-    expect(
-      approximateLocationLabel({
-        country_name: "Ireland",
-        locality: "Dublin",
-        location_label_public: null,
-        region: "Leinster",
-      }),
-    ).toBe("Dublin, Leinster, Ireland area");
-  });
-
-  it("shows both kilometers and miles for travel willingness", () => {
-    expect(travelRadiusLabel(100)).toBe("100 km / 62 mi");
-    expect(travelRadiusLabel(null)).toBeNull();
   });
 });

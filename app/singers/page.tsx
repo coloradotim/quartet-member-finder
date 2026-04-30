@@ -1,9 +1,10 @@
 import Link from "next/link";
 import {
   approximateLocationLabel,
-  parseDiscoveryFilters,
+  toPublicLocationSummary,
   travelRadiusLabel,
-} from "@/lib/search/discovery-filters";
+} from "@/lib/location/approximate-location";
+import { parseDiscoveryFilters } from "@/lib/search/discovery-filters";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type SingerDiscoveryRow = {
@@ -252,7 +253,14 @@ export default async function SingerSearchPage({
                   {singer.display_name}
                 </h2>
                 <p className="mt-1 text-sm text-[#596466]">
-                  {approximateLocationLabel(singer)}
+                  {approximateLocationLabel(
+                    toPublicLocationSummary({
+                      countryName: singer.country_name,
+                      locality: singer.locality,
+                      locationLabelPublic: singer.location_label_public,
+                      region: singer.region,
+                    }),
+                  )}
                 </p>
               </div>
               <p className="text-sm font-semibold text-[#2f6f73]">
@@ -278,10 +286,18 @@ export default async function SingerSearchPage({
                   <dd>{singer.availability}</dd>
                 </div>
               ) : null}
-              {travelRadiusLabel(singer.travel_radius_km) ? (
+              {travelRadiusLabel(
+                singer.travel_radius_km,
+                singer.preferred_distance_unit,
+              ) ? (
                 <div>
                   <dt className="font-semibold text-[#172023]">Travel</dt>
-                  <dd>{travelRadiusLabel(singer.travel_radius_km)}</dd>
+                  <dd>
+                    {travelRadiusLabel(
+                      singer.travel_radius_km,
+                      singer.preferred_distance_unit,
+                    )}
+                  </dd>
                 </div>
               ) : null}
             </dl>
