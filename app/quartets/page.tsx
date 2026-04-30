@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ContactRequestForm } from "@/components/contact/contact-request-form";
+import { DiscoveryModeNav } from "@/components/discovery/discovery-mode-nav";
 import { PublicSiteHeader } from "@/components/navigation/public-site-header";
 import { captureProductEvent } from "@/lib/analytics/product-analytics";
 import { contactStatusMessage } from "@/lib/contact/contact-status";
@@ -193,13 +194,15 @@ export default async function QuartetSearchPage({
       <main className="mx-auto w-full max-w-6xl px-6 py-12">
         <div>
           <h1 className="mt-4 text-3xl font-bold text-[#172023]">
-            Find Quartet Openings
+            Find quartet openings
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-[#394548]">
-            Search visible quartet listings from groups looking for one or more
-            missing parts. Results show approximate location only.
+            Use this detailed view when you are a singer looking for groups that
+            need your part. Results show approximate location only.
           </p>
         </div>
+
+        <DiscoveryModeNav activeMode="quartets" />
 
         <form
           aria-label="Filter quartet openings"
@@ -339,11 +342,11 @@ export default async function QuartetSearchPage({
                 <Link className="font-semibold text-[#2f6f73]" href="/quartets">
                   Clear filters
                 </Link>
-                <Link className="font-semibold text-[#2f6f73]" href="/map">
-                  View Map
+                <Link className="font-semibold text-[#2f6f73]" href="/find">
+                  Return to Find map
                 </Link>
                 <Link className="font-semibold text-[#2f6f73]" href="/singers">
-                  Find Singers
+                  Find singers
                 </Link>
               </div>
             </section>

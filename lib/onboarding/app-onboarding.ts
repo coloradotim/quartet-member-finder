@@ -23,17 +23,17 @@ export const onboardingSections: OnboardingSection[] = [
       },
       {
         description:
-          "Browse quartet openings from groups looking for one or more missing parts.",
-        href: "/quartets",
+          "Search quartet openings by needed part, goal, approximate area, or map region.",
+        href: "/find?kind=quartets",
         id: "find-quartet-openings",
-        label: "Find Quartet Openings",
+        label: "Find quartet openings",
       },
       {
         description:
-          "Look for singers nearby or in another region where you are willing to sing.",
-        href: "/singers",
+          "Search for singers nearby or in another region where you are willing to sing.",
+        href: "/find?kind=singers",
         id: "find-singers-as-singer",
-        label: "Find Singers",
+        label: "Find singers",
       },
     ],
     heading: "As a singer",
@@ -52,7 +52,7 @@ export const onboardingSections: OnboardingSection[] = [
       {
         description:
           "Search singer profiles when your quartet is ready to contact someone about a missing part.",
-        href: "/singers",
+        href: "/find?kind=singers",
         id: "quartet-mode-find-singers",
         label: "Find singers for a quartet",
       },

@@ -12,7 +12,11 @@ function routeArea(pathname: string) {
     return "signed_in_app";
   }
 
-  if (pathname === "/singers" || pathname === "/quartets") {
+  if (
+    pathname === "/find" ||
+    pathname === "/singers" ||
+    pathname === "/quartets"
+  ) {
     return "discovery";
   }
 

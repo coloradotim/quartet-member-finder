@@ -4,16 +4,8 @@ export const signedInPrimaryNavigationLinks = [
     label: "My Singer Profile",
   },
   {
-    href: "/quartets",
-    label: "Find Quartet Openings",
-  },
-  {
-    href: "/singers",
-    label: "Find Singers",
-  },
-  {
-    href: "/map",
-    label: "Map",
+    href: "/find",
+    label: "Find",
   },
 ] as const;
 

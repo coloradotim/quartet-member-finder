@@ -16,10 +16,10 @@ describe("empty and first-time states", () => {
 
     expect(profilePage).toContain("Create My Singer Profile");
     expect(profilePage).toContain("Your profile is hidden");
-    expect(profilePage).toContain("Find Singers");
+    expect(profilePage).toContain("Find, detailed singer search");
     expect(listingPage).toContain("Start Quartet Mode");
     expect(listingPage).toContain("This quartet listing is hidden");
-    expect(listingPage).toContain("Find Quartet Openings");
+    expect(listingPage).toContain("Find, detailed quartet search");
   });
 
   it("turns public discovery no-results states into next actions", () => {

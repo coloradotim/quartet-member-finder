@@ -22,8 +22,10 @@ export const publicHelpSections = [
   },
   {
     body: [
-      "Find Quartet Openings shows visible quartet listings from groups looking for missing parts. Find Singers shows visible singer profiles for both individual singers and quartet representatives.",
-      "Search and map filters can use public fields like part, goal, country, region, locality, availability, and travel willingness where that data exists.",
+      "Find is the main discovery page. It combines filters, a privacy-safe regional map, and a results table for quartet openings and singer profiles.",
+      "Use the looking-for filter to focus on quartet openings when you are a singer, or singer profiles when you are representing a quartet or looking for other singers.",
+      "The map is part of Find rather than a separate first step. It helps you scan approximate activity, then the table below gives names, parts, type, and next-step links.",
+      "Detailed singer and quartet search pages remain available from Find when you need more specific filters like availability, experience, or travel willingness.",
       "Search results are useful even when a profile is incomplete, but more complete profiles are easier for others to evaluate.",
     ],
     heading: "Search",

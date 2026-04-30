@@ -82,9 +82,11 @@ displays. Singer profiles and quartet listings keep their own
 
 The public discovery routes are:
 
+- `/find`, backed by both discovery views for consolidated filters, map, and
+  results table
 - `/singers`, backed by `singer_discovery_profiles`
 - `/quartets`, backed by `quartet_discovery_listings`
-- `/map`, backed by both discovery views
+- `/map`, backed by both discovery views as a compatibility map view
 
 These routes may filter on public location fields, part, goals,
 experience/commitment, availability, and travel willingness. They should not

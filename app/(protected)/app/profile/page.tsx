@@ -133,9 +133,9 @@ export default async function ManageProfilePage({
           </p>
           <Link
             className="mt-4 inline-flex font-semibold text-[#2f6f73]"
-            href="/quartets"
+            href="/find?kind=quartets"
           >
-            Browse Find Quartet Openings first
+            Browse quartet openings in Find first
           </Link>
         </section>
       ) : profile.is_visible ? null : (
@@ -144,9 +144,9 @@ export default async function ManageProfilePage({
             Your profile is hidden
           </h2>
           <p className="mt-3 text-sm leading-6 text-[#394548]">
-            Hidden profiles do not appear in Find Singers or on the map. Turn on
-            the visibility checkbox below when you want discovery to show your
-            public singer details.
+            Hidden profiles do not appear in Find, detailed singer search, or
+            the map view. Turn on the visibility checkbox below when you want
+            discovery to show your public singer details.
           </p>
         </section>
       )}

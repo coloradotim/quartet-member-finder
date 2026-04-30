@@ -17,8 +17,8 @@ describe("public help and privacy content", () => {
     expect(helpText).toContain("Singer Profiles");
     expect(helpText).toContain("Quartet Listings");
     expect(helpText).toContain("Search");
-    expect(helpText).toContain("Find Quartet Openings");
-    expect(helpText).toContain("Find Singers");
+    expect(helpText).toContain("Find is the main discovery page");
+    expect(helpText).toContain("results table");
     expect(helpText).toContain("Location And Privacy");
     expect(helpText).toContain("Contact");
     expect(helpText).toContain("Signed-in users can send private feedback");

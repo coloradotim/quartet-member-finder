@@ -10,17 +10,17 @@ const audiencePaths = [
 
 const discoveryLinks = [
   {
-    href: "/quartets",
+    href: "/find?kind=quartets",
     label: "Browse quartet openings",
     description: "See incomplete quartets looking for one or more parts.",
   },
   {
-    href: "/singers",
+    href: "/find?kind=singers",
     label: "Browse singers",
     description: "Find singers who are open to quartet opportunities.",
   },
   {
-    href: "/map",
+    href: "/find",
     label: "View the map",
     description: "Explore approximate singer and quartet locations.",
   },
@@ -103,8 +103,9 @@ export default function Home() {
               Public discovery is open before you sign in.
             </h2>
             <p className="mt-4 text-base leading-7 text-[#394548]">
-              Browse public listings when you want a quick sense of activity
-              before creating your profile or quartet listing.
+              Use Find to filter public listings, scan approximate areas on the
+              map, and compare results in a table before creating your profile
+              or quartet listing.
             </p>
           </div>
 
