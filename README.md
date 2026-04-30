@@ -68,6 +68,9 @@ is intentionally opt-in and must not be run against production.
 Manual launch and deployment validation steps are documented in
 `docs/smoke-test-plan.md`.
 
+The final production-readiness and privacy launch checklist is documented in
+`docs/launch-readiness.md`.
+
 Vercel, Supabase, Resend, Namecheap DNS, and `quartetmemberfinder.org`
 deployment steps are documented in `docs/deployment.md`.
 
