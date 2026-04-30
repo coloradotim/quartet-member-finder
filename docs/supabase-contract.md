@@ -64,6 +64,7 @@ The public discovery routes are:
 
 - `/singers`, backed by `singer_discovery_profiles`
 - `/quartets`, backed by `quartet_discovery_listings`
+- `/map`, backed by both discovery views
 
 These routes may filter on public location fields, part, goals,
 experience/commitment, availability, and travel willingness. They should not
@@ -155,6 +156,10 @@ location fields:
 The public discovery views expose country, region, locality, public location
 label, and preferred distance unit. They do not expose private postal codes,
 formatted addresses, or exact coordinates.
+
+The public map route must continue to use those discovery views rather than base
+tables. Map markers are built from public location summaries and country/region
+anchors; no latitude/longitude columns should be selected for browser display.
 
 ## Contact data expectations
 

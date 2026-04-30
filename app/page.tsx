@@ -35,6 +35,12 @@ export default function Home() {
           </Link>
           <Link
             className="rounded-md border border-[#d7cec0] px-4 py-2.5 text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
+            href="/map"
+          >
+            View map
+          </Link>
+          <Link
+            className="rounded-md border border-[#d7cec0] px-4 py-2.5 text-sm font-semibold text-[#172023] hover:bg-[#fffaf2]"
             href="/sign-in"
           >
             Sign in
