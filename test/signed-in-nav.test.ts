@@ -15,9 +15,7 @@ describe("signed-in navigation", () => {
     expect(signedInModeNavigationLinks).toEqual([
       { href: "/app/listings", label: "Quartet Mode" },
     ]);
-    expect(signedInUtilityNavigationLinks).toEqual([
-      { href: "/app/settings", label: "Account Settings" },
-    ]);
+    expect(signedInUtilityNavigationLinks).toEqual([]);
   });
 
   it("keeps existing route targets for the reorganized labels", () => {
@@ -25,7 +23,6 @@ describe("signed-in navigation", () => {
       { href: "/app/profile", label: "My Singer Profile" },
       { href: "/find", label: "Find" },
       { href: "/app/listings", label: "Quartet Mode" },
-      { href: "/app/settings", label: "Account Settings" },
     ]);
   });
 });

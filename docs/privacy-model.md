@@ -227,22 +227,22 @@ The onboarding copy reminds users that exact locations are not shown publicly,
 location fields should work outside the United States, and first contact starts
 through the app.
 
-## Account settings model
+## Profile, location, and account model
 
-Account Settings are separate from My Singer Profile and Quartet Mode. They are
-for private account identity, app-level preferences, first-run setup, and
-account-level actions that should not change public discovery content by
-accident.
+There is no active standalone Account Settings workflow. The legacy
+`/app/settings` route redirects to My Singer Profile so old links do not break.
+The app does not ask users to re-run onboarding or choose a global distance
+unit.
 
-The settings page lets a signed-in user save an account display name, save an
-account-level preferred distance unit, see sign-in email context, and reset
-first-run onboarding. Future export, deactivation, and delete actions are shown
-only as placeholders until the product has clear privacy and data-retention
-behavior for them.
+My Singer Profile is the place for public singer discovery data: public display
+name, parts, goals, experience, availability, approximate location, private
+postal code for future matching, and search visibility. Quartet Mode owns the
+same kind of location and visibility decisions for quartet listings.
 
-My Singer Profile remains the place for public singer discovery data: public
-display name, parts, goals, experience, availability, approximate location,
-private postal code for future matching, and search visibility.
+Country on the singer profile or quartet listing drives practical defaults such
+as miles vs kilometers and country-aware labels like ZIP code, postcode, state,
+province, or region where practical. The app should keep those labels helpful
+without requiring strict international address validation.
 
 ## Abuse and safety considerations
 

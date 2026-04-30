@@ -188,19 +188,12 @@ validation.
 6. Fail: signed-out users can submit feedback, or the public site displays
    feedback submissions.
 
-## Account Settings
+## Legacy Account Settings Route
 
 1. Open `/app/settings`.
-2. Pass: the page distinguishes Account Settings, My Singer Profile, and
-   Quartet Mode.
-3. Change account display name and preferred distance unit.
-4. Pass: saving succeeds and the selected account-level preferences remain
-   selected.
-5. Click re-run onboarding.
-6. Pass: onboarding state is cleared and the app routes to onboarding with a
-   safe return path.
-7. Fail: Account Settings duplicates singer profile or quartet listing fields
-   instead of staying account-level.
+2. Pass: the route redirects to My Singer Profile.
+3. Fail: the app asks users to re-run onboarding or choose a global distance
+   unit before they can continue.
 
 ## Sign-Out
 

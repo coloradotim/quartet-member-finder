@@ -11,6 +11,7 @@ import {
   inferLocationPrecision,
   parseSingerProfileFormData,
 } from "@/lib/profiles/singer-profile-form";
+import { distanceUnitForCountry } from "@/lib/location/country-location-defaults";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 function redirectWithProfileMessage(
@@ -51,6 +52,10 @@ export async function saveSingerProfile(formData: FormData) {
 
   const locationLabelPublic = buildPublicLocationLabel(values);
   const locationPrecision = inferLocationPrecision(values);
+  const preferredDistanceUnit = distanceUnitForCountry(
+    values.countryCode,
+    values.countryName,
+  );
 
   const { data: profile, error: profileError } = await supabase
     .from("singer_profiles")
@@ -69,7 +74,7 @@ export async function saveSingerProfile(formData: FormData) {
         location_label_public: locationLabelPublic,
         location_precision: locationPrecision,
         postal_code_private: values.postalCodePrivate,
-        preferred_distance_unit: "km",
+        preferred_distance_unit: preferredDistanceUnit,
         region: values.region,
         travel_radius_km: values.travelRadiusKm,
         user_id: user.id,
