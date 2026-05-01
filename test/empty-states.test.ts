@@ -15,11 +15,11 @@ describe("empty and first-time states", () => {
     const listingPage = source("app/(protected)/app/listings/page.tsx");
 
     expect(profilePage).toContain("Create My Singer Profile");
-    expect(profilePage).toContain("Your profile is hidden");
-    expect(profilePage).toContain("Find or detailed singer search");
+    expect(profilePage).toContain("Your Singer Profile is not shown in Find");
+    expect(profilePage).toContain("Show this profile in Find");
     expect(listingPage).toContain("Create My Quartet Profile");
-    expect(listingPage).toContain("My Quartet Profile is hidden");
-    expect(listingPage).toContain("Find or detailed quartet search");
+    expect(listingPage).toContain("Your Quartet Profile is not shown in Find");
+    expect(listingPage).toContain("Show this Quartet Profile in Find");
   });
 
   it("turns public discovery no-results states into next actions", () => {

@@ -66,6 +66,16 @@ function FieldNote({ children, id }: { children: ReactNode; id?: string }) {
   );
 }
 
+function singerProfileNeedsLocation(profile: SingerProfileRow | null) {
+  return Boolean(
+    profile?.is_visible &&
+    (!profile.country_name ||
+      !profile.region ||
+      !profile.locality ||
+      !profile.postal_code_private),
+  );
+}
+
 export default async function ManageProfilePage({
   searchParams,
 }: ManageProfilePageProps) {
@@ -109,9 +119,9 @@ export default async function ManageProfilePage({
           Manage your singer profile
         </h1>
         <p className="mt-4 text-base leading-7 text-[#394548]">
-          This profile is for you as an individual singer. Make it discoverable
-          if you want quartets or other singers to find you; hide it any time
-          without affecting your quartet profile.
+          This profile is for you as an individual singer. Show it in Find when
+          you want quartets or other singers to discover you; turn it off any
+          time without affecting your Quartet Profile.
         </p>
         <p className="mt-3 text-sm leading-6 text-[#596466]">
           Only display name is required. Everything else is optional, but parts,
@@ -146,8 +156,8 @@ export default async function ManageProfilePage({
           <p className="mt-3 text-sm leading-6 text-[#394548]">
             A singer profile helps quartet openings and other singers find you.
             Start with your parts, goals, and approximate location; you can keep
-            it hidden until you are ready. Filling it out does not require
-            making it discoverable.
+            it out of Find until you are ready. Filling it out does not require
+            showing it in discovery.
           </p>
           <Link
             className="mt-4 inline-flex font-semibold text-[#2f6f73]"
@@ -156,21 +166,52 @@ export default async function ManageProfilePage({
             Browse quartet openings in Find first
           </Link>
         </section>
-      ) : profile.is_visible ? null : (
-        <section className="mt-8 max-w-3xl rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5">
-          <h2 className="text-xl font-bold text-[#172023]">
-            Your profile is hidden
-          </h2>
-          <p className="mt-3 text-sm leading-6 text-[#394548]">
-            Hidden profiles do not appear in Find or detailed singer search.
-            Turn on the visibility checkbox below when you want discovery to
-            show your public singer details. This does not change your quartet
-            profile visibility.
-          </p>
-        </section>
-      )}
+      ) : null}
 
       <form action={saveSingerProfile} className="mt-8 max-w-3xl space-y-8">
+        <section className="space-y-4">
+          <div className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5">
+            <h2 className="text-xl font-bold text-[#172023]">
+              {profile?.is_visible
+                ? "Your Singer Profile is shown in Find"
+                : "Your Singer Profile is not shown in Find"}
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-[#394548]">
+              {profile?.is_visible
+                ? "Other users can discover your Singer Profile in Find using approximate location, voice parts, goals, and other profile details you choose to share. This does not change your Quartet Profile visibility."
+                : "Other users cannot discover your Singer Profile right now. Turn on visibility when you want singers or quartets to find you. This does not change your Quartet Profile visibility."}
+            </p>
+          </div>
+
+          {singerProfileNeedsLocation(profile) ? (
+            <p className="rounded-lg border border-[#d7cec0] bg-white p-4 text-sm leading-6 text-[#394548]">
+              Your Singer Profile can be saved, but it may be harder to find
+              without country, state/province/region, city, and ZIP/postal code.
+              These are used only for approximate map placement and search; your
+              ZIP/postal code is not shown publicly.
+            </p>
+          ) : null}
+
+          <label className="flex items-start gap-3 rounded-md border border-[#d7cec0] bg-[#fffaf2] p-4">
+            <input
+              className="mt-1"
+              defaultChecked={profile?.is_visible ?? false}
+              name="isVisible"
+              type="checkbox"
+            />
+            <span>
+              <span className="block font-semibold text-[#172023]">
+                Show this profile in Find
+              </span>
+              <span className="mt-1 block text-sm leading-6 text-[#596466]">
+                Find can include your display name, parts, goals, availability,
+                and approximate location. Turn this off when you do not want
+                other users to discover your Singer Profile.
+              </span>
+            </span>
+          </label>
+        </section>
+
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-[#172023]">Basics</h2>
           <label className="block">
@@ -407,33 +448,6 @@ export default async function ManageProfilePage({
               Mention useful constraints: weeknights or weekends, rehearsal
               frequency, contest interest, pickup singing, or travel limits.
             </FieldNote>
-          </label>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-xl font-bold text-[#172023]">Visibility</h2>
-          <p className="text-sm leading-6 text-[#394548]">
-            Discoverable means this profile can appear in Find results and
-            approximate map discovery inside Find. Hidden means it stays out of
-            discovery.
-          </p>
-          <label className="flex items-start gap-3 rounded-md border border-[#d7cec0] bg-[#fffaf2] p-4">
-            <input
-              className="mt-1"
-              defaultChecked={profile?.is_visible ?? false}
-              name="isVisible"
-              type="checkbox"
-            />
-            <span>
-              <span className="block font-semibold text-[#172023]">
-                Show my singer profile in discovery
-              </span>
-              <span className="mt-1 block text-sm leading-6 text-[#596466]">
-                Discovery views include your display name, parts, goals, and
-                approximate location only. Turn this off if the profile is not
-                ready for people to find.
-              </span>
-            </span>
           </label>
         </section>
 
