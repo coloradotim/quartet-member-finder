@@ -52,6 +52,16 @@ function fieldValue(value: string | number | null | undefined) {
   return value == null ? "" : String(value);
 }
 
+function quartetProfileNeedsLocation(listing: QuartetListingRow | null) {
+  return Boolean(
+    listing?.is_visible &&
+    (!listing.country_name ||
+      !listing.region ||
+      !listing.locality ||
+      !listing.postal_code_private),
+  );
+}
+
 export default async function ManageListingsPage({
   searchParams,
 }: ManageListingsPageProps) {
@@ -106,8 +116,8 @@ export default async function ManageListingsPage({
         </h1>
         <p className="mt-4 text-base leading-7 text-[#394548]">
           This profile is for a quartet or prospective quartet you represent.
-          Make it discoverable when you are looking for one or more singers;
-          hide it any time without affecting your singer profile.
+          Show it in Find when you are looking for one or more singers; turn it
+          off any time without affecting your Singer Profile.
         </p>
       </div>
 
@@ -138,7 +148,7 @@ export default async function ManageListingsPage({
             My Quartet Profile is for a quartet or prospective quartet looking
             for singers. Create a profile with covered parts, missing parts, and
             an approximate location so singers can judge whether it might fit.
-            You can keep it hidden until the opening is active.
+            You can keep it out of Find until the opening is active.
           </p>
           <Link
             className="mt-4 inline-flex font-semibold text-[#2f6f73]"
@@ -147,22 +157,53 @@ export default async function ManageListingsPage({
             Browse singers in Find first
           </Link>
         </section>
-      ) : listing.is_visible ? null : (
-        <section className="mt-8 max-w-3xl rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5">
-          <h2 className="text-xl font-bold text-[#172023]">
-            My Quartet Profile is hidden
-          </h2>
-          <p className="mt-3 text-sm leading-6 text-[#394548]">
-            Hidden listings do not appear in Find or detailed quartet search, so
-            singers cannot discover them yet. Turn on visibility below when the
-            opening is active. This does not change your singer profile
-            visibility.
-          </p>
-        </section>
-      )}
+      ) : null}
 
       <form action={saveQuartetListing} className="mt-8 max-w-3xl space-y-8">
         <input name="listingId" type="hidden" value={fieldValue(listing?.id)} />
+
+        <section className="space-y-4">
+          <div className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5">
+            <h2 className="text-xl font-bold text-[#172023]">
+              {listing?.is_visible
+                ? "Your Quartet Profile is shown in Find"
+                : "Your Quartet Profile is not shown in Find"}
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-[#394548]">
+              {listing?.is_visible
+                ? "Singers can discover your Quartet Profile in Find using approximate location, needed parts, goals, and other details you choose to share. This does not change your Singer Profile visibility."
+                : "Singers cannot discover your Quartet Profile right now. Turn on visibility when this opening is active and you want it to appear in Find. This does not change your Singer Profile visibility."}
+            </p>
+          </div>
+
+          {quartetProfileNeedsLocation(listing) ? (
+            <p className="rounded-lg border border-[#d7cec0] bg-white p-4 text-sm leading-6 text-[#394548]">
+              Your Quartet Profile can be saved, but it may be harder to find
+              without country, state/province/region, city, and ZIP/postal code.
+              These are used only for approximate map placement and search;
+              ZIP/postal code is not shown publicly.
+            </p>
+          ) : null}
+
+          <label className="flex items-start gap-3 rounded-md border border-[#d7cec0] bg-[#fffaf2] p-4">
+            <input
+              className="mt-1"
+              defaultChecked={listing?.is_visible ?? false}
+              name="isVisible"
+              type="checkbox"
+            />
+            <span>
+              <span className="block font-semibold text-[#172023]">
+                Show this Quartet Profile in Find
+              </span>
+              <span className="mt-1 block text-sm leading-6 text-[#596466]">
+                Find can include the profile name, covered and needed parts,
+                goals, availability, and approximate location. Turn this off
+                when the opening is filled, paused, or not ready.
+              </span>
+            </span>
+          </label>
+        </section>
 
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-[#172023]">Basics</h2>
@@ -325,32 +366,6 @@ export default async function ManageListingsPage({
               maxLength={500}
               name="availability"
             />
-          </label>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-xl font-bold text-[#172023]">Visibility</h2>
-          <p className="text-sm leading-6 text-[#394548]">
-            Discoverable means this profile can appear in Find results and
-            approximate map discovery inside Find. Hidden means it stays out of
-            discovery.
-          </p>
-          <label className="flex items-start gap-3 rounded-md border border-[#d7cec0] bg-[#fffaf2] p-4">
-            <input
-              className="mt-1"
-              defaultChecked={listing?.is_visible ?? false}
-              name="isVisible"
-              type="checkbox"
-            />
-            <span>
-              <span className="block font-semibold text-[#172023]">
-                Show My Quartet Profile in discovery
-              </span>
-              <span className="mt-1 block text-sm leading-6 text-[#596466]">
-                Discovery views include the name, parts covered and needed,
-                goals, and approximate location only.
-              </span>
-            </span>
           </label>
         </section>
 
