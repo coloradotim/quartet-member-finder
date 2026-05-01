@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { sendMessageReply } from "@/app/(protected)/app/messages/actions";
+import {
+  reportMessage,
+  sendMessageReply,
+} from "@/app/(protected)/app/messages/actions";
+import { messageReportCategories } from "@/lib/messages/moderation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type MessageDetailPageProps = {
@@ -8,6 +12,7 @@ type MessageDetailPageProps = {
     id: string;
   }>;
   searchParams: Promise<{
+    report?: string;
     reply?: string;
   }>;
 };
@@ -48,6 +53,26 @@ function replyStatusMessage(value: string | undefined) {
 
   if (value === "error") {
     return "Unable to send that reply. Check the message and try again.";
+  }
+
+  if (value === "blocked") {
+    return "This account is not currently allowed to send messages.";
+  }
+
+  return null;
+}
+
+function reportStatusMessage(value: string | undefined) {
+  if (value === "sent") {
+    return "Report submitted. The project team has been notified.";
+  }
+
+  if (value === "stored") {
+    return "Report saved. Admin email notification is waiting on Resend or server email configuration.";
+  }
+
+  if (value === "error") {
+    return "Unable to submit that report. Check the form and try again.";
   }
 
   return null;
@@ -134,6 +159,7 @@ export default async function MessageDetailPage({
     targetName(supabase, request),
   ]);
   const replyStatus = replyStatusMessage(query.reply);
+  const reportStatus = reportStatusMessage(query.report);
   const userIsOriginalSender = request.sender_user_id === user.id;
 
   return (
@@ -167,6 +193,19 @@ export default async function MessageDetailPage({
           role={query.reply === "error" ? "alert" : "status"}
         >
           {replyStatus}
+        </p>
+      ) : null}
+
+      {reportStatus ? (
+        <p
+          className={`mt-6 rounded-lg border p-4 text-sm ${
+            query.report === "error"
+              ? "border-red-200 bg-red-50 text-red-800"
+              : "border-[#b7d7ce] bg-[#eef8f4] text-[#174b4f]"
+          }`}
+          role={query.report === "error" ? "alert" : "status"}
+        >
+          {reportStatus}
         </p>
       ) : null}
 
@@ -241,6 +280,52 @@ export default async function MessageDetailPage({
           type="submit"
         >
           Send reply
+        </button>
+      </form>
+
+      <form
+        action={reportMessage}
+        className="mt-8 rounded-lg border border-[#d7cec0] bg-white p-5"
+      >
+        <input name="requestId" type="hidden" value={request.id} />
+        <h2 className="text-xl font-bold text-[#172023]">
+          Report this message
+        </h2>
+        <p className="mt-3 text-sm leading-6 text-[#394548]">
+          Use this for spam, harassment, suspicious requests, or other safety
+          concerns. Reports are private and reviewed as the project team is
+          able.
+        </p>
+        <label className="mt-4 block">
+          <span className="text-sm font-semibold text-[#172023]">Reason</span>
+          <select
+            className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
+            name="category"
+            required
+          >
+            {messageReportCategories.map((category) => (
+              <option key={category.value} value={category.value}>
+                {category.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="mt-4 block">
+          <span className="text-sm font-semibold text-[#172023]">
+            Optional note
+          </span>
+          <textarea
+            className="mt-2 min-h-24 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
+            maxLength={2000}
+            name="note"
+            placeholder="Add any context that will help the project team review this report."
+          />
+        </label>
+        <button
+          className="mt-4 w-full rounded-md border border-[#8a3b12] px-4 py-2.5 text-sm font-semibold text-[#8a3b12] hover:bg-[#fffaf2] sm:w-fit"
+          type="submit"
+        >
+          Submit report
         </button>
       </form>
     </div>

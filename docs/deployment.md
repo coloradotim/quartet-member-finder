@@ -437,6 +437,7 @@ The contact relay requires these server-side values in production:
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
 - `SUPABASE_SERVICE_ROLE_KEY`
+- `ADMIN_EMAILS`
 
 `SUPABASE_SERVICE_ROLE_KEY` is used only in server code to look up the resolved
 recipient email after RLS and the contact-request trigger have accepted the
@@ -446,9 +447,15 @@ delivery is deferred.
 
 Help-page feedback stores authenticated submissions in Supabase and sends a
 Resend notification to the project-team inbox at `cubuff98@gmail.com`. Admin
-review should use service-role/server access or a future protected admin
-surface; feedback must not be exposed through public routes or browser-side
-service-role code.
+review should use service-role/server access; feedback must not be exposed
+through public routes or browser-side service-role code.
+
+Message reports also send Resend notifications to `cubuff98@gmail.com`.
+Authorized admins can review them at `/app/admin`. Grant or revoke admin access
+by changing the server-only `ADMIN_EMAILS` allowlist in Vercel and redeploying.
+For severe abuse, use the admin console to hide public profiles and set a
+message or permanent block, then perform any account deletion manually in
+Supabase Auth after preserving the report/audit context needed for review.
 
 ## Maps and geocoding
 

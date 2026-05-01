@@ -268,15 +268,16 @@ address validation or a street address.
 
 ## Abuse and safety considerations
 
-Future work may include:
+Users can report inappropriate, spammy, suspicious, or concerning Messages from
+the signed-in message detail page. Reports are private: ordinary users see only
+confirmation that a report was submitted, while authorized admins can review
+report context in the admin console.
 
-- reporting inappropriate profiles/messages
-- blocking users
-- rate limits on contact messages
-- admin feedback triage tools
-- audit logs for contact attempts
-- admin tools for handling abuse reports
+Admins can hide reported singer or quartet profiles from discovery, block a
+reported account from sending additional messages, mark reports reviewed or
+action taken, and permanently block an account when warranted. Account deletion
+is a careful manual Supabase Auth action, not the default response to a report.
 
 The MVP should at least avoid public exposure of private location/contact data,
-avoid unauthenticated contact spam, and rate-limit authenticated feedback
-submissions.
+avoid unauthenticated contact spam, rate-limit authenticated feedback
+submissions, and provide a report/block path for abusive message behavior.

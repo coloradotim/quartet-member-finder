@@ -27,7 +27,7 @@ type ContactRequestRow = {
 
 function redirectWithContactStatus(
   returnTo: string,
-  status: "auth" | "error" | "sent" | "stored",
+  status: "auth" | "blocked" | "error" | "sent" | "stored",
 ): never {
   const separator = returnTo.includes("?") ? "&" : "?";
 
@@ -89,6 +89,21 @@ export async function sendContactRequest(formData: FormData) {
 
   if (!user) {
     redirect(`/sign-in?next=${encodeURIComponent(values.returnTo)}`);
+  }
+
+  const { data: moderationStatus } = await supabase
+    .from("user_moderation_status")
+    .select("account_status, messaging_blocked_at")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (
+    moderationStatus?.messaging_blocked_at ||
+    moderationStatus?.account_status === "message_blocked" ||
+    moderationStatus?.account_status === "suspended" ||
+    moderationStatus?.account_status === "permanently_blocked"
+  ) {
+    redirectWithContactStatus(values.returnTo, "blocked");
   }
 
   const rateLimitWindowStart = contactRateLimitWindowStart();

@@ -6,6 +6,9 @@ describe("contact status messages", () => {
     expect(contactStatusMessage("sent")).toMatchObject({ tone: "success" });
     expect(contactStatusMessage("stored")).toMatchObject({ tone: "notice" });
     expect(contactStatusMessage("error")).toMatchObject({ tone: "error" });
+    expect(contactStatusMessage("blocked")?.text).toContain(
+      "not currently allowed",
+    );
     expect(contactStatusMessage(undefined)).toBeNull();
   });
 
