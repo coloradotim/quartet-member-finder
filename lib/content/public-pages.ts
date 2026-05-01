@@ -51,8 +51,9 @@ export const publicHelpSections = [
   },
   {
     body: [
-      "First contact happens through the app. A signed-in user can send a short message, and the recipient can decide whether to respond or share direct contact information.",
-      "The app does not show the recipient's private email address or phone number in public search results.",
+      "First contact happens through the app. A signed-in user can send a short message, the recipient gets an email notification, and both people can read and reply in Messages.",
+      "The app does not show private email addresses or phone numbers in public search results or message pages by default.",
+      "Notification emails link back to sign-in so full message and reply text stays behind the app.",
     ],
     heading: "Contact",
   },
@@ -121,6 +122,7 @@ export const publicPrivacySections = [
     body: [
       "Public search results should not show personal email addresses or phone numbers by default.",
       "When someone sends a contact request, the app stores the request, resolves the recipient on the server/database side, and sends a notification without revealing the recipient's email address to the sender.",
+      "Replies are stored with the original contact request and are visible only to the sender and recipient participants.",
     ],
     heading: "Contact Relay",
   },

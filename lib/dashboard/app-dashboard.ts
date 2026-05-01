@@ -37,6 +37,12 @@ export const quartetDashboardActions: DashboardAction[] = [
 export const supportDashboardActions: DashboardAction[] = [
   {
     description:
+      "Read contact requests and replies in the app without exposing private email addresses by default.",
+    href: "/app/messages",
+    label: "Messages",
+  },
+  {
+    description:
       "Review how optional profiles, independent visibility, discovery, and app-mediated contact work.",
     href: "/help",
     label: "Help",

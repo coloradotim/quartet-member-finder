@@ -30,6 +30,7 @@ describe("signed-in app dashboard", () => {
       expect.objectContaining({ href: "/find?kind=quartets" }),
       expect.objectContaining({ href: "/app/listings" }),
       expect.objectContaining({ href: "/find?kind=singers" }),
+      expect.objectContaining({ href: "/app/messages" }),
       expect.objectContaining({ href: "/help" }),
       expect.objectContaining({ href: "/privacy" }),
     ]);

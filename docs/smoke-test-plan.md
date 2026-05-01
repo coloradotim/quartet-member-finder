@@ -189,9 +189,13 @@ validation.
 5. Pass without Resend configured: the request is stored and the user sees the
    stored/deferred notification message.
 6. Pass: recipient email address is never shown to the sender.
-7. Pass: a user cannot contact their own profile or listing.
-8. Fail: browser form accepts recipient email, recipient user ID, or direct
-   contact details as trusted input.
+7. Pass: the email notification links through sign-in to the message detail page
+   and does not include the full message body.
+8. Pass: the recipient can open Messages, read the message, and send a reply.
+9. Pass: the original sender can open Sent, read the reply, and reply again.
+10. Pass: a user cannot contact their own profile or listing.
+11. Fail: browser form accepts recipient email, recipient user ID, or direct
+    contact details as trusted input.
 
 ## Authenticated Feedback Form
 
