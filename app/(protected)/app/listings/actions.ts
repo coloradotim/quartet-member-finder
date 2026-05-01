@@ -13,6 +13,10 @@ import {
   parseQuartetListingFormData,
 } from "@/lib/quartets/quartet-listing-form";
 import { distanceUnitForCountry } from "@/lib/location/country-location-defaults";
+import {
+  shouldGeocodeApproximateLocation,
+  storedApproximateCoordinates,
+} from "@/lib/location/geocoding-decision";
 import { geocodeApproximateLocation } from "@/lib/location/geocoding";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -52,18 +56,52 @@ export async function saveQuartetListing(formData: FormData) {
     );
   }
 
-  const geocodingResult = await geocodeApproximateLocation(values, {
-    storageMode: "permanent",
-  });
-  const geocodedCoordinates = geocodingResult.coordinates;
   const { data: existingListing } = values.listingId
     ? await supabase
         .from("quartet_listings")
-        .select("is_visible")
+        .select(
+          "country_code, country_name, is_visible, latitude_private, locality, location_precision, longitude_private, postal_code_private, region",
+        )
         .eq("id", values.listingId)
         .eq("owner_user_id", user.id)
-        .maybeSingle<{ is_visible: boolean | null }>()
+        .maybeSingle<{
+          country_code: string | null;
+          country_name: string | null;
+          is_visible: boolean | null;
+          latitude_private: number | null;
+          locality: string | null;
+          location_precision: string | null;
+          longitude_private: number | null;
+          postal_code_private: string | null;
+          region: string | null;
+        }>()
     : { data: null };
+  const storedLocation = existingListing
+    ? {
+        countryCode: existingListing.country_code,
+        countryName: existingListing.country_name,
+        latitudePrivate: existingListing.latitude_private,
+        locality: existingListing.locality,
+        locationPrecision: existingListing.location_precision,
+        longitudePrivate: existingListing.longitude_private,
+        postalCodePrivate: existingListing.postal_code_private,
+        region: existingListing.region,
+      }
+    : null;
+  const shouldGeocode = shouldGeocodeApproximateLocation({
+    input: values,
+    storageMode: "permanent",
+    stored: storedLocation,
+  });
+  const geocodingResult = shouldGeocode
+    ? await geocodeApproximateLocation(values, {
+        storageMode: "permanent",
+      })
+    : null;
+  const preservedCoordinates = storedApproximateCoordinates(storedLocation);
+  const geocodedCoordinates =
+    geocodingResult?.coordinates ??
+    (shouldGeocode ? null : preservedCoordinates);
   const listingPayload = {
     availability: values.availability,
     country_code: values.countryCode,

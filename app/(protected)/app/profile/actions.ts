@@ -13,6 +13,10 @@ import {
   parseSingerProfileFormData,
 } from "@/lib/profiles/singer-profile-form";
 import { distanceUnitForCountry } from "@/lib/location/country-location-defaults";
+import {
+  shouldGeocodeApproximateLocation,
+  storedApproximateCoordinates,
+} from "@/lib/location/geocoding-decision";
 import { geocodeApproximateLocation } from "@/lib/location/geocoding";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -58,15 +62,49 @@ export async function saveSingerProfile(formData: FormData) {
     values.countryCode,
     values.countryName,
   );
-  const geocodingResult = await geocodeApproximateLocation(values, {
-    storageMode: "permanent",
-  });
-  const geocodedCoordinates = geocodingResult.coordinates;
   const { data: existingProfile } = await supabase
     .from("singer_profiles")
-    .select("is_visible")
+    .select(
+      "country_code, country_name, is_visible, latitude_private, locality, location_precision, longitude_private, postal_code_private, region",
+    )
     .eq("user_id", user.id)
-    .maybeSingle<{ is_visible: boolean | null }>();
+    .maybeSingle<{
+      country_code: string | null;
+      country_name: string | null;
+      is_visible: boolean | null;
+      latitude_private: number | null;
+      locality: string | null;
+      location_precision: string | null;
+      longitude_private: number | null;
+      postal_code_private: string | null;
+      region: string | null;
+    }>();
+  const storedLocation = existingProfile
+    ? {
+        countryCode: existingProfile.country_code,
+        countryName: existingProfile.country_name,
+        latitudePrivate: existingProfile.latitude_private,
+        locality: existingProfile.locality,
+        locationPrecision: existingProfile.location_precision,
+        longitudePrivate: existingProfile.longitude_private,
+        postalCodePrivate: existingProfile.postal_code_private,
+        region: existingProfile.region,
+      }
+    : null;
+  const shouldGeocode = shouldGeocodeApproximateLocation({
+    input: values,
+    storageMode: "permanent",
+    stored: storedLocation,
+  });
+  const geocodingResult = shouldGeocode
+    ? await geocodeApproximateLocation(values, {
+        storageMode: "permanent",
+      })
+    : null;
+  const preservedCoordinates = storedApproximateCoordinates(storedLocation);
+  const geocodedCoordinates =
+    geocodingResult?.coordinates ??
+    (shouldGeocode ? null : preservedCoordinates);
 
   const { data: profile, error: profileError } = await supabase
     .from("singer_profiles")

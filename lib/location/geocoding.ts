@@ -1,6 +1,6 @@
 import type { Coordinates } from "@/lib/location/approximate-location";
 
-type GeocodingStorageMode = "permanent" | "temporary";
+export type GeocodingStorageMode = "permanent" | "temporary";
 
 export type ApproximateGeocodingInput = {
   countryCode?: string | null;
