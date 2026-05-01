@@ -105,9 +105,11 @@ The signed-in discovery routes are:
 - `/quartets`, backed by `quartet_discovery_listings`
 - `/map`, backed by both discovery views as a compatibility map view
 
-These routes may filter on public location fields, voicing-aware part, goals,
-experience/commitment, availability, and travel willingness. They should not
-read private base-table location or contact fields.
+These routes may filter on voicing-aware parts and goals. `/find` presents a
+search-origin and radius interface, but true distance-from-origin filtering
+requires a future approximate geocoding/RPC layer; until then, the map and cards
+use privacy-safe public location summaries from the discovery views. They should
+not read private base-table location or contact fields.
 
 These routes require authentication before reading discovery views. The views
 still expose only privacy-safe public fields, but anonymous visitors are

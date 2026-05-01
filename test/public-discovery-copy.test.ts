@@ -55,14 +55,19 @@ describe("public discovery copy", () => {
     expect(singerPage).toContain("looking for other singers nearby");
   });
 
-  it("consolidates discovery around filters, map, and table", () => {
+  it("consolidates discovery around search origin, map, cards, and details", () => {
     const findPage = source("app/find/page.tsx");
 
-    expect(findPage).toContain("Search singers and quartet openings");
+    expect(findPage).toContain("Search quartet openings and singers");
     expect(findPage).toContain("Filter discovery results");
     expect(findPage).toContain("Privacy-safe discovery map");
-    expect(findPage).toContain("Results table");
-    expect(findPage).toContain("Detailed quartet search");
-    expect(findPage).toContain("Detailed singer search");
+    expect(findPage).toContain("Search from");
+    expect(findPage).toContain("Within");
+    expect(findPage).toContain("multiple");
+    expect(findPage).toContain("Matching results");
+    expect(findPage).toContain("details and contact");
+    expect(findPage).not.toContain("Detailed quartet search");
+    expect(findPage).not.toContain("Detailed singer search");
+    expect(findPage).not.toContain("Open detailed search");
   });
 });
