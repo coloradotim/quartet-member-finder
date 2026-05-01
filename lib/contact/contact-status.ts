@@ -1,4 +1,4 @@
-export type ContactStatus = "auth" | "error" | "sent" | "stored";
+export type ContactStatus = "auth" | "blocked" | "error" | "sent" | "stored";
 
 export function contactStatusMessage(status: string | string[] | undefined) {
   const value = Array.isArray(status) ? status[0] : status;
@@ -21,6 +21,13 @@ export function contactStatusMessage(status: string | string[] | undefined) {
     return {
       tone: "notice" as const,
       text: "Sign in with an email one-time code before sending a contact request.",
+    };
+  }
+
+  if (value === "blocked") {
+    return {
+      tone: "error" as const,
+      text: "This account is not currently allowed to send messages.",
     };
   }
 

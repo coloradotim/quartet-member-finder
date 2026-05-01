@@ -15,6 +15,8 @@ const appTables = [
   "quartet_listing_parts",
   "contact_requests",
   "contact_request_replies",
+  "message_reports",
+  "user_moderation_status",
   "feedback_submissions",
 ];
 
@@ -149,5 +151,23 @@ describe("initial Supabase schema migration", () => {
     );
     expect(migration).toContain("recipient_read_at");
     expect(migration).toContain("sender_read_at");
+  });
+
+  it("adds private message reports and account moderation status", () => {
+    expect(migration).toContain("create table public.message_reports");
+    expect(migration).toContain("create table public.user_moderation_status");
+    expect(migration).toContain("set_message_report_reported_user");
+    expect(migration).toContain(
+      'create policy "Message participants can create private reports"',
+    );
+    expect(migration).toContain(
+      'create policy "Users can read their own moderation status"',
+    );
+    expect(migration).toContain("grant insert on table public.message_reports");
+    expect(migration).toContain(
+      "grant select on table public.user_moderation_status",
+    );
+    expect(migration).toContain("'message_blocked'");
+    expect(migration).toContain("'permanently_blocked'");
   });
 });

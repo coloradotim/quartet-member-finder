@@ -22,10 +22,14 @@ describe("messages UI", () => {
     );
     expect(detailPage).toContain("Original message");
     expect(detailPage).toContain("Send reply");
+    expect(detailPage).toContain("Report this message");
+    expect(detailPage).toContain("messageReportCategories");
     expect(detailPage).toContain(
       "Private email addresses and phone numbers are not shown by default.",
     );
     expect(replyAction).toContain("contact_request_replies");
     expect(replyAction).toContain("sendContactReplyNotification");
+    expect(replyAction).toContain("message_reports");
+    expect(replyAction).toContain("sendAdminReportNotification");
   });
 });

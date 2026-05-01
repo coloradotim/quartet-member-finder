@@ -11,6 +11,7 @@ The app will need environment variables for:
 - server-only Supabase administrative value, if needed for scripts or trusted server tasks
 - Resend API access
 - Resend sender email
+- server-only admin email allowlist
 - map/geocoding provider configuration
 
 The current scaffold includes `.env.example` with safe placeholder keys:
@@ -23,6 +24,7 @@ The current scaffold includes `.env.example` with safe placeholder keys:
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
+- `ADMIN_EMAILS` server-only comma-separated allowlist for `/app/admin`
 - `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` optional public Mapbox browser token for
   the interactive discovery map
 - `NEXT_PUBLIC_MAPBOX_STYLE_URL` optional Mapbox style URL
@@ -56,6 +58,7 @@ build/deploy:
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
+- `ADMIN_EMAILS`
 
 ## Supabase Auth
 
@@ -101,6 +104,10 @@ Required server-only values for notification delivery:
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
+
+Message reports and the admin console also require:
+
+- `ADMIN_EMAILS`, a comma-separated list of signed-in admin email addresses
 
 For production, use a verified sender on the project domain, such as:
 

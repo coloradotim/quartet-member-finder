@@ -76,7 +76,8 @@ export const publicHelpSections = [
   {
     body: [
       "Use the same judgment you would use when meeting someone through a singing community. Start with app-mediated messages, meet in public or group settings when possible, and do not share private contact details until you are comfortable.",
-      "The app helps reduce public exposure of personal data, but it does not replace personal judgment or formal moderation.",
+      "Message detail pages include a private report action for spam, harassment, suspicious requests, or other safety concerns. Reports are reviewed as the project team is able.",
+      "The app helps reduce public exposure of personal data, but it does not replace personal judgment or guarantee real-time moderation.",
     ],
     heading: "First Contact Safety",
   },
@@ -123,6 +124,7 @@ export const publicPrivacySections = [
       "Public search results should not show personal email addresses or phone numbers by default.",
       "When someone sends a contact request, the app stores the request, resolves the recipient on the server/database side, and sends a notification without revealing the recipient's email address to the sender.",
       "Replies are stored with the original contact request and are visible only to the sender and recipient participants.",
+      "Message reports are private. They are visible only to authorized project administrators for review and safety action.",
     ],
     heading: "Contact Relay",
   },

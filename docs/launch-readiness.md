@@ -150,12 +150,12 @@ Record before launch:
 
 ## Abuse and Spam Protections
 
-| Status    | Item                                                                                       | Verification                                             |
-| --------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
-| Complete  | Contact requests require sign-in.                                                          | `docs/privacy-model.md#contact-model`.                   |
-| Complete  | Contact relay has a basic sender-side rate limit.                                          | `docs/supabase-contract.md#contact-data-expectations`.   |
-| Complete  | Feedback requires sign-in and has a basic authenticated rate limit.                        | `docs/privacy-model.md#feedback-model`.                  |
-| Follow-up | Add reporting, blocking, and stronger admin abuse workflows when real usage requires them. | `docs/privacy-model.md#abuse-and-safety-considerations`. |
+| Status   | Item                                                                           | Verification                                                                                       |
+| -------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| Complete | Contact requests require sign-in.                                              | `docs/privacy-model.md#contact-model`.                                                             |
+| Complete | Contact relay has a basic sender-side rate limit.                              | `docs/supabase-contract.md#contact-data-expectations`.                                             |
+| Complete | Feedback requires sign-in and has a basic authenticated rate limit.            | `docs/privacy-model.md#feedback-model`.                                                            |
+| Complete | Add reporting, message blocking, and minimal admin abuse workflows for launch. | `/app/admin`; `docs/admin-moderation.md`; `docs/privacy-model.md#abuse-and-safety-considerations`. |
 
 ## Final Launch Sign-Off
 

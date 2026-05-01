@@ -18,6 +18,9 @@ It includes these data areas:
 - `quartet_listing_parts`: voicing-aware parts currently covered or needed by a quartet.
 - `contact_requests`: app-mediated first-contact messages.
 - `contact_request_replies`: app-mediated replies attached to contact requests.
+- `message_reports`: private reports for inappropriate or concerning messages.
+- `user_moderation_status`: private account-level moderation status used for
+  message blocking and permanent blocks.
 - `feedback_submissions`: private authenticated-user feedback from the help page.
 - `singer_discovery_profiles`: privacy-safe singer discovery view.
 - `quartet_discovery_listings`: privacy-safe quartet discovery view.
@@ -134,6 +137,8 @@ RLS should enforce:
 - contact requests require an authenticated sender
 - recipients can read contact requests addressed to them or to listings they own
 - contact request participants can read and reply inside their own message thread
+- message participants can create private reports for messages they can view
+- blocked accounts cannot send new first-contact messages or replies
 - feedback submissions require an authenticated submitter and are not readable by
   other regular users
 
@@ -180,6 +185,19 @@ original sender or resolved recipient. Reply inserts mark the parent contact
 request as `responded`. Notification email for first-contact messages and
 replies links users back through sign-in to `/app/messages/[id]`; full message
 and reply bodies stay behind authenticated app access.
+
+Message reports are inserted into `message_reports` by authenticated message
+participants only. A database trigger resolves the reported account as the other
+participant on the contact request, rejecting unrelated report attempts. Reports
+are not readable by ordinary authenticated users. The app's admin console uses
+server-side service-role access only after the signed-in account passes the
+server-only `ADMIN_EMAILS` allowlist.
+
+`user_moderation_status` stores account-level moderation state. Ordinary users
+may read only their own status so server actions can enforce message blocks
+without exposing other accounts' moderation history. Admin actions can mark an
+account `message_blocked` or `permanently_blocked`; first-contact and reply
+actions must reject blocked senders with a generic message-send error.
 
 Help-page feedback inserts are authenticated-only. The server action writes
 `feedback_submissions` with the authenticated user ID and, when available, the
@@ -294,6 +312,28 @@ The MVP contact flow should use app-mediated contact with Resend notifications.
 
 RLS lets only contact participants read replies and lets only participants add
 replies to their own contact requests.
+
+`message_reports` stores private report data:
+
+- parent contact request
+- reporting user
+- reported user resolved by trigger
+- category
+- optional reporter note
+- review status
+- admin notes and action timestamp
+- created and updated timestamps
+
+`user_moderation_status` stores:
+
+- account status
+- message-block timestamp and reason
+- admin notes
+- created and updated timestamps
+
+Admin access is controlled by the server-only `ADMIN_EMAILS` allowlist. Account
+deletion remains a manual Supabase Auth process documented in
+`docs/admin-moderation.md`.
 
 The app applies a basic sender-side rate limit before insert: five contact
 requests per authenticated sender per hour. Database-side rate limiting or abuse

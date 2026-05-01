@@ -197,6 +197,25 @@ validation.
 11. Fail: browser form accepts recipient email, recipient user ID, or direct
     contact details as trusted input.
 
+## Message Reporting And Admin Review
+
+1. Sign in as a user who can view a message detail page.
+2. Submit Report this message with category `Spam` and an optional note.
+3. Pass: the user sees a report-submitted confirmation.
+4. Pass: the report is stored in Supabase and ordinary message participants
+   cannot browse all reports.
+5. Pass with Resend configured: an admin notification is sent to
+   `cubuff98@gmail.com` with a link to `/app/admin/reports/[id]`.
+6. Sign in with an email that is not in `ADMIN_EMAILS` and open `/app/admin`.
+7. Pass: the user sees a generic not-authorized page.
+8. Sign in as an allowlisted admin and open `/app/admin`.
+9. Pass: reports are listed and report detail shows message context, reporter,
+   reported account, status, and available actions.
+10. Use Block from messaging on the reported account.
+11. Pass: that account cannot send new contact requests or message replies and
+    sees only a generic message-send block error.
+12. Use hide-profile or permanent-block actions only after reviewing context.
+
 ## Authenticated Feedback Form
 
 1. Sign in and open `/help#feedback`.
