@@ -134,6 +134,16 @@
           "series": [{ "event": "discovery_search_submitted" }]
         },
         {
+          "key": "find-searches-by-kind",
+          "name": "Find searches by kind",
+          "description": "Unified Find page searches by singer, quartet, or combined result type.",
+          "type": "trend",
+          "display": "ActionsBar",
+          "dateFrom": "-30d",
+          "breakdown": "kind",
+          "series": [{ "event": "find_searched" }]
+        },
+        {
           "key": "map-views-by-kind",
           "name": "Map views by result type",
           "description": "Whether the privacy-safe map is used for singers, quartet openings, or both.",
@@ -149,10 +159,7 @@
           "description": "Search or map discovery leading to app-mediated contact request submission.",
           "type": "funnel",
           "dateFrom": "-30d",
-          "series": [
-            { "event": "discovery_search_submitted" },
-            { "event": "contact_request_submitted" }
-          ]
+          "series": [{ "event": "find_searched" }, { "event": "message_sent" }]
         },
         {
           "key": "contact-requests-by-target",
@@ -173,6 +180,16 @@
           "dateFrom": "-30d",
           "breakdown": "status",
           "series": [{ "event": "contact_request_submitted" }]
+        },
+        {
+          "key": "message-replies-by-status",
+          "name": "Message replies by status",
+          "description": "In-app replies grouped by notification outcome.",
+          "type": "trend",
+          "display": "ActionsBar",
+          "dateFrom": "-30d",
+          "breakdown": "status",
+          "series": [{ "event": "message_replied" }]
         }
       ]
     },

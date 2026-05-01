@@ -136,7 +136,8 @@ blank.
 When enabled, analytics uses an internal app endpoint that accepts only
 allowlisted product events and safe properties. The app may track route views and
 high-level funnel events such as onboarding completion, profile/listing saves,
-discovery searches, map views, contact request submission, and feedback
+profile/listing visibility changes, discovery searches, map views, contact
+request/message submission, message views/replies/reports, and feedback
 submission.
 
 Do not send email addresses, display names, profile/listing text, contact or

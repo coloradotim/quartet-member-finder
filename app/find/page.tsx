@@ -205,8 +205,9 @@ function filterAnalyticsProperties(
 ) {
   const flags = {
     has_goal_filter: Boolean(filters.goal),
+    has_location_filter: Boolean(filters.searchFrom),
     has_part_filter: filters.parts.length > 0,
-    has_radius: filters.radius != null,
+    has_radius_filter: filters.radius != null,
     has_search_origin: Boolean(filters.searchFrom),
   };
   const filterCount = Object.values(flags).filter(Boolean).length;
@@ -461,14 +462,19 @@ export default async function FindPage({ searchParams }: FindPageProps) {
     radiusSearchOrigin ? "; sorted by approximate distance" : ""
   }`;
 
-  await captureProductEvent("map_viewed", {
+  const discoveryAnalyticsProperties = {
     ...flags,
+    distance_unit: filters.distanceUnit,
     filter_count: filterCount,
     kind,
     route: "/find",
     result_count: results.length,
     route_area: "discovery",
-  });
+    search_origin: filters.searchOrigin,
+  };
+
+  await captureProductEvent("find_searched", discoveryAnalyticsProperties);
+  await captureProductEvent("map_viewed", discoveryAnalyticsProperties);
 
   return (
     <>

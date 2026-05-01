@@ -117,6 +117,15 @@ export async function completeOnboarding(formData: FormData) {
   }
 
   await captureProductEvent(
+    "onboarding_intent_selected",
+    {
+      onboarding_choice: choiceId,
+      route: "/app/onboarding",
+      route_area: "signed_in_app",
+    },
+    { distinctId: pseudonymousAnalyticsUserId(user.id) },
+  );
+  await captureProductEvent(
     "onboarding_completed",
     {
       has_country: Boolean(

@@ -68,6 +68,29 @@ async function fetchContactTarget(
   return data ? { id: data.id, kind: "quartet", name: data.name } : null;
 }
 
+async function captureContactRequestSubmitted({
+  returnTo,
+  status,
+  targetKind,
+  userId,
+}: {
+  returnTo: string;
+  status: "sent" | "stored";
+  targetKind: "quartet" | "singer";
+  userId: string;
+}) {
+  const properties = {
+    route: returnTo.split("?")[0] || returnTo,
+    route_area: "discovery",
+    status,
+    target_kind: targetKind,
+  };
+  const options = { distinctId: pseudonymousAnalyticsUserId(userId) };
+
+  await captureProductEvent("contact_request_submitted", properties, options);
+  await captureProductEvent("message_sent", properties, options);
+}
+
 export async function sendContactRequest(formData: FormData) {
   let values;
 
@@ -155,16 +178,12 @@ export async function sendContactRequest(formData: FormData) {
 
   if (!admin || !relayConfig) {
     revalidatePath(values.returnTo);
-    await captureProductEvent(
-      "contact_request_submitted",
-      {
-        route: values.returnTo.split("?")[0] || values.returnTo,
-        route_area: "discovery",
-        status: "stored",
-        target_kind: values.targetKind,
-      },
-      { distinctId: pseudonymousAnalyticsUserId(user.id) },
-    );
+    await captureContactRequestSubmitted({
+      returnTo: values.returnTo,
+      status: "stored",
+      targetKind: values.targetKind,
+      userId: user.id,
+    });
     redirectWithContactStatus(values.returnTo, "stored");
   }
 
@@ -173,16 +192,12 @@ export async function sendContactRequest(formData: FormData) {
 
   if (recipientError || !recipient.user?.email) {
     revalidatePath(values.returnTo);
-    await captureProductEvent(
-      "contact_request_submitted",
-      {
-        route: values.returnTo.split("?")[0] || values.returnTo,
-        route_area: "discovery",
-        status: "stored",
-        target_kind: values.targetKind,
-      },
-      { distinctId: pseudonymousAnalyticsUserId(user.id) },
-    );
+    await captureContactRequestSubmitted({
+      returnTo: values.returnTo,
+      status: "stored",
+      targetKind: values.targetKind,
+      userId: user.id,
+    });
     redirectWithContactStatus(values.returnTo, "stored");
   }
 
@@ -200,29 +215,21 @@ export async function sendContactRequest(formData: FormData) {
       .eq("id", contactRequest.id);
   } catch {
     revalidatePath(values.returnTo);
-    await captureProductEvent(
-      "contact_request_submitted",
-      {
-        route: values.returnTo.split("?")[0] || values.returnTo,
-        route_area: "discovery",
-        status: "stored",
-        target_kind: values.targetKind,
-      },
-      { distinctId: pseudonymousAnalyticsUserId(user.id) },
-    );
+    await captureContactRequestSubmitted({
+      returnTo: values.returnTo,
+      status: "stored",
+      targetKind: values.targetKind,
+      userId: user.id,
+    });
     redirectWithContactStatus(values.returnTo, "stored");
   }
 
   revalidatePath(values.returnTo);
-  await captureProductEvent(
-    "contact_request_submitted",
-    {
-      route: values.returnTo.split("?")[0] || values.returnTo,
-      route_area: "discovery",
-      status: "sent",
-      target_kind: values.targetKind,
-    },
-    { distinctId: pseudonymousAnalyticsUserId(user.id) },
-  );
+  await captureContactRequestSubmitted({
+    returnTo: values.returnTo,
+    status: "sent",
+    targetKind: values.targetKind,
+    userId: user.id,
+  });
   redirectWithContactStatus(values.returnTo, "sent");
 }

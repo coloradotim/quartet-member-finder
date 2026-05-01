@@ -38,19 +38,33 @@ Current events:
 
 - `analytics_client_ready`
 - `app_route_viewed`
+- `sign_in_started`
+- `sign_in_completed`
 - `user_logged_in`
+- `onboarding_viewed`
+- `onboarding_intent_selected`
 - `onboarding_completed`
 - `onboarding_skipped`
 - `singer_profile_saved`
+- `singer_profile_visibility_changed`
 - `quartet_listing_saved`
+- `quartet_listing_visibility_changed`
 - `discovery_search_submitted`
+- `find_searched`
 - `map_viewed`
 - `contact_request_submitted`
+- `message_sent`
+- `message_viewed`
+- `message_replied`
+- `message_report_submitted`
 - `feedback_submitted`
 
 Allowed properties are intentionally narrow. They include route area, public
-route path, filter-presence booleans, result counts, target kind, visibility
-enabled flags, feedback type, generic status, and onboarding choice.
+route path, filter-presence booleans, distance unit, result counts, search
+origin type, target kind, participant role, reply count, visibility enabled
+flags, feedback type, report category, generic status, and onboarding choice.
+Route values are stripped of query strings and hash fragments, and UUID-looking
+path segments are normalized to `[id]`.
 
 Never send:
 
@@ -66,6 +80,17 @@ Never send:
 Signed-in server events may use a pseudonymous hash of the authenticated user ID
 so funnel steps can be understood without identifying users by direct personal
 information.
+
+When adding or changing analytics:
+
+1. Add the event name and each safe property key to
+   `lib/analytics/product-analytics.ts`.
+2. Prefer booleans, counts, coarse categories, and enum-like values.
+3. Do not add raw IDs, user-entered text, contact details, precise location
+   fields, or query strings.
+4. Add or update tests in `test/product-analytics.test.ts`.
+5. Update this document and `docs/privacy-model.md` if the event changes the
+   privacy contract.
 
 ## Dashboards
 

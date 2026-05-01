@@ -4,6 +4,10 @@ import {
   reportMessage,
   sendMessageReply,
 } from "@/app/(protected)/app/messages/actions";
+import {
+  captureProductEvent,
+  pseudonymousAnalyticsUserId,
+} from "@/lib/analytics/product-analytics";
 import { messageReportCategories } from "@/lib/messages/moderation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -161,6 +165,19 @@ export default async function MessageDetailPage({
   const replyStatus = replyStatusMessage(query.reply);
   const reportStatus = reportStatusMessage(query.report);
   const userIsOriginalSender = request.sender_user_id === user.id;
+
+  await captureProductEvent(
+    "message_viewed",
+    {
+      participant_role: userIsOriginalSender ? "sender" : "recipient",
+      reply_count: (replies ?? []).length,
+      route: "/app/messages/[id]",
+      route_area: "signed_in_app",
+      status: request.status,
+      target_kind: request.singer_profile_id ? "singer" : "quartet",
+    },
+    { distinctId: pseudonymousAnalyticsUserId(user.id) },
+  );
 
   return (
     <div className="max-w-3xl">

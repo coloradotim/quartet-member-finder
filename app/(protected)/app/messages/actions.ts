@@ -3,6 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
+  captureProductEvent,
+  pseudonymousAnalyticsUserId,
+} from "@/lib/analytics/product-analytics";
+import {
   CONTACT_MESSAGE_MAX_LENGTH,
   getContactRelayConfig,
   sendContactReplyNotification,
@@ -63,6 +67,31 @@ function trimMessage(value: FormDataEntryValue | null) {
   const trimmed = value.trim();
 
   return trimmed ? trimmed : null;
+}
+
+function messageParticipantRole(request: ContactRequestRow, userId: string) {
+  return request.sender_user_id === userId ? "sender" : "recipient";
+}
+
+async function captureMessageReply({
+  request,
+  status,
+  userId,
+}: {
+  request: ContactRequestRow;
+  status: "sent" | "stored";
+  userId: string;
+}) {
+  await captureProductEvent(
+    "message_replied",
+    {
+      participant_role: messageParticipantRole(request, userId),
+      route: "/app/messages/[id]",
+      route_area: "signed_in_app",
+      status,
+    },
+    { distinctId: pseudonymousAnalyticsUserId(userId) },
+  );
 }
 
 async function resolveContactTarget(
@@ -194,6 +223,11 @@ export async function sendMessageReply(formData: FormData) {
 
   if (!admin || !relayConfig || !otherUserId) {
     revalidatePath(`/app/messages/${requestId}`);
+    await captureMessageReply({
+      request: contactRequest,
+      status: "stored",
+      userId: user.id,
+    });
     redirectWithReplyStatus(requestId, "stored");
   }
 
@@ -202,6 +236,11 @@ export async function sendMessageReply(formData: FormData) {
 
   if (recipientError || !recipient.user?.email) {
     revalidatePath(`/app/messages/${requestId}`);
+    await captureMessageReply({
+      request: contactRequest,
+      status: "stored",
+      userId: user.id,
+    });
     redirectWithReplyStatus(requestId, "stored");
   }
 
@@ -218,10 +257,20 @@ export async function sendMessageReply(formData: FormData) {
       .eq("id", reply.id);
   } catch {
     revalidatePath(`/app/messages/${requestId}`);
+    await captureMessageReply({
+      request: contactRequest,
+      status: "stored",
+      userId: user.id,
+    });
     redirectWithReplyStatus(requestId, "stored");
   }
 
   revalidatePath(`/app/messages/${requestId}`);
+  await captureMessageReply({
+    request: contactRequest,
+    status: "sent",
+    userId: user.id,
+  });
   redirectWithReplyStatus(requestId, "sent");
 }
 
@@ -300,6 +349,16 @@ export async function reportMessage(formData: FormData) {
 
   if (!config) {
     revalidatePath(`/app/messages/${requestId}`);
+    await captureProductEvent(
+      "message_report_submitted",
+      {
+        report_category: category,
+        route: "/app/messages/[id]",
+        route_area: "signed_in_app",
+        status: "stored",
+      },
+      { distinctId: pseudonymousAnalyticsUserId(user.id) },
+    );
     redirectWithReportStatus(requestId, "stored");
   }
 
@@ -316,9 +375,29 @@ export async function reportMessage(formData: FormData) {
     });
   } catch {
     revalidatePath(`/app/messages/${requestId}`);
+    await captureProductEvent(
+      "message_report_submitted",
+      {
+        report_category: category,
+        route: "/app/messages/[id]",
+        route_area: "signed_in_app",
+        status: "stored",
+      },
+      { distinctId: pseudonymousAnalyticsUserId(user.id) },
+    );
     redirectWithReportStatus(requestId, "stored");
   }
 
   revalidatePath(`/app/messages/${requestId}`);
+  await captureProductEvent(
+    "message_report_submitted",
+    {
+      report_category: category,
+      route: "/app/messages/[id]",
+      route_area: "signed_in_app",
+      status: "sent",
+    },
+    { distinctId: pseudonymousAnalyticsUserId(user.id) },
+  );
   redirectWithReportStatus(requestId, "sent");
 }

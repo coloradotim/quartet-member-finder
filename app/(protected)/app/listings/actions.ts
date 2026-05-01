@@ -56,6 +56,14 @@ export async function saveQuartetListing(formData: FormData) {
     storageMode: "permanent",
   });
   const geocodedCoordinates = geocodingResult.coordinates;
+  const { data: existingListing } = values.listingId
+    ? await supabase
+        .from("quartet_listings")
+        .select("is_visible")
+        .eq("id", values.listingId)
+        .eq("owner_user_id", user.id)
+        .maybeSingle<{ is_visible: boolean | null }>()
+    : { data: null };
   const listingPayload = {
     availability: values.availability,
     country_code: values.countryCode,
@@ -150,6 +158,22 @@ export async function saveQuartetListing(formData: FormData) {
     },
     { distinctId: pseudonymousAnalyticsUserId(user.id) },
   );
+  if (
+    existingListing &&
+    existingListing.is_visible !== null &&
+    existingListing.is_visible !== values.isVisible
+  ) {
+    await captureProductEvent(
+      "quartet_listing_visibility_changed",
+      {
+        is_visible: values.isVisible,
+        route: "/app/listings",
+        route_area: "signed_in_app",
+        visibility_enabled: values.isVisible,
+      },
+      { distinctId: pseudonymousAnalyticsUserId(user.id) },
+    );
+  }
   const locationWarning = discoverabilityLocationWarning(values);
   redirectWithListingMessage(
     "message",
