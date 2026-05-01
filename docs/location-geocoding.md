@@ -45,11 +45,16 @@ columns:
 Public discovery views never expose exact coordinates, postal codes, private
 addresses, owner IDs, or recipient contact details.
 
+Profile and listing save actions call permanent geocoding only when the saved
+location fields are new or changed. If a user updates goals, parts,
+availability, visibility, or other non-location fields, the app preserves the
+existing private coordinates and does not make another geocoding request.
+
 ## Radius Search
 
 When a signed-in user enters a search origin and radius on `/find`, the server:
 
-1. Resolves the origin with temporary Mapbox geocoding.
+1. Resolves the origin with temporary Mapbox geocoding on explicit search.
 2. Converts miles to kilometers when needed.
 3. Calls Supabase RPC functions that filter visible records by approximate
    distance.
@@ -87,3 +92,9 @@ Mapbox requests may be billed and rate limited according to the Mapbox account's
 current plan. Search-origin lookups are temporary geocoding requests. Saved
 profile/listing location lookups use `permanent=true` only when
 `MAPBOX_GEOCODING_PERMANENT=true` is set.
+
+Mapbox documentation states that temporary geocoding results are not for stored
+reuse. QMF therefore does not persist typed search-origin geocoding responses.
+Repeated searches for the same typed origin can make repeated temporary
+geocoding requests; keep the UI explicit and avoid live geocoding on every
+keystroke.

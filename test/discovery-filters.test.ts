@@ -17,6 +17,7 @@ describe("discovery filters", () => {
       searchFromSource: "singer_profile",
       searchFrom: " Manchester, England ",
       travelRadiusKm: "50",
+      view: "map",
     });
 
     expect(filters.country).toBe("United Kingdom");
@@ -32,6 +33,7 @@ describe("discovery filters", () => {
     expect(filters.searchFromSource).toBe("singer_profile");
     expect(filters.searchFrom).toBe("Manchester, England");
     expect(filters.travelRadiusKm).toBe(50);
+    expect(filters.view).toBe("map");
     expect(hasDiscoveryFilters(filters)).toBe(true);
   });
 
@@ -51,7 +53,20 @@ describe("discovery filters", () => {
     expect(filters.distanceUnit).toBe("mi");
     expect(filters.searchOrigin).toBe("typed");
     expect(filters.searchFromSource).toBe("another");
+    expect(filters.view).toBe("list");
     expect(hasDiscoveryFilters(filters)).toBe(false);
+  });
+
+  it("treats Map view as explicit and list view as the default", () => {
+    expect(parseDiscoveryFilters({ view: "map" }).view).toBe("map");
+    expect(parseDiscoveryFilters({ view: "list" }).view).toBe("list");
+    expect(parseDiscoveryFilters({ view: "globe" }).view).toBe("list");
+    expect(hasDiscoveryFilters(parseDiscoveryFilters({ view: "map" }))).toBe(
+      true,
+    );
+    expect(hasDiscoveryFilters(parseDiscoveryFilters({ view: "list" }))).toBe(
+      false,
+    );
   });
 
   it("keeps multiple submitted goals and global text filters", () => {

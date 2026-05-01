@@ -125,6 +125,10 @@ Vercel Production and Preview to render the interactive map. This must be a
 public `pk...` token with no secret scopes. `NEXT_PUBLIC_MAPBOX_PROJECTION`
 defaults to `globe` so the primary map is not Web Mercator.
 
+Restrict the public token to the production domain, required Vercel preview
+domains, and localhost development origins. QMF defaults `/find` to list results
+and loads Mapbox GL JS only when the signed-in user opens Map view.
+
 Server-side geocoding uses separate `MAPBOX_GEOCODING_*` values. Geocoding
 secrets should be server-only and must not use the `NEXT_PUBLIC_` prefix.
 

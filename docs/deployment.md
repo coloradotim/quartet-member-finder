@@ -469,11 +469,42 @@ The browser map requires `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN`. Use a public
 `pk...` token with no secret scopes. Do not put an `sk...` secret token in a
 `NEXT_PUBLIC_` variable.
 
+Restrict the public token in Mapbox to QMF origins where possible:
+
+- `https://quartetmemberfinder.org/*`
+- `https://www.quartetmemberfinder.org/*`
+- the Vercel preview/deployment host patterns needed for pull-request testing
+- `http://localhost:3000/*` for local development, preferably on a separate
+  development token
+
+Mapbox GL JS usage is billed by web map loads. Current Mapbox documentation
+defines a map load as initializing a Mapbox GL JS `Map` object. QMF therefore
+keeps list results as the default `/find` view, loads the interactive map only
+when Map view is selected, and updates marker data without recreating the map
+instance during routine result changes.
+
 Approximate radius search can use server-side Mapbox geocoding. Keep
 `MAPBOX_GEOCODING_TOKEN` server-only. Set `MAPBOX_GEOCODING_PERMANENT=true`
 only when the Mapbox account is allowed to store geocoding results, because
 profile/listing save actions persist private approximate coordinates in
 Supabase.
+
+Use a dedicated server-side geocoding token. If that token is a public `pk...`
+token, do not expose it through browser code; if it is a secret `sk...` token,
+keep only the minimum scopes needed for Geocoding API use. Do not reuse a token
+from another project.
+
+Mapbox temporary geocoding results are not stored by QMF. Profile/listing
+coordinates are stored only through permanent geocoding, and only when relevant
+location fields are created or changed. Typed `/find` origins use temporary
+geocoding on explicit search submission, not per keystroke.
+
+For hobby-project cost control, check Mapbox Statistics after launch and after
+large QA sessions. Watch the products QMF uses: Mapbox GL JS map loads and
+Geocoding API requests. Configure conservative Mapbox budget or usage alerts if
+available: one alert before any paid usage threshold and another if paid usage
+appears. If usage spikes, restrict or rotate tokens, confirm the public token's
+allowed URLs, and verify `/find` is not repeatedly initializing Map view.
 
 Geocoding provider secrets, if any, must be server-only. Browser-rendered map
 props should contain approximate public labels, regional anchors, rounded

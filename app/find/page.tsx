@@ -1,6 +1,6 @@
 import { ContactRequestForm } from "@/components/contact/contact-request-form";
-import { InteractiveDiscoveryMap } from "@/components/discovery/interactive-discovery-map";
 import { SignedInSiteHeader } from "@/components/navigation/signed-in-site-header";
+import { InteractiveDiscoveryMap } from "@/components/discovery/interactive-discovery-map";
 import { captureProductEvent } from "@/lib/analytics/product-analytics";
 import { requireAuthenticatedDiscovery } from "@/lib/auth/require-authenticated-discovery";
 import {
@@ -209,6 +209,35 @@ function returnToPath(params: Record<string, string | string[] | undefined>) {
         query.append(key, item);
       }
     }
+  }
+
+  const queryString = query.toString();
+
+  return queryString ? `/find?${queryString}` : "/find";
+}
+
+function findPathWithView(
+  params: Record<string, string | string[] | undefined>,
+  view: ReturnType<typeof parseDiscoveryFilters>["view"],
+) {
+  const query = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(params)) {
+    if (key === "view") {
+      continue;
+    }
+
+    const values = Array.isArray(value) ? value : [value];
+
+    for (const item of values) {
+      if (item) {
+        query.append(key, item);
+      }
+    }
+  }
+
+  if (view === "map") {
+    query.set("view", "map");
   }
 
   const queryString = query.toString();
@@ -499,6 +528,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
   );
 
   const markers = buildDiscoveryMapMarkers(results);
+  const showMap = filters.view === "map";
   const { filterCount, flags } = filterAnalyticsProperties(filters);
   const radiusLabel =
     filters.radius == null
@@ -520,7 +550,10 @@ export default async function FindPage({ searchParams }: FindPageProps) {
   };
 
   await captureProductEvent("find_searched", discoveryAnalyticsProperties);
-  await captureProductEvent("map_viewed", discoveryAnalyticsProperties);
+
+  if (showMap) {
+    await captureProductEvent("map_viewed", discoveryAnalyticsProperties);
+  }
 
   return (
     <>
@@ -718,6 +751,8 @@ export default async function FindPage({ searchParams }: FindPageProps) {
             </div>
           </div>
 
+          <input name="view" type="hidden" value={filters.view} />
+
           <div className="mt-4 grid gap-4 lg:grid-cols-2">
             <label className="block">
               <span className="text-sm font-semibold">Voice Part(s)</span>
@@ -775,31 +810,58 @@ export default async function FindPage({ searchParams }: FindPageProps) {
           </p>
         ) : null}
 
-        <section className="mt-6 grid gap-6 xl:grid-cols-[minmax(22rem,0.9fr)_minmax(0,1.1fr)]">
-          <InteractiveDiscoveryMap
-            emptyMessage="No approximate map regions match. Try increasing the radius, clearing part filters, or changing what you are looking for."
-            markers={markers}
-            resultLabel="Interactive map scope"
-            scopeLabel={searchScopeLabel}
-            totalResults={results.length}
-          />
-
-          <section aria-labelledby="results-heading">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <h2
-                  className="text-2xl font-bold text-[#172023]"
-                  id="results-heading"
-                >
-                  Matching results
-                </h2>
-                <p className="mt-1 text-sm text-[#394548]">
-                  Cards and detail panels show only privacy-safe discovery
-                  fields.
-                </p>
-              </div>
+        <section className="mt-6" aria-labelledby="results-heading">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2
+                className="text-2xl font-bold text-[#172023]"
+                id="results-heading"
+              >
+                Matching results
+              </h2>
+              <p className="mt-1 text-sm text-[#394548]">
+                Cards and detail panels show only privacy-safe discovery fields.
+              </p>
             </div>
+            <div className="flex flex-wrap gap-2">
+              <a
+                aria-current={showMap ? undefined : "page"}
+                className={`inline-flex min-h-11 items-center justify-center rounded-md px-4 py-2 text-sm font-semibold ${
+                  showMap
+                    ? "border border-[#d7cec0] bg-white text-[#174b4f] hover:border-[#174b4f]"
+                    : "bg-[#174b4f] text-white"
+                }`}
+                href={findPathWithView(params, "list")}
+              >
+                List
+              </a>
+              <a
+                aria-current={showMap ? "page" : undefined}
+                className={`inline-flex min-h-11 items-center justify-center rounded-md px-4 py-2 text-sm font-semibold ${
+                  showMap
+                    ? "bg-[#174b4f] text-white"
+                    : "border border-[#d7cec0] bg-white text-[#174b4f] hover:border-[#174b4f]"
+                }`}
+                href={findPathWithView(params, "map")}
+              >
+                Map
+              </a>
+            </div>
+          </div>
 
+          {showMap ? (
+            <div className="mt-5">
+              <InteractiveDiscoveryMap
+                emptyMessage="No approximate map regions match. Try increasing the radius, clearing part filters, or changing what you are looking for."
+                markers={markers}
+                resultLabel="Interactive map scope"
+                scopeLabel={searchScopeLabel}
+                totalResults={results.length}
+              />
+            </div>
+          ) : null}
+
+          <div className="mt-6">
             {results.length === 0 && !errorMessage ? (
               <section className="mt-5 rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 text-[#394548]">
                 <h3 className="text-xl font-bold text-[#172023]">
@@ -935,7 +997,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
                 </article>
               ))}
             </div>
-          </section>
+          </div>
         </section>
 
         {markers.length > 0 ? (

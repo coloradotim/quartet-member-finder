@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type {
   LngLatBoundsLike,
   Map as MapboxMap,
   MapOptions,
   Marker as MapboxMarker,
+  Popup as MapboxPopup,
 } from "mapbox-gl";
 import { groupVoicingParts } from "@/lib/parts/voicings";
 import type { DiscoveryMapMarker } from "@/lib/location/map-markers";
@@ -134,6 +135,9 @@ export function InteractiveDiscoveryMap({
 }: InteractiveDiscoveryMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapboxMap | null>(null);
+  const mapboxglRef = useRef<typeof import("mapbox-gl").default | null>(null);
+  const markerInstancesRef = useRef<MapboxMarker[]>([]);
+  const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current || !MAPBOX_TOKEN) {
@@ -141,8 +145,6 @@ export function InteractiveDiscoveryMap({
     }
 
     let canceled = false;
-    let map: MapboxMap | null = null;
-    let markerInstances: MapboxMarker[] = [];
 
     async function initializeMap() {
       const mapboxgl = (await import("mapbox-gl")).default;
@@ -152,15 +154,16 @@ export function InteractiveDiscoveryMap({
       }
 
       mapboxgl.accessToken = MAPBOX_TOKEN;
+      mapboxglRef.current = mapboxgl;
 
-      map = new mapboxgl.Map({
+      const map = new mapboxgl.Map({
         attributionControl: false,
-        center: centerForMarkers(markers),
+        center: DEFAULT_CENTER,
         container: containerRef.current,
         cooperativeGestures: true,
         projection: MAP_PROJECTION as MapOptions["projection"],
         style: MAPBOX_STYLE,
-        zoom: markers.length > 1 ? 2.2 : 4,
+        zoom: 2.2,
       });
 
       map.addControl(
@@ -181,31 +184,8 @@ export function InteractiveDiscoveryMap({
         });
       });
 
-      markerInstances = markers.map((marker) => {
-        const popup = new mapboxgl.Popup({
-          closeButton: true,
-          closeOnClick: true,
-          maxWidth: "320px",
-          offset: 18,
-        }).setDOMContent(createPopupNode(marker, resultBasePath));
-
-        return new mapboxgl.Marker({
-          element: createMarkerElement(marker),
-        })
-          .setLngLat([marker.longitude, marker.latitude])
-          .setPopup(popup)
-          .addTo(map as MapboxMap);
-      });
-
-      if (markers.length > 1) {
-        map.fitBounds(boundsForMarkers(markers, mapboxgl), {
-          duration: 0,
-          maxZoom: 5,
-          padding: 70,
-        });
-      }
-
       mapRef.current = map;
+      setMapReady(true);
     }
 
     void initializeMap();
@@ -213,14 +193,59 @@ export function InteractiveDiscoveryMap({
     return () => {
       canceled = true;
 
-      for (const marker of markerInstances) {
+      for (const marker of markerInstancesRef.current) {
         marker.remove();
       }
 
-      map?.remove();
+      markerInstancesRef.current = [];
+      mapRef.current?.remove();
       mapRef.current = null;
+      mapboxglRef.current = null;
+      setMapReady(false);
     };
-  }, [markers, resultBasePath]);
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    const mapboxgl = mapboxglRef.current;
+
+    if (!mapReady || !map || !mapboxgl) {
+      return;
+    }
+
+    for (const marker of markerInstancesRef.current) {
+      marker.remove();
+    }
+
+    markerInstancesRef.current = markers.map((marker) => {
+      const popup: MapboxPopup = new mapboxgl.Popup({
+        closeButton: true,
+        closeOnClick: true,
+        maxWidth: "320px",
+        offset: 18,
+      }).setDOMContent(createPopupNode(marker, resultBasePath));
+
+      return new mapboxgl.Marker({
+        element: createMarkerElement(marker),
+      })
+        .setLngLat([marker.longitude, marker.latitude])
+        .setPopup(popup)
+        .addTo(map);
+    });
+
+    if (markers.length > 1) {
+      map.fitBounds(boundsForMarkers(markers, mapboxgl), {
+        duration: 0,
+        maxZoom: 5,
+        padding: 70,
+      });
+    } else {
+      map.jumpTo({
+        center: centerForMarkers(markers),
+        zoom: markers.length === 1 ? 4 : 2.2,
+      });
+    }
+  }, [markers, mapReady, resultBasePath]);
 
   return (
     <section

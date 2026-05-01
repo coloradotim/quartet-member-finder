@@ -26,4 +26,13 @@ describe("interactive discovery map", () => {
       /postal_code_private|latitude_private|longitude_private/,
     );
   });
+
+  it("initializes one Mapbox map instance and updates markers separately", () => {
+    expect(component).toContain("const [mapReady, setMapReady]");
+    expect(component).toContain("useEffect(() => {");
+    expect(component).toContain("new mapboxgl.Map");
+    expect(component).toContain("}, []);");
+    expect(component).toContain("markerInstancesRef.current = markers.map");
+    expect(component).toContain("}, [markers, mapReady, resultBasePath]);");
+  });
 });

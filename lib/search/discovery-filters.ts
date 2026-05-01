@@ -24,10 +24,12 @@ export type DiscoveryFilters = {
   searchFrom: string | null;
   searchOrigin: SearchOrigin;
   travelRadiusKm: number | null;
+  view: DiscoveryView;
 };
 
 export type SearchOrigin = "profile" | "typed";
 export type SearchFromSource = "another" | "quartet_profile" | "singer_profile";
+export type DiscoveryView = "list" | "map";
 
 function normalizeSearchText(value: string | string[] | undefined) {
   const rawValue = Array.isArray(value) ? value[0] : value;
@@ -55,6 +57,12 @@ function parseAllowedValue<T extends string>(
 
 function parseSearchOrigin(value: string | string[] | undefined): SearchOrigin {
   return normalizeSearchText(value) === "profile" ? "profile" : "typed";
+}
+
+function parseDiscoveryView(
+  value: string | string[] | undefined,
+): DiscoveryView {
+  return normalizeSearchText(value) === "map" ? "map" : "list";
 }
 
 function parseSearchFromSource(
@@ -152,6 +160,7 @@ export function parseDiscoveryFilters(
     searchFrom: normalizeSearchText(searchParams.searchFrom),
     searchOrigin,
     travelRadiusKm: parseTravelRadiusKm(searchParams.travelRadiusKm),
+    view: parseDiscoveryView(searchParams.view),
   };
 }
 
@@ -167,6 +176,10 @@ export function hasDiscoveryFilters(filters: DiscoveryFilters) {
 
     if (key === "searchOrigin") {
       return false;
+    }
+
+    if (key === "view") {
+      return value === "map";
     }
 
     if (Array.isArray(value)) {
