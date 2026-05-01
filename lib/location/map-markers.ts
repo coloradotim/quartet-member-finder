@@ -24,6 +24,7 @@ export type DiscoveryMapMarker = {
   label: string;
   names: string[];
   parts: string[];
+  resultIds: string[];
   xPercent: number;
   yPercent: number;
 };
@@ -143,6 +144,7 @@ export function buildDiscoveryMapMarkers(
       existingMarker.parts = Array.from(
         new Set([...existingMarker.parts, ...item.parts]),
       ).sort();
+      existingMarker.resultIds.push(item.id);
       continue;
     }
 
@@ -155,6 +157,7 @@ export function buildDiscoveryMapMarkers(
       label,
       names: [item.name],
       parts: [...item.parts].sort(),
+      resultIds: [item.id],
       xPercent,
       yPercent,
     });

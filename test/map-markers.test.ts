@@ -77,6 +77,7 @@ describe("privacy-safe discovery map markers", () => {
       label: "Dublin, Leinster, Ireland area",
       names: ["Casey", "River City Four"],
       parts: ["SSAA:Soprano 2", "TTBB:Tenor"],
+      resultIds: ["singer-1", "quartet-1"],
     });
   });
 

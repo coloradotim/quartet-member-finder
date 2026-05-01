@@ -135,17 +135,21 @@ validation.
 ## Find
 
 1. Open `/find`.
-2. Filter by country, region/locality, part, goal, and looking-for mode using
-   data known to exist in the environment.
-3. Pass: the distance-unit picker defaults to Miles and can be changed to
-   Kilometers for travel-radius display.
-4. Pass: valid filters narrow the consolidated results without crashing.
-5. Pass: the approximate map appears above the results table.
-6. Pass: the table distinguishes singer profiles from quartet openings.
-7. Pass: empty results show helpful next actions, including clearing filters.
-8. Fail: hidden or inactive profiles/listings appear in public results.
-9. Fail: public UI exposes owner user IDs, private postal codes, exact
-   coordinates, email addresses, or phone numbers.
+2. Enter a Search from place, radius, distance unit, looking-for mode, one or
+   more parts, and a goal using data known to exist in the environment.
+3. Pass: the distance-unit picker defaults to Miles and sits beside the radius
+   field.
+4. Pass: part filtering accepts multiple voicing-aware values.
+5. Pass: the approximate map and result cards use the same filtered result set.
+6. Pass: result cards distinguish singer profiles from quartet openings and
+   include enough decision-making detail to open the details/contact panel.
+7. Pass: details/contact panels stay on `/find` and do not expose private email,
+   phone, exact ZIP/postal code, street address, or exact coordinates.
+8. Pass: empty results show helpful next actions, including increasing radius or
+   changing filters.
+9. Fail: hidden or inactive profiles/listings appear in public results.
+10. Fail: public UI exposes owner user IDs, private postal codes, exact
+    coordinates, email addresses, or phone numbers.
 
 ## Detailed Quartet Opening Search
 

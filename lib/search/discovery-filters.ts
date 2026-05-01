@@ -16,7 +16,10 @@ export type DiscoveryFilters = {
   goal: ProfileGoal | null;
   locality: string | null;
   part: VoicingPartSelection | null;
+  parts: VoicingPartSelection[];
+  radius: number | null;
   region: string | null;
+  searchFrom: string | null;
   travelRadiusKm: number | null;
 };
 
@@ -60,9 +63,35 @@ function parseTravelRadiusKm(value: string | string[] | undefined) {
   return radius;
 }
 
+function parseRadius(value: string | string[] | undefined) {
+  const normalized = normalizeSearchText(value);
+
+  if (!normalized) {
+    return null;
+  }
+
+  const radius = Number(normalized);
+
+  if (!Number.isInteger(radius) || radius <= 0 || radius > 10000) {
+    return null;
+  }
+
+  return radius;
+}
+
+function parsePartList(value: string | string[] | undefined) {
+  const values = Array.isArray(value) ? value : [value];
+
+  return values
+    .map((item) => parseVoicingPartValue(normalizeSearchText(item) ?? ""))
+    .filter((part): part is VoicingPartSelection => part != null);
+}
+
 export function parseDiscoveryFilters(
   searchParams: Record<string, string | string[] | undefined>,
 ): DiscoveryFilters {
+  const parts = parsePartList(searchParams.part);
+
   return {
     availability: normalizeSearchText(searchParams.availability),
     country: normalizeSearchText(searchParams.country),
@@ -70,14 +99,25 @@ export function parseDiscoveryFilters(
     experience: normalizeSearchText(searchParams.experience),
     goal: parseAllowedValue(searchParams.goal, PROFILE_GOALS),
     locality: normalizeSearchText(searchParams.locality),
-    part: parseVoicingPartValue(normalizeSearchText(searchParams.part) ?? ""),
+    part: parts[0] ?? null,
+    parts,
+    radius: parseRadius(searchParams.radius),
     region: normalizeSearchText(searchParams.region),
+    searchFrom: normalizeSearchText(searchParams.searchFrom),
     travelRadiusKm: parseTravelRadiusKm(searchParams.travelRadiusKm),
   };
 }
 
 export function hasDiscoveryFilters(filters: DiscoveryFilters) {
-  return Object.entries(filters).some(
-    ([key, value]) => key !== "distanceUnit" && value !== null,
-  );
+  return Object.entries(filters).some(([key, value]) => {
+    if (key === "distanceUnit") {
+      return false;
+    }
+
+    if (Array.isArray(value)) {
+      return value.length > 0;
+    }
+
+    return value !== null;
+  });
 }
