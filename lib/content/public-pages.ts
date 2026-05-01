@@ -1,97 +1,329 @@
-export const publicHelpSections = [
+export type HelpGuideTopic = {
+  body: string[];
+  bullets?: string[];
+  title: string;
+};
+
+export type HelpGuideSection = {
+  eyebrow: string;
+  id: string;
+  intro: string;
+  title: string;
+  topics: HelpGuideTopic[];
+};
+
+export const publicHelpSections: HelpGuideSection[] = [
   {
-    body: [
-      "Quartet Member Finder helps barbershop singers and incomplete quartets find each other. It is for practical discovery and safer introductions, not for building a public social network.",
-      "One account can support My Singer Profile, My Quartet Profile, or both. You can use either optional profile without choosing a permanent role.",
+    eyebrow: "Start here",
+    id: "getting-started",
+    intro:
+      "Quartet Member Finder helps barbershop singers and incomplete quartets find each other through practical, privacy-conscious introductions.",
+    title: "Getting Started",
+    topics: [
+      {
+        body: [
+          "Use QMF when you want to find quartet openings, find singers for an incomplete quartet, or understand who nearby might be open to singing together.",
+          "The app is not a public social network or a directory of personal contact details. It is meant to support safer introductions and enough context for people to decide whether a conversation makes sense.",
+        ],
+        title: "What the app is for",
+      },
+      {
+        body: [
+          "Most people arrive with one immediate goal: they are a singer looking for opportunities, or they represent a quartet looking for one or more singers.",
+          "Start with the profile that matches your current goal, or use Find first to understand how discovery works. Your first choice does not lock you into a permanent role.",
+        ],
+        bullets: [
+          "Use My Singer Profile when you personally want quartet opportunities.",
+          "Use My Quartet Profile when you represent an incomplete or prospective quartet.",
+          "Use Find when you want to search visible profiles and openings after signing in.",
+        ],
+        title: "What to do first",
+      },
+      {
+        body: [
+          "Discovery requires sign-in so browsing, contact, reporting, and feedback are tied to accountable accounts. Help and Privacy remain available before sign-in so you can understand the app before creating a session.",
+          "Privacy starts with approximate location, independent visibility controls, and app-mediated Messages instead of exposing private email addresses or phone numbers in discovery.",
+        ],
+        title: "Why sign-in and privacy matter",
+      },
     ],
-    heading: "What It Is For",
   },
   {
-    body: [
-      "A singer profile describes who you are as a singer: your name, parts, goals, experience, availability, travel willingness, and approximate location.",
-      "Parts are grouped by voicing, so TTBB Tenor, SATB Tenor, and SSAA part labels stay distinct in discovery.",
-      "Only display name is required; the optional details help others decide whether a contact request makes sense.",
-      "You choose whether My Singer Profile appears in discovery. Hidden singer profiles stay out of singer search and Find, and hiding it does not hide My Quartet Profile.",
+    eyebrow: "Profiles",
+    id: "optional-profiles",
+    intro:
+      "One account can support two independent optional presences: My Singer Profile and My Quartet Profile.",
+    title: "One Account, Two Optional Profiles",
+    topics: [
+      {
+        body: [
+          "You can fill out My Singer Profile, My Quartet Profile, both profiles, or neither while you get oriented. You do not need to publish both profiles just because both options exist.",
+          "The two profiles are independent. Hiding My Singer Profile does not hide My Quartet Profile, and hiding My Quartet Profile does not hide My Singer Profile.",
+        ],
+        title: "Use either profile, both, or neither",
+      },
+      {
+        body: [
+          "Each profile has its own visibility control. Filling out a profile does not make it discoverable unless you turn visibility on.",
+          "Both profiles can be discoverable at the same time if that matches your situation, such as when you personally sing and also represent a quartet looking for another part.",
+        ],
+        bullets: [
+          "Discoverable profiles can appear in Find.",
+          "Hidden profiles stay out of discovery.",
+          "You can hide a profile when you are no longer looking.",
+        ],
+        title: "Independent visibility",
+      },
     ],
-    heading: "Singer Profiles",
   },
   {
-    body: [
-      "After sign-in, onboarding first asks for basic profile context like display name, country, and approximate location.",
-      "Then you choose what you are here to do first. That choice is not permanent; you can use My Singer Profile, My Quartet Profile, Find, and Help later.",
+    eyebrow: "Your singer presence",
+    id: "singer-profile",
+    intro:
+      "My Singer Profile represents you personally as a singer and helps quartets or other singers decide whether to contact you.",
+    title: "My Singer Profile",
+    topics: [
+      {
+        body: [
+          "A singer profile can include your display name, parts, goals, experience, availability, travel willingness, and approximate location.",
+          "Only display name is required to save the form, but parts, goals, availability, and location make discovery and first contact more useful.",
+        ],
+        title: "What to include",
+      },
+      {
+        body: [
+          "Parts are stored with voicing context. TTBB Tenor, SATB Tenor, and SSAA part labels are not casually treated as the same thing.",
+          "Use every part you would be comfortable being contacted about. That helps people avoid guessing from a short bio.",
+        ],
+        title: "Parts and voicing",
+      },
+      {
+        body: [
+          "Keep the profile hidden while it is incomplete, while you are not open to opportunities, or while you are only using the app as a quartet representative.",
+          "If important discovery or location fields are incomplete, your profile can be harder to interpret and may not place well in map or radius search context.",
+        ],
+        title: "When to hide it",
+      },
     ],
-    heading: "First Sign-In",
   },
   {
-    body: [
-      "My Quartet Profile is for a quartet or prospective quartet that has some parts covered and is looking for one or more singers.",
-      "It keeps covered parts and needed parts separate within the quartet's voicing so searchers can quickly understand what the group needs.",
-      "You choose whether My Quartet Profile appears in discovery. Hidden quartet profiles stay out of quartet search and Find, and hiding it does not hide My Singer Profile.",
+    eyebrow: "Your quartet presence",
+    id: "quartet-profile",
+    intro:
+      "My Quartet Profile is for a quartet, incomplete quartet, or prospective quartet you represent.",
+    title: "My Quartet Profile",
+    topics: [
+      {
+        body: [
+          "Use My Quartet Profile when the group has some parts covered and is looking for one or more singers. The profile should explain enough for a singer to decide whether to start a conversation.",
+          "Useful details include covered parts, needed parts, goals, rehearsal expectations, commitment level, availability, travel willingness, and approximate location.",
+        ],
+        title: "What it represents",
+      },
+      {
+        body: [
+          "Covered parts and needed parts are separate. That lets a Lead, Bass, Baritone, or Tenor see whether the opening actually fits before contacting you.",
+          "Like My Singer Profile, My Quartet Profile has its own visibility setting. Hide it when the opening is filled, paused, or not ready for people to find.",
+        ],
+        title: "Covered and needed parts",
+      },
     ],
-    heading: "Quartet Profiles",
   },
   {
-    body: [
-      "Find is the main discovery page. It combines filters, a privacy-safe interactive map, and result cards for quartet openings and singer profiles.",
-      "Use the looking-for filter to focus on quartet openings when you are a singer, or singer profiles when you are representing a quartet or looking for other singers.",
-      "Part filters include voicing context, including TTBB, SSAA, and SATB / mixed labels.",
-      "Search from a typed place or your saved singer profile location, choose a radius, and switch between miles and kilometers. Radius search uses approximate distance when geocoding is configured.",
-      "The map is part of Find rather than a separate first step. It helps you scan approximate activity, then the result cards give names, parts, type, distance when available, and contact links.",
-      "Detailed singer and quartet search pages remain available when you need more specific filters like availability, experience, or travel willingness.",
-      "Search results are useful even when a profile is incomplete, but more complete profiles are easier for others to evaluate.",
+    eyebrow: "Discovery",
+    id: "find",
+    intro:
+      "Find is the shared discovery surface for quartet openings and singer profiles.",
+    title: "Find Quartet Openings And Find Singers",
+    topics: [
+      {
+        body: [
+          "Choose what you are looking for: quartet openings, singers, or both. Use part filters with voicing context when a specific part matters.",
+          "Find combines filters, a privacy-safe interactive map, and result cards. Result cards give the practical context you need before starting contact.",
+        ],
+        title: "How Find works",
+      },
+      {
+        body: [
+          "You can search from a typed place or from your saved singer profile location, choose a radius, and switch between miles and kilometers. Miles are the default display unit.",
+          "Radius search uses approximate geocoding and approximate distance. It is meant to answer whether a match is plausibly nearby, not provide exact navigation.",
+        ],
+        title: "Radius and distance",
+      },
+      {
+        body: [
+          "The map is part of Find. It shows privacy-safe approximate regions rather than exact home pins.",
+          "Use the map to understand broad geography, then use result cards and Messages for actual introductions.",
+        ],
+        title: "Map and results",
+      },
     ],
-    heading: "Search",
   },
   {
-    body: [
-      "Discovery results show approximate places, such as a city or regional area. They do not show exact home addresses, exact coordinates, private postal codes, email addresses, or phone numbers.",
-      "Location fields are designed for a global barbershop community, so they are not limited to US ZIP codes or US states.",
+    eyebrow: "Location",
+    id: "location",
+    intro:
+      "Location helps people judge practical singing distance without exposing exact home-location details.",
+    title: "Location, Radius Search, And Approximate Maps",
+    topics: [
+      {
+        body: [
+          "No street address is required. Profile and listing forms ask for globally tolerant fields such as country, state/province/region, city/locality, and ZIP/postal code.",
+          "ZIP or postal code can help approximate search and map placement, but it is not shown publicly.",
+        ],
+        title: "What location fields are for",
+      },
+      {
+        body: [
+          "Discovery can show approximate area labels such as a city or region. It should not show exact coordinates, private postal codes, street addresses, private emails, or phone numbers.",
+          "Global support is intended. Early defaults are most polished for the United States and Canada, but the app avoids assuming US-only address formats.",
+        ],
+        title: "What discovery shows",
+      },
+      {
+        body: [
+          "Approximate geocoding supports radius search and map placement. If a profile or listing has incomplete location data, it may still be useful but may not place well on the map.",
+          "Distance search defaults to miles, with kilometers available when that is more useful.",
+        ],
+        title: "Limits of approximate search",
+      },
     ],
-    heading: "Location And Privacy",
   },
   {
-    body: [
-      "First contact happens through the app. A signed-in user can send a short message, the recipient gets an email notification, and both people can read and reply in Messages.",
-      "The app does not show private email addresses or phone numbers in public search results or message pages by default.",
-      "Notification emails link back to sign-in so full message and reply text stays behind the app.",
+    eyebrow: "Contact",
+    id: "messages",
+    intro:
+      "First contact happens through app-mediated Messages instead of exposing private contact details in discovery.",
+    title: "Messages And Contacting Someone",
+    topics: [
+      {
+        body: [
+          "When you send a message from a profile or opening, the recipient receives an email notification and signs in to read it. The full message stays behind authenticated app access.",
+          "Messages includes Inbox and Sent views so both sides can keep track of contact requests and replies.",
+        ],
+        title: "What happens when you send a message",
+      },
+      {
+        body: [
+          "Users can reply through the app without revealing private email addresses or phone numbers by default. Either person can choose to share direct contact details later if they are comfortable.",
+          "Use the same judgment you would use in a singing community: meet in public or group settings when possible, and do not share private details until you are ready.",
+        ],
+        title: "Replying safely",
+      },
     ],
-    heading: "Contact",
   },
   {
-    body: [
-      "Discoverable means a profile can appear in Find results and approximate map discovery inside Find. Hidden means it stays out of discovery.",
-      "My Singer Profile and My Quartet Profile have independent visibility controls. You can make either one discoverable, both discoverable, or neither discoverable.",
-      "Filling out a profile does not require making it discoverable. If you are no longer looking personally, hide My Singer Profile; if the quartet opening is no longer active, hide My Quartet Profile.",
+    eyebrow: "Safety",
+    id: "privacy-safety",
+    intro:
+      "Visibility, privacy, and safety controls are built around practical discovery rather than public exposure.",
+    title: "Visibility, Privacy, And Safety",
+    topics: [
+      {
+        body: [
+          "Visible profiles can appear in Find. Hidden profiles stay out of discovery. My Singer Profile and My Quartet Profile have separate visibility controls.",
+          "Do not put private contact details or exact home-location information in public bio, description, availability, or goal fields.",
+        ],
+        title: "Visible versus hidden",
+      },
+      {
+        body: [
+          "Discovery should show enough to evaluate a possible match: display names, parts, goals, experience, availability, travel willingness, approximate area, and contact links.",
+          "Discovery should not show exact home addresses, exact coordinates, private postal codes, private email addresses, or phone numbers.",
+        ],
+        title: "What stays private",
+      },
+      {
+        body: [
+          "The Privacy page explains the public/private boundary in more detail. Help and Privacy are both available before sign-in.",
+        ],
+        title: "Where to learn more",
+      },
     ],
-    heading: "Visibility Controls",
   },
   {
-    body: [
-      "Country is the first location cue because it helps the app use sensible labels, such as ZIP code, postcode, state, province, or region, without strict address validation.",
-      "Profile and listing forms ask for country, state/province/region, city/locality, and ZIP/postal code instead of country codes or street addresses. ZIP/postal codes are not shown in discovery.",
-      "Find defaults distance display to miles and lets you switch to kilometers when that is more useful. If your singer profile has a saved approximate location, Find can use it as the search origin.",
+    eyebrow: "Reports",
+    id: "reporting",
+    intro:
+      "Message reports give users a private way to flag spam, harassment, suspicious requests, or other safety concerns.",
+    title: "Reporting Bad Behavior",
+    topics: [
+      {
+        body: [
+          "Use Report this message from a message detail page when something is inappropriate, spammy, suspicious, or concerning.",
+          "Reports are private and are reviewed as the project team is able. The app does not promise real-time moderation or background checks.",
+        ],
+        title: "When to report",
+      },
+      {
+        body: [
+          "Reported behavior may lead to a profile being hidden from discovery or an account being blocked from sending additional messages.",
+          "Ordinary users do not see admin review notes, report history, or internal action details.",
+        ],
+        title: "What can happen after a report",
+      },
     ],
-    heading: "Location Defaults",
   },
   {
-    body: [
-      "Use the same judgment you would use when meeting someone through a singing community. Start with app-mediated messages, meet in public or group settings when possible, and do not share private contact details until you are comfortable.",
-      "Message detail pages include a private report action for spam, harassment, suspicious requests, or other safety concerns. Reports are reviewed as the project team is able.",
-      "The app helps reduce public exposure of personal data, but it does not replace personal judgment or guarantee real-time moderation.",
+    eyebrow: "FAQ",
+    id: "faq",
+    intro:
+      "These are the most common reasons discovery or contact might feel confusing at first.",
+    title: "Troubleshooting And FAQ",
+    topics: [
+      {
+        body: [
+          "There may not be many visible profiles yet, your filters may be too narrow, or your search origin/radius may exclude likely matches. Try clearing part filters, increasing the radius, or searching both singers and quartet openings.",
+        ],
+        title: "Why can't I find any results?",
+      },
+      {
+        body: [
+          "Your profile may be hidden, incomplete, or missing useful location details. Filling out a profile does not publish it; check the visibility setting before expecting it to appear in Find.",
+        ],
+        title: "Why does my profile not show up?",
+      },
+      {
+        body: [
+          "Map and distance search are intentionally approximate. The app avoids exact home-location pins and uses broad area placement for privacy.",
+        ],
+        title: "Why does my map location look approximate?",
+      },
+      {
+        body: [
+          "Yes. One account can have both optional profiles, and neither profile has to be discoverable until you choose to make it visible.",
+        ],
+        title: "Can I be both a singer and a quartet representative?",
+      },
+      {
+        body: [
+          "The recipient gets an email notification, signs in, reads the message in Messages, and can reply through the app. Private email and phone are not shown by default.",
+        ],
+        title: "What happens when I send a message?",
+      },
+      {
+        body: [
+          "Open the message detail page and use Report this message. Choose the closest reason and add a short note if it helps explain the concern.",
+        ],
+        title: "How do I report a bad message?",
+      },
     ],
-    heading: "First Contact Safety",
   },
   {
-    body: [
-      "The public privacy overview explains what is shown, what is kept private, and how approximate location and contact relay behavior work.",
+    eyebrow: "Feedback",
+    id: "feedback-guide",
+    intro:
+      "Feedback helps improve the app while it is still early and practical workflows are being refined.",
+    title: "Feedback",
+    topics: [
+      {
+        body: [
+          "Useful feedback includes bug reports, confusing behavior, unclear copy, missing location formats, search problems, and suggestions for safer contact workflows.",
+          "Signed-in users can send feedback from the bottom of this page. Signed-out users are invited to sign in first so feedback can be tied to an account for follow-up and abuse prevention.",
+        ],
+        title: "What to send",
+      },
     ],
-    heading: "Privacy Page",
-  },
-  {
-    body: [
-      "Signed-in users can send private feedback, bug reports, and suggestions from this help page. Feedback is tied to the signed-in account server-side and is not shown publicly.",
-    ],
-    heading: "Feedback",
   },
 ];
 

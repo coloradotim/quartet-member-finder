@@ -41,7 +41,7 @@ describe("empty and first-time states", () => {
     expect(contactForm).toContain("Contact starts through the app");
     expect(contactForm).toContain("personal email addresses and phone");
     expect(contactForm).toContain("asked to sign in");
-    expect(helpPage).toContain("Sign in if you want to send private feedback");
+    expect(helpPage).toContain("Send feedback after signing in");
     expect(helpPage).toContain("prevent spam");
   });
 });

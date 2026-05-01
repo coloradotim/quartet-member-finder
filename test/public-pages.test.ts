@@ -10,25 +10,50 @@ function pageText(sections: Array<{ body: string[]; heading: string }>) {
     .join("\n");
 }
 
+function helpText() {
+  return publicHelpSections
+    .flatMap((section) => [
+      section.eyebrow,
+      section.title,
+      section.intro,
+      ...section.topics.flatMap((topic) => [
+        topic.title,
+        ...topic.body,
+        ...(topic.bullets ?? []),
+      ]),
+    ])
+    .join("\n");
+}
+
 describe("public help and privacy content", () => {
   it("covers practical help topics without overpromising moderation", () => {
-    const helpText = pageText(publicHelpSections);
+    const text = helpText();
 
-    expect(helpText).toContain("Singer Profiles");
-    expect(helpText).toContain("Quartet Profiles");
-    expect(helpText).toContain("One account can support My Singer Profile");
-    expect(helpText).toContain("independent visibility controls");
-    expect(helpText).toContain("Search");
-    expect(helpText).toContain("Find is the main discovery page");
-    expect(helpText).toContain("result cards");
-    expect(helpText).toContain("Location And Privacy");
-    expect(helpText).toContain("Location Defaults");
-    expect(helpText).toContain("Contact");
-    expect(helpText).toContain("read and reply in Messages");
-    expect(helpText).toContain("private report action");
-    expect(helpText).toContain("Signed-in users can send private feedback");
-    expect(helpText).toContain("does not replace personal judgment");
-    expect(helpText).not.toMatch(/24\/7 moderation|background checks/i);
+    expect(publicHelpSections.map((section) => section.id)).toEqual([
+      "getting-started",
+      "optional-profiles",
+      "singer-profile",
+      "quartet-profile",
+      "find",
+      "location",
+      "messages",
+      "privacy-safety",
+      "reporting",
+      "faq",
+      "feedback-guide",
+    ]);
+    expect(text).toContain("One Account, Two Optional Profiles");
+    expect(text).toContain("My Singer Profile");
+    expect(text).toContain("My Quartet Profile");
+    expect(text).toContain("Find Quartet Openings And Find Singers");
+    expect(text).toContain("Location, Radius Search, And Approximate Maps");
+    expect(text).toContain("Messages And Contacting Someone");
+    expect(text).toContain("Reporting Bad Behavior");
+    expect(text).toContain("Why can't I find any results?");
+    expect(text).toContain("Miles are the default display unit");
+    expect(text).toContain("read it. The full message stays behind");
+    expect(text).toContain("Report this message");
+    expect(text).not.toMatch(/24\/7 moderation|provides background checks/i);
   });
 
   it("keeps privacy overview plainspoken and aligned with app behavior", () => {

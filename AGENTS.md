@@ -76,6 +76,10 @@ Security:
 
 ## Barbershop-specific context
 
+Additional durable domain context lives in `docs/barbershop-context.md`. Keep
+that document aligned when changing voice-part behavior, discovery/privacy
+assumptions, or user-facing product language.
+
 - Barbershop is sung by communities around the world, including the US, Canada, UK, Ireland, Europe, Australia, New Zealand, and elsewhere.
 - Pickup and prospective quartets often form through local chapters, conventions, afterglows, coaching circles, and informal singer networks.
 - Quartet goals vary widely:
