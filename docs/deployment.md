@@ -72,6 +72,9 @@ Expected variables will likely include:
 - `SUPABASE_SERVICE_ROLE_KEY` for server-only administrative scripts, never browser code
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
+- `MAPBOX_GEOCODING_TOKEN` optional server-only token for approximate geocoding
+- `MAPBOX_GEOCODING_PERMANENT` set to `true` only when permanent Mapbox geocoding
+  storage is allowed for the account
 - `NEXT_PUBLIC_APP_URL`
 
 Do not commit real secrets.
@@ -117,12 +120,18 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<production Supabase anon key>
 SUPABASE_SERVICE_ROLE_KEY=<production Supabase service-role key>
 RESEND_API_KEY=<production Resend API key>
 RESEND_FROM_EMAIL=messages@quartetmemberfinder.org
+MAPBOX_GEOCODING_TOKEN=<server-only Mapbox token>
+MAPBOX_GEOCODING_PERMANENT=true
 ```
 
 Preview should use a safe preview/staging Supabase project if available, not
 production data. For preview builds, set `NEXT_PUBLIC_APP_URL` to the exact
 preview URL being tested or keep a documented preview/staging host with matching
 Supabase Auth redirects.
+
+Approximate radius search is documented in `docs/location-geocoding.md`. Leave
+Mapbox geocoding variables blank until the account is ready for the expected
+request volume and permanent geocoding storage terms.
 
 ### Vercel custom domain setup
 
@@ -436,14 +445,20 @@ service-role code.
 
 ## Maps and geocoding
 
-The current public discovery map does not require a third-party map or geocoder
-environment variable. It uses public discovery-view location summaries and
-country/region anchors to render approximate regional markers.
+The current public discovery map does not require a third-party map tile
+provider. It uses public discovery-view location summaries and country/region
+anchors to render approximate regional markers.
 
-When interactive tiles or geocoding are added, use a provider-compatible
-MapLibre setup rather than sending exact home coordinates to the browser.
-Provider configuration should be optional and documented in `.env.example`.
-Expected future public configuration values are:
+Approximate radius search can use server-side Mapbox geocoding. Keep
+`MAPBOX_GEOCODING_TOKEN` server-only. Set `MAPBOX_GEOCODING_PERMANENT=true`
+only when the Mapbox account is allowed to store geocoding results, because
+profile/listing save actions persist private approximate coordinates in
+Supabase.
+
+When interactive tiles are added, use a provider-compatible MapLibre setup
+rather than sending exact home coordinates to the browser. Provider
+configuration should be optional and documented in `.env.example`. Expected
+future public configuration values are:
 
 - `NEXT_PUBLIC_MAP_TILE_URL_TEMPLATE`
 - `NEXT_PUBLIC_MAP_ATTRIBUTION`

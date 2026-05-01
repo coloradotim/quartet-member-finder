@@ -59,9 +59,10 @@ Private geocoded data should be transformed into a public location summary
 before display. Public summaries may contain only locality/city, region when
 available, and country. They must not contain exact latitude, longitude, private
 postal code, formatted private address, or other precise address components.
-Until automatic geocoding is added, country, region, city, and ZIP/postal code
-provide useful context for the current approximate map/search approach because
-the map uses country/region anchors and public city/country labels rather than
+When server-side geocoding is configured, the app may store private approximate
+coordinates for matching and radius search. Country, region, city, and ZIP/postal
+code still provide useful context for approximate map/search behavior because
+browser maps use public city/country labels and regional markers rather than
 exact pins.
 
 Distance helpers may use exact coordinates internally for matching later, but
@@ -85,11 +86,12 @@ Avoid exact map pins. Map interfaces should use one of the following:
 - search-result areas rather than exact addresses
 
 The MVP discovery map uses region-level markers derived from public discovery
-view fields only: public location label, locality, region, country, and country
-code. It must not receive base-table coordinates, private postal codes, or
-formatted private addresses in browser-rendered props. Marker placement may use
-country/region anchors and deterministic offsets so nearby results can cluster
-without implying a home address or exact rehearsal location.
+fields only: public location label, locality, region, country, country code, and
+rounded approximate distance when radius search is active. It must not receive
+base-table coordinates, private postal codes, or formatted private addresses in
+browser-rendered props. Marker placement may use country/region anchors and
+deterministic offsets so nearby results can cluster without implying a home
+address or exact rehearsal location.
 
 ## Visibility controls
 

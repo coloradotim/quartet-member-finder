@@ -13,6 +13,7 @@ import {
   parseSingerProfileFormData,
 } from "@/lib/profiles/singer-profile-form";
 import { distanceUnitForCountry } from "@/lib/location/country-location-defaults";
+import { geocodeApproximateLocation } from "@/lib/location/geocoding";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 function redirectWithProfileMessage(
@@ -57,6 +58,10 @@ export async function saveSingerProfile(formData: FormData) {
     values.countryCode,
     values.countryName,
   );
+  const geocodingResult = await geocodeApproximateLocation(values, {
+    storageMode: "permanent",
+  });
+  const geocodedCoordinates = geocodingResult.coordinates;
 
   const { data: profile, error: profileError } = await supabase
     .from("singer_profiles")
@@ -71,9 +76,13 @@ export async function saveSingerProfile(formData: FormData) {
         goals: values.goals,
         is_active: true,
         is_visible: values.isVisible,
+        latitude_private: geocodedCoordinates?.latitude ?? null,
         locality: values.locality,
         location_label_public: locationLabelPublic,
-        location_precision: locationPrecision,
+        location_precision: geocodedCoordinates
+          ? "geocoded"
+          : locationPrecision,
+        longitude_private: geocodedCoordinates?.longitude ?? null,
         postal_code_private: values.postalCodePrivate,
         preferred_distance_unit: preferredDistanceUnit,
         region: values.region,
