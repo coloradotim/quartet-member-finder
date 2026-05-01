@@ -63,6 +63,10 @@ describe("public discovery copy", () => {
     expect(findPage).toContain("InteractiveDiscoveryMap");
     expect(findPage).toContain("Search from");
     expect(findPage).toContain("My Singer Profile");
+    expect(findPage).toContain("My Singer Profile (add location first)");
+    expect(findPage).not.toContain(
+      "does not have a saved approximate location yet",
+    );
     expect(findPage).toContain("Within");
     expect(findPage).toContain("multiple");
     expect(findPage).toContain("Matching results");

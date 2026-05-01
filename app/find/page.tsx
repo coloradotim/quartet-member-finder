@@ -7,8 +7,8 @@ import {
   approximateLocationLabel,
   formatApproximateDistance,
   milesToKilometers,
-  travelRadiusLabel,
   type Coordinates,
+  travelRadiusLabel,
 } from "@/lib/location/approximate-location";
 import {
   geocodeApproximateLocation,
@@ -24,6 +24,11 @@ import {
   voicingPartValue,
 } from "@/lib/parts/voicings";
 import { parseDiscoveryFilters } from "@/lib/search/discovery-filters";
+import {
+  profileOriginState,
+  profileOriginUnavailableMessage,
+  type ProfileOriginRow,
+} from "@/lib/search/profile-origin";
 
 type SingerFindRow = {
   availability: string | null;
@@ -61,15 +66,6 @@ type QuartetFindRow = {
 
 type FindPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
-};
-
-type ProfileOriginRow = {
-  country_name: string | null;
-  latitude_private: number | string | null;
-  locality: string | null;
-  location_label_public: string | null;
-  longitude_private: number | string | null;
-  region: string | null;
 };
 
 type FindResult = DiscoveryMapItem & {
@@ -238,43 +234,6 @@ function geocodingStatusMessage(status: ApproximateGeocodingStatus) {
   return "The search origin could not be resolved right now. Try again in a moment or clear the location search.";
 }
 
-function coordinatesFromPrivateRow(
-  row: ProfileOriginRow | null,
-): Coordinates | null {
-  if (!row?.latitude_private || !row.longitude_private) {
-    return null;
-  }
-
-  const latitude = Number(row.latitude_private);
-  const longitude = Number(row.longitude_private);
-
-  if (
-    !Number.isFinite(latitude) ||
-    !Number.isFinite(longitude) ||
-    latitude < -90 ||
-    latitude > 90 ||
-    longitude < -180 ||
-    longitude > 180
-  ) {
-    return null;
-  }
-
-  return { latitude, longitude };
-}
-
-function labelForProfileOrigin(row: ProfileOriginRow | null) {
-  if (!row) {
-    return "your singer profile";
-  }
-
-  return approximateLocationLabel({
-    countryName: row.country_name,
-    locality: row.locality,
-    locationLabelPublic: row.location_label_public,
-    region: row.region,
-  });
-}
-
 export default async function FindPage({ searchParams }: FindPageProps) {
   const params = await searchParams;
   const filters = parseDiscoveryFilters(params);
@@ -289,18 +248,19 @@ export default async function FindPage({ searchParams }: FindPageProps) {
   let geocodingResult: Awaited<
     ReturnType<typeof geocodeApproximateLocation>
   > | null = null;
+  const { data: profileOriginData } = await supabase
+    .from("singer_profiles")
+    .select(
+      "latitude_private, longitude_private, country_name, region, locality, postal_code_private, location_label_public",
+    )
+    .maybeSingle<ProfileOriginRow>();
+
+  profileOrigin = profileOriginData ?? null;
+  const profileSearchOrigin = profileOriginState(profileOrigin);
 
   if (filters.searchOrigin === "profile") {
-    const { data } = await supabase
-      .from("singer_profiles")
-      .select(
-        "latitude_private, longitude_private, country_name, region, locality, location_label_public",
-      )
-      .maybeSingle();
-
-    profileOrigin = (data ?? null) as ProfileOriginRow | null;
-    radiusSearchOrigin = coordinatesFromPrivateRow(profileOrigin);
-    radiusSearchOriginLabel = labelForProfileOrigin(profileOrigin);
+    radiusSearchOrigin = profileSearchOrigin.coordinates;
+    radiusSearchOriginLabel = profileSearchOrigin.label;
   } else if (filters.searchFrom && radiusKm) {
     geocodingResult = await geocodeApproximateLocation(
       {
@@ -315,9 +275,11 @@ export default async function FindPage({ searchParams }: FindPageProps) {
   let errorMessage: string | null = null;
   let searchNotice: string | null = null;
 
-  if (filters.searchOrigin === "profile" && !radiusSearchOrigin) {
-    searchNotice =
-      "Your singer profile does not have a saved approximate location yet. Save My Singer Profile with country, region, city, and ZIP/postal code, or switch to a typed search origin.";
+  if (
+    filters.searchOrigin === "profile" &&
+    profileSearchOrigin.status !== "usable"
+  ) {
+    searchNotice = profileOriginUnavailableMessage(profileSearchOrigin.status);
   } else if (filters.searchOrigin === "profile" && filters.radius == null) {
     searchNotice =
       "Add a radius to search by distance from your singer profile location. Without a radius, results show all visible areas that match the other filters.";
@@ -522,8 +484,20 @@ export default async function FindPage({ searchParams }: FindPageProps) {
                 name="searchOrigin"
               >
                 <option value="typed">Typed place</option>
-                <option value="profile">My Singer Profile</option>
+                <option
+                  disabled={profileSearchOrigin.status !== "usable"}
+                  value="profile"
+                >
+                  {profileSearchOrigin.status === "usable"
+                    ? "My Singer Profile"
+                    : "My Singer Profile (add location first)"}
+                </option>
               </select>
+              {profileSearchOrigin.status !== "usable" ? (
+                <span className="mt-2 block text-xs leading-5 text-[#596466]">
+                  {profileOriginUnavailableMessage(profileSearchOrigin.status)}
+                </span>
+              ) : null}
             </label>
 
             <label className="block">
