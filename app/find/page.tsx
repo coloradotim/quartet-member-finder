@@ -27,6 +27,8 @@ import { parseDiscoveryFilters } from "@/lib/search/discovery-filters";
 import {
   profileOriginState,
   profileOriginUnavailableMessage,
+  profileOriginUnavailableMessageFor,
+  type ProfileOriginState,
   type ProfileOriginRow,
 } from "@/lib/search/profile-origin";
 
@@ -81,6 +83,10 @@ type FindResult = DiscoveryMapItem & {
   distanceKm: number | null;
 };
 
+type DiscoverabilityOriginRow = ProfileOriginRow & {
+  is_visible: boolean | null;
+};
+
 const kindOptions = [
   ["quartets", "Quartet openings"],
   ["singers", "Singers"],
@@ -103,6 +109,12 @@ const distanceUnitOptions = [
   ["mi", "Miles"],
   ["km", "Kilometers"],
 ];
+
+const searchFromSourceOptions = [
+  ["singer_profile", "My Singer Profile location"],
+  ["quartet_profile", "My Quartet Profile location"],
+  ["another", "Another location"],
+] as const;
 
 const filterControlClass =
   "mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20";
@@ -153,6 +165,14 @@ function selectedPartValues(filters: ReturnType<typeof parseDiscoveryFilters>) {
   return filters.parts.map((part) => voicingPartValue(part.voicing, part.part));
 }
 
+function resultMatchesSelectedGoals(result: FindResult, goals: string[]) {
+  if (goals.length === 0) {
+    return true;
+  }
+
+  return goals.some((goal) => result.goals.includes(goal));
+}
+
 function resultMatchesSelectedParts(
   result: FindResult,
   selectedParts: string[],
@@ -200,15 +220,63 @@ function filterAnalyticsProperties(
   filters: ReturnType<typeof parseDiscoveryFilters>,
 ) {
   const flags = {
-    has_goal_filter: Boolean(filters.goal),
-    has_location_filter: Boolean(filters.searchFrom),
+    has_goal_filter: filters.goals.length > 0,
+    has_location_filter:
+      filters.searchFromSource !== "another" || Boolean(filters.searchFrom),
     has_part_filter: filters.parts.length > 0,
     has_radius_filter: filters.radius != null,
-    has_search_origin: Boolean(filters.searchFrom),
+    has_search_origin:
+      filters.searchFromSource !== "another" || Boolean(filters.searchFrom),
   };
   const filterCount = Object.values(flags).filter(Boolean).length;
 
   return { filterCount, flags };
+}
+
+function sourceLabel(
+  source: ReturnType<typeof parseDiscoveryFilters>["searchFromSource"],
+) {
+  if (source === "singer_profile") {
+    return "your Singer Profile location";
+  }
+
+  if (source === "quartet_profile") {
+    return "your Quartet Profile location";
+  }
+
+  return "the entered location";
+}
+
+function unavailableProfileStatusLine({
+  label,
+  state,
+}: {
+  label: string;
+  state: ProfileOriginState;
+}) {
+  if (state.status === "usable") {
+    return null;
+  }
+
+  return `${label} does not have enough location information for distance search.`;
+}
+
+function discoverabilityLabel({
+  isVisible,
+  state,
+}: {
+  isVisible: boolean | null | undefined;
+  state: ProfileOriginState;
+}) {
+  if (!isVisible) {
+    return "Not shown in Find";
+  }
+
+  if (state.status !== "usable") {
+    return "Shown in Find, but missing location for distance search";
+  }
+
+  return "Shown in Find";
 }
 
 function radiusToKilometers(
@@ -224,14 +292,14 @@ function radiusToKilometers(
 
 function geocodingStatusMessage(status: ApproximateGeocodingStatus) {
   if (status === "not_configured") {
-    return "Radius search needs server-side Mapbox geocoding configuration before a search origin can be resolved.";
+    return "Radius search needs server-side Mapbox geocoding configuration before that location can be resolved.";
   }
 
   if (status === "not_found") {
-    return "That search origin could not be resolved. Try a city plus region/country or a postal code plus country.";
+    return "That location could not be resolved. Try a city plus region/country or a postal code plus country.";
   }
 
-  return "The search origin could not be resolved right now. Try again in a moment or clear the location search.";
+  return "That location could not be resolved right now. Try again in a moment or clear the location search.";
 }
 
 export default async function FindPage({ searchParams }: FindPageProps) {
@@ -244,23 +312,38 @@ export default async function FindPage({ searchParams }: FindPageProps) {
   const radiusKm = radiusToKilometers(filters.radius, filters.distanceUnit);
   let radiusSearchOrigin: Coordinates | null = null;
   let radiusSearchOriginLabel = textValue(filters.searchFrom);
-  let profileOrigin: ProfileOriginRow | null = null;
   let geocodingResult: Awaited<
     ReturnType<typeof geocodeApproximateLocation>
   > | null = null;
-  const { data: profileOriginData } = await supabase
+  const { data: singerOriginData } = await supabase
     .from("singer_profiles")
     .select(
-      "latitude_private, longitude_private, country_name, region, locality, postal_code_private, location_label_public",
+      "is_visible, latitude_private, longitude_private, country_name, region, locality, postal_code_private, location_label_public",
     )
-    .maybeSingle<ProfileOriginRow>();
+    .maybeSingle<DiscoverabilityOriginRow>();
+  const { data: quartetOriginData } = await supabase
+    .from("quartet_listings")
+    .select(
+      "is_visible, latitude_private, longitude_private, country_name, region, locality, postal_code_private, location_label_public",
+    )
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .maybeSingle<DiscoverabilityOriginRow>();
+  const singerOrigin = singerOriginData ?? null;
+  const quartetOrigin = quartetOriginData ?? null;
+  const singerSearchOrigin = profileOriginState(singerOrigin);
+  const quartetSearchOrigin = profileOriginState(quartetOrigin);
+  const selectedProfileOrigin =
+    filters.searchFromSource === "quartet_profile"
+      ? quartetSearchOrigin
+      : singerSearchOrigin;
 
-  profileOrigin = profileOriginData ?? null;
-  const profileSearchOrigin = profileOriginState(profileOrigin);
-
-  if (filters.searchOrigin === "profile") {
-    radiusSearchOrigin = profileSearchOrigin.coordinates;
-    radiusSearchOriginLabel = profileSearchOrigin.label;
+  if (filters.searchFromSource === "singer_profile") {
+    radiusSearchOrigin = singerSearchOrigin.coordinates;
+    radiusSearchOriginLabel = singerSearchOrigin.label;
+  } else if (filters.searchFromSource === "quartet_profile") {
+    radiusSearchOrigin = quartetSearchOrigin.coordinates;
+    radiusSearchOriginLabel = quartetSearchOrigin.label;
   } else if (filters.searchFrom && radiusKm) {
     geocodingResult = await geocodeApproximateLocation(
       {
@@ -276,25 +359,32 @@ export default async function FindPage({ searchParams }: FindPageProps) {
   let searchNotice: string | null = null;
 
   if (
-    filters.searchOrigin === "profile" &&
-    profileSearchOrigin.status !== "usable"
+    filters.searchFromSource !== "another" &&
+    selectedProfileOrigin.status !== "usable"
   ) {
-    searchNotice = profileOriginUnavailableMessage(profileSearchOrigin.status);
-  } else if (filters.searchOrigin === "profile" && filters.radius == null) {
     searchNotice =
-      "Add a radius to search by distance from your singer profile location. Without a radius, results show all visible areas that match the other filters.";
+      filters.searchFromSource === "quartet_profile"
+        ? profileOriginUnavailableMessageFor(
+            selectedProfileOrigin.status,
+            "My Quartet Profile",
+          )
+        : profileOriginUnavailableMessage(selectedProfileOrigin.status);
+  } else if (filters.searchFromSource !== "another" && filters.radius == null) {
+    searchNotice = `Add a radius to search by distance from ${sourceLabel(
+      filters.searchFromSource,
+    )}. Without a radius, results show all visible areas that match the other filters.`;
   } else if (filters.searchFrom && filters.radius == null) {
     searchNotice =
-      "Add a radius to search by distance from the entered place. Without a radius, results show all visible areas that match the other filters.";
+      "Add a radius to search by distance from another location. Without a radius, results show all visible areas that match the other filters.";
   } else if (
     filters.radius != null &&
-    filters.searchOrigin === "typed" &&
+    filters.searchFromSource === "another" &&
     !filters.searchFrom
   ) {
     searchNotice =
-      "Add a search origin to use radius filtering. Without a search origin, results show all visible areas that match the other filters.";
+      "Add another location to use radius filtering. Without a location, results show all visible areas that match the other filters.";
   } else if (
-    filters.searchOrigin === "typed" &&
+    filters.searchFromSource === "another" &&
     filters.searchFrom &&
     radiusKm &&
     geocodingResult?.status !== "resolved"
@@ -306,22 +396,18 @@ export default async function FindPage({ searchParams }: FindPageProps) {
     const { data, error } =
       radiusSearchOrigin && radiusKm
         ? await supabase.rpc("search_singer_discovery_profiles", {
-            goal_filter: filters.goal,
+            goal_filter: null,
             radius_km: radiusKm,
             search_latitude: radiusSearchOrigin.latitude,
             search_longitude: radiusSearchOrigin.longitude,
           })
         : await (() => {
-            let query = supabase
+            const query = supabase
               .from("singer_discovery_profiles")
               .select(
                 "id, display_name, parts, goals, experience_level, availability, travel_radius_km, country_code, country_name, region, locality, location_label_public",
               )
               .order("updated_at", { ascending: false });
-
-            if (filters.goal) {
-              query = query.contains("goals", [filters.goal]);
-            }
 
             return query;
           })();
@@ -360,22 +446,18 @@ export default async function FindPage({ searchParams }: FindPageProps) {
     const { data, error } =
       radiusSearchOrigin && radiusKm
         ? await supabase.rpc("search_quartet_discovery_listings", {
-            goal_filter: filters.goal,
+            goal_filter: null,
             radius_km: radiusKm,
             search_latitude: radiusSearchOrigin.latitude,
             search_longitude: radiusSearchOrigin.longitude,
           })
         : await (() => {
-            let query = supabase
+            const query = supabase
               .from("quartet_discovery_listings")
               .select(
                 "id, name, description, parts_covered, parts_needed, goals, experience_level, availability, travel_radius_km, country_code, country_name, region, locality, location_label_public",
               )
               .order("updated_at", { ascending: false });
-
-            if (filters.goal) {
-              query = query.contains("goals", [filters.goal]);
-            }
 
             return query;
           })();
@@ -410,8 +492,10 @@ export default async function FindPage({ searchParams }: FindPageProps) {
     }
   }
 
-  results = results.filter((result) =>
-    resultMatchesSelectedParts(result, selectedParts),
+  results = results.filter(
+    (result) =>
+      resultMatchesSelectedParts(result, selectedParts) &&
+      resultMatchesSelectedGoals(result, filters.goals),
   );
 
   const markers = buildDiscoveryMapMarkers(results);
@@ -432,7 +516,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
     route: "/find",
     result_count: results.length,
     route_area: "discovery",
-    search_origin: filters.searchOrigin,
+    search_origin: filters.searchFromSource,
   };
 
   await captureProductEvent("find_searched", discoveryAnalyticsProperties);
@@ -456,11 +540,50 @@ export default async function FindPage({ searchParams }: FindPageProps) {
           </p>
         </header>
 
+        <section className="mt-6 max-w-4xl rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-4 text-sm text-[#394548]">
+          <h2 className="text-base font-bold text-[#172023]">
+            Your discoverability
+          </h2>
+          <dl className="mt-3 grid gap-2 sm:grid-cols-2">
+            <div>
+              <dt className="font-semibold text-[#172023]">Singer Profile</dt>
+              <dd>
+                {discoverabilityLabel({
+                  isVisible: singerOrigin?.is_visible,
+                  state: singerSearchOrigin,
+                })}
+              </dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-[#172023]">Quartet Profile</dt>
+              <dd>
+                {discoverabilityLabel({
+                  isVisible: quartetOrigin?.is_visible,
+                  state: quartetSearchOrigin,
+                })}
+              </dd>
+            </div>
+          </dl>
+          <p className="mt-3 leading-6">
+            {singerOrigin?.is_visible || quartetOrigin?.is_visible
+              ? "You can search either way. These settings only control whether other people can find your profiles."
+              : "You can still search, but other users will not discover your Singer Profile or Quartet Profile until you turn visibility on."}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <a className="font-semibold text-[#2f6f73]" href="/app/profile">
+              Edit My Singer Profile
+            </a>
+            <a className="font-semibold text-[#2f6f73]" href="/app/listings">
+              Edit My Quartet Profile
+            </a>
+          </div>
+        </section>
+
         <form
           aria-label="Filter discovery results"
           className="mt-6 rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-4 shadow-sm"
         >
-          <div className="grid gap-4 lg:grid-cols-[1fr_1fr_1.4fr_0.7fr_0.9fr]">
+          <div className="grid gap-4 lg:grid-cols-[1fr_1.6fr_1.1fr_auto]">
             <label className="block">
               <span className="text-sm font-semibold">Looking for</span>
               <select
@@ -476,106 +599,108 @@ export default async function FindPage({ searchParams }: FindPageProps) {
               </select>
             </label>
 
-            <label className="block">
-              <span className="text-sm font-semibold">Search origin</span>
-              <select
-                className={filterControlClass}
-                defaultValue={filters.searchOrigin}
-                name="searchOrigin"
-              >
-                <option value="typed">Typed place</option>
-                <option
-                  disabled={profileSearchOrigin.status !== "usable"}
-                  value="profile"
+            <div className="block">
+              <label>
+                <span className="text-sm font-semibold">Search From</span>
+                <select
+                  className={filterControlClass}
+                  defaultValue={filters.searchFromSource}
+                  name="searchFromSource"
                 >
-                  {profileSearchOrigin.status === "usable"
-                    ? "My Singer Profile"
-                    : "My Singer Profile (add location first)"}
-                </option>
-              </select>
-              {profileSearchOrigin.status !== "usable" ? (
-                <span className="mt-2 block text-xs leading-5 text-[#596466]">
-                  {profileOriginUnavailableMessage(profileSearchOrigin.status)}
-                </span>
+                  {searchFromSourceOptions.map(([value, label]) => {
+                    const sourceState =
+                      value === "quartet_profile"
+                        ? quartetSearchOrigin
+                        : singerSearchOrigin;
+                    const unavailable =
+                      value !== "another" && sourceState.status !== "usable";
+
+                    return (
+                      <option disabled={unavailable} key={value} value={value}>
+                        {unavailable ? `${label} - add location first` : label}
+                      </option>
+                    );
+                  })}
+                </select>
+              </label>
+              {filters.searchFromSource === "another" ? (
+                <label className="mt-3 block">
+                  <span className="text-sm font-semibold">
+                    Another location
+                  </span>
+                  <input
+                    className={filterControlClass}
+                    defaultValue={textValue(filters.searchFrom)}
+                    name="searchFrom"
+                    placeholder="Fort Collins, CO; Toronto, ON; M5V, Canada"
+                  />
+                  <span className="mt-2 block text-xs leading-5 text-[#596466]">
+                    City, region, country, or postal code. No street address.
+                  </span>
+                </label>
               ) : null}
-            </label>
+              <div className="mt-2 space-y-2 text-xs leading-5 text-[#596466]">
+                {unavailableProfileStatusLine({
+                  label: "Your Singer Profile",
+                  state: singerSearchOrigin,
+                }) ? (
+                  <p>
+                    {unavailableProfileStatusLine({
+                      label: "Your Singer Profile",
+                      state: singerSearchOrigin,
+                    })}{" "}
+                    <a
+                      className="font-semibold text-[#2f6f73]"
+                      href="/app/profile"
+                    >
+                      Edit My Singer Profile
+                    </a>
+                  </p>
+                ) : null}
+                {unavailableProfileStatusLine({
+                  label: "Your Quartet Profile",
+                  state: quartetSearchOrigin,
+                }) ? (
+                  <p>
+                    {unavailableProfileStatusLine({
+                      label: "Your Quartet Profile",
+                      state: quartetSearchOrigin,
+                    })}{" "}
+                    <a
+                      className="font-semibold text-[#2f6f73]"
+                      href="/app/listings"
+                    >
+                      Edit My Quartet Profile
+                    </a>
+                  </p>
+                ) : null}
+              </div>
+            </div>
 
-            <label className="block">
-              <span className="text-sm font-semibold">Search from</span>
-              <input
-                className={filterControlClass}
-                defaultValue={textValue(filters.searchFrom)}
-                name="searchFrom"
-                placeholder="Fort Collins, CO or M5V, Canada"
-              />
-              <span className="mt-2 block text-xs leading-5 text-[#596466]">
-                Used when Search origin is Typed place.
-              </span>
-            </label>
-
-            <label className="block">
-              <span className="text-sm font-semibold">Within</span>
-              <input
-                className={filterControlClass}
-                defaultValue={textValue(filters.radius)}
-                min={1}
-                name="radius"
-                placeholder="25"
-                type="number"
-              />
-            </label>
-
-            <label className="block">
-              <span className="text-sm font-semibold">Distance units</span>
-              <select
-                className={filterControlClass}
-                defaultValue={filters.distanceUnit}
-                name="distanceUnit"
-              >
-                {distanceUnitOptions.map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-
-          <div className="mt-4 grid gap-4 lg:grid-cols-[1.5fr_1fr_auto]">
-            <label className="block">
-              <span className="text-sm font-semibold">Parts</span>
-              <select
-                className={`${filterControlClass} min-h-32`}
-                defaultValue={selectedParts}
-                multiple
-                name="part"
-              >
-                {partOptions.slice(1).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-              <span className="mt-2 block text-xs leading-5 text-[#596466]">
-                Select one or more voicing-aware parts. Leave blank for any
-                part.
-              </span>
-            </label>
-
-            <label className="block">
-              <span className="text-sm font-semibold">Goal</span>
-              <select
-                className={filterControlClass}
-                defaultValue={textValue(filters.goal)}
-                name="goal"
-              >
-                {goalOptions.map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <fieldset>
+              <legend className="text-sm font-semibold">Within</legend>
+              <div className="mt-2 grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+                <input
+                  className="w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
+                  defaultValue={textValue(filters.radius)}
+                  min={1}
+                  name="radius"
+                  placeholder="100"
+                  type="number"
+                />
+                <select
+                  className="rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
+                  defaultValue={filters.distanceUnit}
+                  name="distanceUnit"
+                >
+                  {distanceUnitOptions.map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </fieldset>
 
             <div className="flex flex-col gap-3 lg:justify-end">
               <button
@@ -591,6 +716,47 @@ export default async function FindPage({ searchParams }: FindPageProps) {
                 Clear filters
               </a>
             </div>
+          </div>
+
+          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+            <label className="block">
+              <span className="text-sm font-semibold">Voice Part(s)</span>
+              <select
+                className={`${filterControlClass} min-h-32`}
+                defaultValue={selectedParts}
+                multiple
+                name="part"
+              >
+                {partOptions.slice(1).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <span className="mt-2 block text-xs leading-5 text-[#596466]">
+                Choose one or more parts you sing or need. Leave blank for any
+                voice part.
+              </span>
+            </label>
+
+            <label className="block">
+              <span className="text-sm font-semibold">Goal(s)</span>
+              <select
+                className={`${filterControlClass} min-h-32`}
+                defaultValue={filters.goals}
+                multiple
+                name="goal"
+              >
+                {goalOptions.slice(1).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <span className="mt-2 block text-xs leading-5 text-[#596466]">
+                Choose one or more goals. Leave blank for any goal.
+              </span>
+            </label>
           </div>
 
           {searchNotice ? (
@@ -642,8 +808,8 @@ export default async function FindPage({ searchParams }: FindPageProps) {
                 <p className="mt-3 text-sm leading-6">
                   Try increasing the radius, selecting fewer parts, clearing
                   goal filters, or searching both singers and quartet openings.
-                  If no origin is entered, add a city/region/country or postal
-                  code, or use your saved singer profile location.
+                  If no location is entered, add a city/region/country or postal
+                  code, or use a saved profile location.
                 </p>
               </section>
             ) : null}

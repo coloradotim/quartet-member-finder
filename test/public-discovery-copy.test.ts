@@ -55,24 +55,34 @@ describe("public discovery copy", () => {
     expect(singerPage).toContain("looking for other singers nearby");
   });
 
-  it("consolidates discovery around search origin, map, cards, and details", () => {
+  it("consolidates discovery around Search From, map, cards, and details", () => {
     const findPage = source("app/find/page.tsx");
 
     expect(findPage).toContain("Search quartet openings and singers");
     expect(findPage).toContain("Filter discovery results");
     expect(findPage).toContain("InteractiveDiscoveryMap");
-    expect(findPage).toContain("Search from");
-    expect(findPage).toContain("My Singer Profile");
-    expect(findPage).toContain("My Singer Profile (add location first)");
+    expect(findPage).toContain("Search From");
+    expect(findPage).toContain("My Singer Profile location");
+    expect(findPage).toContain("My Quartet Profile location");
+    expect(findPage).toContain("Another location");
+    expect(findPage).toContain("add location first");
+    expect(findPage).toContain("Your discoverability");
+    expect(findPage).toContain("Shown in Find");
+    expect(findPage).toContain("Not shown in Find");
+    expect(findPage).toContain("Edit My Singer Profile");
+    expect(findPage).toContain("Edit My Quartet Profile");
     expect(findPage).not.toContain(
       "does not have a saved approximate location yet",
     );
     expect(findPage).toContain("Within");
+    expect(findPage).toContain("Voice Part(s)");
+    expect(findPage).toContain("Goal(s)");
     expect(findPage).toContain("multiple");
     expect(findPage).toContain("Matching results");
     expect(findPage).toContain("details and contact");
     expect(findPage).not.toContain("Detailed quartet search");
     expect(findPage).not.toContain("Detailed singer search");
     expect(findPage).not.toContain("Open detailed search");
+    expect(findPage).not.toContain("Search origin");
   });
 });

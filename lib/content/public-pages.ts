@@ -138,14 +138,14 @@ export const publicHelpSections: HelpGuideSection[] = [
     topics: [
       {
         body: [
-          "Choose what you are looking for: quartet openings, singers, or both. Use part filters with voicing context when a specific part matters.",
+          "Choose what you are looking for: quartet openings, singers, or both. Use Voice Part(s) and Goal(s) filters when a specific part or set of goals matters.",
           "Find combines filters, a privacy-safe interactive map, and result cards. Result cards give the practical context you need before starting contact.",
         ],
         title: "How Find works",
       },
       {
         body: [
-          "You can search from a typed place or from your saved singer profile location, choose a radius, and switch between miles and kilometers. Miles are the default display unit.",
+          "Search From can use My Singer Profile location, My Quartet Profile location, or another location you type. Choose a radius and switch between miles and kilometers. Miles are the default display unit.",
           "Radius search uses approximate geocoding and approximate distance. It is meant to answer whether a match is plausibly nearby, not provide exact navigation.",
         ],
         title: "Radius and distance",
@@ -273,7 +273,7 @@ export const publicHelpSections: HelpGuideSection[] = [
     topics: [
       {
         body: [
-          "There may not be many visible profiles yet, your filters may be too narrow, or your search origin/radius may exclude likely matches. Try clearing part filters, increasing the radius, or searching both singers and quartet openings.",
+          "There may not be many visible profiles yet, your filters may be too narrow, or your selected Search From location and radius may exclude likely matches. Try clearing part filters, increasing the radius, or searching both singers and quartet openings.",
         ],
         title: "Why can't I find any results?",
       },

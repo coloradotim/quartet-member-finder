@@ -90,7 +90,7 @@ function filterAnalyticsProperties(
     has_availability_filter: Boolean(filters.availability),
     has_country_filter: Boolean(filters.country),
     has_experience_filter: Boolean(filters.experience),
-    has_goal_filter: Boolean(filters.goal),
+    has_goal_filter: filters.goals.length > 0,
     has_locality_filter: Boolean(filters.locality),
     has_part_filter: Boolean(filters.part),
     has_region_filter: Boolean(filters.region),
@@ -150,8 +150,8 @@ export default async function SingerSearchPage({
     ]);
   }
 
-  if (filters.goal) {
-    query = query.contains("goals", [filters.goal]);
+  if (filters.goals.length > 0) {
+    query = query.overlaps("goals", filters.goals);
   }
 
   if (filters.experience) {
