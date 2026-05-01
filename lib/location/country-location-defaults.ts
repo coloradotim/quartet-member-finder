@@ -53,12 +53,12 @@ const labelOverrides: Record<string, LocationFieldLabels> = {
   CA: {
     locality: "City/locality",
     postalCode: "Postal code",
-    region: "Province/territory",
+    region: "Province/Territory",
   },
   GB: {
     locality: "Town/city",
     postalCode: "Postcode",
-    region: "Nation/county/region",
+    region: "Region/County/State",
   },
   IE: {
     locality: "Town/city",
@@ -73,14 +73,14 @@ const labelOverrides: Record<string, LocationFieldLabels> = {
   US: {
     locality: "City/locality",
     postalCode: "ZIP code",
-    region: "State/region",
+    region: "State",
   },
 };
 
 const defaultLocationFieldLabels: LocationFieldLabels = {
   locality: "Locality/city",
   postalCode: "Postal code",
-  region: "Region/admin area",
+  region: "State / province / region",
 };
 
 function normalizeCountryCodeValue(countryCode: string | null | undefined) {

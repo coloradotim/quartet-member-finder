@@ -33,18 +33,24 @@ describe("country-aware location defaults", () => {
   it("adapts location field labels without strict address validation", () => {
     expect(locationFieldLabelsForCountry("US")).toMatchObject({
       postalCode: "ZIP code",
-      region: "State/region",
+      region: "State",
     });
     expect(locationFieldLabelsForCountry("CA")).toMatchObject({
       postalCode: "Postal code",
-      region: "Province/territory",
+      region: "Province/Territory",
     });
     expect(locationFieldLabelsForCountry(null, "United Kingdom")).toMatchObject(
       {
         postalCode: "Postcode",
-        region: "Nation/county/region",
+        region: "Region/County/State",
       },
     );
+    expect(
+      locationFieldLabelsForCountry(null, "Other / not listed"),
+    ).toMatchObject({
+      postalCode: "Postal code",
+      region: "State / province / region",
+    });
   });
 
   it("normalizes common country aliases", () => {

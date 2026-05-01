@@ -66,7 +66,7 @@ export const publicHelpSections = [
   {
     body: [
       "Country is the first location cue because it helps the app use sensible labels, such as ZIP code, postcode, state, province, or region, without strict address validation.",
-      "Profile and listing forms ask for country, city, and ZIP/postal code instead of country codes or admin-area fields. ZIP/postal codes are not shown in discovery.",
+      "Profile and listing forms ask for country, state/province/region, city/locality, and ZIP/postal code instead of country codes or street addresses. ZIP/postal codes are not shown in discovery.",
       "Find defaults distance display to miles and lets you switch to kilometers when that is more useful.",
     ],
     heading: "Location Defaults",

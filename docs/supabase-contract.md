@@ -201,8 +201,9 @@ Current pattern:
 
 Application location helpers should treat base-table coordinates and private
 postal/address fields as internal matching data. User-facing profile/listing
-forms ask for country, city, and ZIP/postal code; they do not expose country
-code or admin-area fields. The reusable public transformation returns only
+forms ask for country, state/province/region, city/locality, and ZIP/postal
+code; they do not expose country code or street address fields. The reusable
+public transformation returns only
 `location_label_public`, `locality`, `region`, and `country_name` equivalents
 for display. Find can display travel-radius values in miles or kilometers, with
 miles as the default, while storage remains in kilometers.

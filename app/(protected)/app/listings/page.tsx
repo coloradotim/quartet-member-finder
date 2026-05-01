@@ -7,6 +7,7 @@ import {
 import {
   countryOptions,
   kilometersToRoundedMiles,
+  locationFieldLabelsForCountry,
 } from "@/lib/location/country-location-defaults";
 import { type Voicing } from "@/lib/parts/voicings";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -23,6 +24,7 @@ type QuartetListingRow = {
   locality: string | null;
   name: string;
   postal_code_private: string | null;
+  region: string | null;
   travel_radius_km: number | null;
 };
 
@@ -64,7 +66,7 @@ export default async function ManageListingsPage({
       ? await supabase
           .from("quartet_listings")
           .select(
-            "id, availability, country_name, description, experience_level, goals, is_visible, locality, name, postal_code_private, travel_radius_km",
+            "id, availability, country_name, description, experience_level, goals, is_visible, locality, name, postal_code_private, region, travel_radius_km",
           )
           .eq("owner_user_id", user.id)
           .order("created_at", { ascending: true })
@@ -91,6 +93,7 @@ export default async function ManageListingsPage({
       ?.filter((partRow) => partRow.status === "needed")
       .map((partRow) => `${partRow.voicing}:${partRow.part}`) ?? [];
   const selectedCountry = listing?.country_name ?? "United States";
+  const locationLabels = locationFieldLabelsForCountry(null, selectedCountry);
 
   return (
     <div>
@@ -199,7 +202,8 @@ export default async function ManageListingsPage({
           <p className="text-sm leading-6 text-[#394548]">
             Used only to place this listing approximately on the map and support
             location-based search. ZIP/postal code is not shown publicly, and
-            discovery shows an approximate area, not an exact address.
+            discovery shows an approximate area, not an exact address. No street
+            address is required.
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
@@ -225,7 +229,22 @@ export default async function ManageListingsPage({
               </select>
             </label>
             <label className="block">
-              <span className="text-sm font-semibold text-[#172023]">City</span>
+              <span className="text-sm font-semibold text-[#172023]">
+                {locationLabels.region}
+                <span className="font-normal text-[#596466]"> Optional</span>
+              </span>
+              <input
+                className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
+                defaultValue={fieldValue(listing?.region)}
+                maxLength={120}
+                name="region"
+              />
+            </label>
+            <label className="block">
+              <span className="text-sm font-semibold text-[#172023]">
+                {locationLabels.locality}
+                <span className="font-normal text-[#596466]"> Optional</span>
+              </span>
               <input
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
                 defaultValue={fieldValue(listing?.locality)}
@@ -235,7 +254,8 @@ export default async function ManageListingsPage({
             </label>
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
-                ZIP/postal code
+                {locationLabels.postalCode}
+                <span className="font-normal text-[#596466]"> Optional</span>
               </span>
               <input
                 className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
