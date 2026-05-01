@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { DiscoveryModeNav } from "@/components/discovery/discovery-mode-nav";
-import { PublicSiteHeader } from "@/components/navigation/public-site-header";
+import { SignedInSiteHeader } from "@/components/navigation/signed-in-site-header";
 import { captureProductEvent } from "@/lib/analytics/product-analytics";
+import { requireAuthenticatedDiscovery } from "@/lib/auth/require-authenticated-discovery";
 import {
   buildDiscoveryMapMarkers,
   type DiscoveryMapItem,
@@ -12,7 +13,6 @@ import {
   voicingPartValue,
 } from "@/lib/parts/voicings";
 import { parseDiscoveryFilters } from "@/lib/search/discovery-filters";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type SingerMapRow = {
   country_code: string | null;
@@ -117,116 +117,112 @@ export default async function DiscoveryMapPage({ searchParams }: MapPageProps) {
   const params = await searchParams;
   const filters = parseDiscoveryFilters(params);
   const kind = selectedKind(params.kind);
-  const supabase = await createSupabaseServerClient();
+  const supabase = await requireAuthenticatedDiscovery("/map", params);
 
   let mapItems: DiscoveryMapItem[] = [];
   let errorMessage: string | null = null;
 
-  if (!supabase) {
-    errorMessage = "Supabase is not configured for discovery map search yet.";
-  } else {
-    if (kind === "both" || kind === "singers") {
-      let query = supabase
-        .from("singer_discovery_profiles")
-        .select(
-          "id, display_name, parts, goals, country_code, country_name, region, locality, location_label_public",
-        )
-        .order("updated_at", { ascending: false });
+  if (kind === "both" || kind === "singers") {
+    let query = supabase
+      .from("singer_discovery_profiles")
+      .select(
+        "id, display_name, parts, goals, country_code, country_name, region, locality, location_label_public",
+      )
+      .order("updated_at", { ascending: false });
 
-      if (filters.country) {
-        query = query.ilike("country_name", `%${filters.country}%`);
-      }
-
-      if (filters.region) {
-        query = query.ilike("region", `%${filters.region}%`);
-      }
-
-      if (filters.locality) {
-        query = query.ilike("locality", `%${filters.locality}%`);
-      }
-
-      if (filters.part) {
-        query = query.contains("parts", [
-          voicingPartValue(filters.part.voicing, filters.part.part),
-        ]);
-      }
-
-      if (filters.goal) {
-        query = query.contains("goals", [filters.goal]);
-      }
-
-      const { data, error } = await query;
-
-      if (error) {
-        errorMessage = error.message;
-      } else {
-        mapItems = [
-          ...mapItems,
-          ...((data ?? []) as SingerMapRow[]).map((singer) => ({
-            countryCode: singer.country_code,
-            countryName: singer.country_name,
-            id: singer.id,
-            kind: "singer" as const,
-            locality: singer.locality,
-            locationLabelPublic: singer.location_label_public,
-            name: singer.display_name,
-            parts: singer.parts,
-            region: singer.region,
-          })),
-        ];
-      }
+    if (filters.country) {
+      query = query.ilike("country_name", `%${filters.country}%`);
     }
 
-    if (!errorMessage && (kind === "both" || kind === "quartets")) {
-      let query = supabase
-        .from("quartet_discovery_listings")
-        .select(
-          "id, name, parts_needed, goals, country_code, country_name, region, locality, location_label_public",
-        )
-        .order("updated_at", { ascending: false });
+    if (filters.region) {
+      query = query.ilike("region", `%${filters.region}%`);
+    }
 
-      if (filters.country) {
-        query = query.ilike("country_name", `%${filters.country}%`);
-      }
+    if (filters.locality) {
+      query = query.ilike("locality", `%${filters.locality}%`);
+    }
 
-      if (filters.region) {
-        query = query.ilike("region", `%${filters.region}%`);
-      }
+    if (filters.part) {
+      query = query.contains("parts", [
+        voicingPartValue(filters.part.voicing, filters.part.part),
+      ]);
+    }
 
-      if (filters.locality) {
-        query = query.ilike("locality", `%${filters.locality}%`);
-      }
+    if (filters.goal) {
+      query = query.contains("goals", [filters.goal]);
+    }
 
-      if (filters.part) {
-        query = query.contains("parts_needed", [
-          voicingPartValue(filters.part.voicing, filters.part.part),
-        ]);
-      }
+    const { data, error } = await query;
 
-      if (filters.goal) {
-        query = query.contains("goals", [filters.goal]);
-      }
+    if (error) {
+      errorMessage = error.message;
+    } else {
+      mapItems = [
+        ...mapItems,
+        ...((data ?? []) as SingerMapRow[]).map((singer) => ({
+          countryCode: singer.country_code,
+          countryName: singer.country_name,
+          id: singer.id,
+          kind: "singer" as const,
+          locality: singer.locality,
+          locationLabelPublic: singer.location_label_public,
+          name: singer.display_name,
+          parts: singer.parts,
+          region: singer.region,
+        })),
+      ];
+    }
+  }
 
-      const { data, error } = await query;
+  if (!errorMessage && (kind === "both" || kind === "quartets")) {
+    let query = supabase
+      .from("quartet_discovery_listings")
+      .select(
+        "id, name, parts_needed, goals, country_code, country_name, region, locality, location_label_public",
+      )
+      .order("updated_at", { ascending: false });
 
-      if (error) {
-        errorMessage = error.message;
-      } else {
-        mapItems = [
-          ...mapItems,
-          ...((data ?? []) as QuartetMapRow[]).map((quartet) => ({
-            countryCode: quartet.country_code,
-            countryName: quartet.country_name,
-            id: quartet.id,
-            kind: "quartet" as const,
-            locality: quartet.locality,
-            locationLabelPublic: quartet.location_label_public,
-            name: quartet.name,
-            parts: quartet.parts_needed,
-            region: quartet.region,
-          })),
-        ];
-      }
+    if (filters.country) {
+      query = query.ilike("country_name", `%${filters.country}%`);
+    }
+
+    if (filters.region) {
+      query = query.ilike("region", `%${filters.region}%`);
+    }
+
+    if (filters.locality) {
+      query = query.ilike("locality", `%${filters.locality}%`);
+    }
+
+    if (filters.part) {
+      query = query.contains("parts_needed", [
+        voicingPartValue(filters.part.voicing, filters.part.part),
+      ]);
+    }
+
+    if (filters.goal) {
+      query = query.contains("goals", [filters.goal]);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      errorMessage = error.message;
+    } else {
+      mapItems = [
+        ...mapItems,
+        ...((data ?? []) as QuartetMapRow[]).map((quartet) => ({
+          countryCode: quartet.country_code,
+          countryName: quartet.country_name,
+          id: quartet.id,
+          kind: "quartet" as const,
+          locality: quartet.locality,
+          locationLabelPublic: quartet.location_label_public,
+          name: quartet.name,
+          parts: quartet.parts_needed,
+          region: quartet.region,
+        })),
+      ];
     }
   }
 
@@ -244,7 +240,7 @@ export default async function DiscoveryMapPage({ searchParams }: MapPageProps) {
 
   return (
     <>
-      <PublicSiteHeader />
+      <SignedInSiteHeader />
       <main className="mx-auto w-full max-w-6xl px-6 py-12">
         <div>
           <h1 className="mt-4 text-3xl font-bold text-[#172023]">

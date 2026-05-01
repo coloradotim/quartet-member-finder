@@ -5,9 +5,13 @@ function source(path: string) {
   return readFileSync(path, "utf8");
 }
 
+function normalizedSource(path: string) {
+  return source(path).replace(/\s+/g, " ");
+}
+
 describe("public discovery copy", () => {
   it("makes the first-time path obvious on the public home page", () => {
-    const homePage = source("app/page.tsx");
+    const homePage = normalizedSource("app/page.tsx");
 
     expect(homePage).toContain("Sign in to get started");
     expect(homePage).toContain("First time here? Read Help");
@@ -17,6 +21,13 @@ describe("public discovery copy", () => {
     expect(homePage).toContain("Use either profile, or both.");
     expect(homePage).toContain("My Singer Profile");
     expect(homePage).toContain("My Quartet Profile");
+    expect(homePage).toContain(
+      "Sign in to search quartet openings and singers",
+    );
+    expect(homePage).toContain("Discovery stays behind sign-in");
+    expect(homePage).toContain(
+      "Help and privacy information are available before sign-in",
+    );
     expect(homePage).not.toContain(
       "Public discovery is open before you sign in.",
     );
@@ -24,7 +35,7 @@ describe("public discovery copy", () => {
       "look around before you decide what to share",
     );
     expect(homePage).toContain("approximate locations");
-    expect(homePage).toContain("first contact happens");
+    expect(homePage).toContain("First contact happens");
   });
 
   it("frames quartet discovery as openings for missing parts", () => {
