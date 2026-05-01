@@ -7,28 +7,28 @@ export type DashboardAction = {
 export const singerDashboardActions: DashboardAction[] = [
   {
     description:
-      "Create or update the profile that helps other singers and quartets understand your parts, goals, availability, and approximate area.",
+      "Create or update your optional singer presence. Make it discoverable when you want quartets or other singers to find you.",
     href: "/app/profile",
     label: "My Singer Profile",
   },
   {
     description:
-      "Search quartet openings, singer profiles, and approximate regions from one discovery page.",
-    href: "/find",
-    label: "Find",
+      "Search quartet openings after your singer context is ready. You can change the looking-for filter any time.",
+    href: "/find?kind=quartets",
+    label: "Find quartet openings",
   },
 ];
 
-export const quartetModeDashboardActions: DashboardAction[] = [
+export const quartetDashboardActions: DashboardAction[] = [
   {
     description:
-      "Create or update the listing for an incomplete quartet, including covered parts, needed parts, goals, and approximate area.",
+      "Create or update the optional profile for a quartet or prospective quartet you represent.",
     href: "/app/listings",
-    label: "Manage Quartet Listing",
+    label: "My Quartet Profile",
   },
   {
     description:
-      "Search singer profiles and nearby activity when your quartet is ready to contact someone about a missing part.",
+      "Search singer profiles when your quartet opening is ready for app-mediated first contact.",
     href: "/find?kind=singers",
     label: "Find singers",
   },
@@ -37,7 +37,7 @@ export const quartetModeDashboardActions: DashboardAction[] = [
 export const supportDashboardActions: DashboardAction[] = [
   {
     description:
-      "Review how profiles, listings, discovery, visibility, and app-mediated contact work.",
+      "Review how optional profiles, independent visibility, discovery, and app-mediated contact work.",
     href: "/help",
     label: "Help",
   },

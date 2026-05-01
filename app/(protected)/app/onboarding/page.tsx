@@ -83,8 +83,8 @@ export default async function OnboardingPage({
           distance defaults before asking what you want to do first.
         </p>
         <p className="mt-3 max-w-3xl text-base leading-7 text-[#394548]">
-          You can use the app as a singer, in Quartet Mode, or both. The choice
-          below is only your next step, not a permanent role.
+          You can use My Singer Profile, My Quartet Profile, or both. The choice
+          below is only your first task, not a permanent role.
         </p>
       </header>
 
@@ -193,11 +193,11 @@ export default async function OnboardingPage({
               Step 2
             </p>
             <h2 className="mt-2 text-2xl font-bold text-[#172023]">
-              What do you want to do first?
+              What are you here to do first?
             </h2>
             <p className="mt-2 text-base leading-7 text-[#394548]">
-              Pick the next page to open after setup. You can use every workflow
-              later.
+              Pick the next page to open after setup. You can use both optional
+              profiles later, and each profile has its own visibility setting.
             </p>
           </div>
           <div className="mt-4 grid gap-4 md:grid-cols-2">

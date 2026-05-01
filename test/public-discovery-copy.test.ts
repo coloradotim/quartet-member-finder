@@ -13,7 +13,16 @@ describe("public discovery copy", () => {
     expect(homePage).toContain("First time here? Read Help");
     expect(homePage).toContain("Who it helps");
     expect(homePage).toContain("Singers looking for quartet openings");
-    expect(homePage).toContain("Public discovery is open before you sign in.");
+    expect(homePage).toContain("Two optional profiles");
+    expect(homePage).toContain("Use either profile, or both.");
+    expect(homePage).toContain("My Singer Profile");
+    expect(homePage).toContain("My Quartet Profile");
+    expect(homePage).not.toContain(
+      "Public discovery is open before you sign in.",
+    );
+    expect(homePage).not.toContain(
+      "look around before you decide what to share",
+    );
     expect(homePage).toContain("approximate locations");
     expect(homePage).toContain("first contact happens");
   });

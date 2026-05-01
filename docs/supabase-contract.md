@@ -84,9 +84,12 @@ The server creates the account profile row after sign-in when needed. If neither
 completion nor skipped state is present, sign-in routes the user through
 `/app/onboarding`. Current onboarding collects display name and optional
 country/city/ZIP or postal code before asking what workflow the user wants to
-open first. Completing onboarding also creates or updates a hidden starter
-`singer_profiles` row with that basic context so profile defaults are available
-without publishing the user in discovery.
+open first. Current `onboarding_last_choice` values are
+`singer-profile-first`, `quartet-profile-first`, and `get-oriented`; legacy
+values remain allowed by the database constraint for existing rows. Completing
+onboarding also creates or updates a hidden starter `singer_profiles` row with
+that basic context so profile defaults are available without publishing the user
+in discovery.
 
 The legacy `/app/settings` route redirects to My Singer Profile. The app no
 longer asks users to re-run onboarding or choose account-level distance units.

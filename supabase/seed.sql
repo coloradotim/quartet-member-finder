@@ -131,42 +131,42 @@ values
     '00000000-0000-4000-8000-000000000101',
     'Avery Demo',
     now(),
-    'my-singer-profile',
+    'singer-profile-first',
     'mi'
   ),
   (
     '00000000-0000-4000-8000-000000000102',
     'Morgan Demo',
     now(),
-    'find-quartet-openings',
+    'singer-profile-first',
     'km'
   ),
   (
     '00000000-0000-4000-8000-000000000103',
     'Priya Demo',
     now(),
-    'my-singer-profile',
+    'singer-profile-first',
     'km'
   ),
   (
     '00000000-0000-4000-8000-000000000104',
     'Noah Demo',
     now(),
-    'find-singers-as-singer',
+    'get-oriented',
     'mi'
   ),
   (
     '00000000-0000-4000-8000-000000000105',
     'Hidden Demo',
     now(),
-    'browse-for-now',
+    'get-oriented',
     'km'
   ),
   (
     '00000000-0000-4000-8000-000000000106',
     'Quartet Owner Demo',
     now(),
-    'quartet-mode-listing',
+    'quartet-profile-first',
     'km'
   );
 

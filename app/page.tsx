@@ -8,21 +8,24 @@ const audiencePaths = [
   "Quartet representatives looking for missing parts",
 ];
 
-const discoveryLinks = [
+const profilePaths = [
   {
-    href: "/find?kind=quartets",
-    label: "Browse quartet openings",
-    description: "See incomplete quartets looking for voicing-specific parts.",
+    href: "/sign-in?next=%2Fapp%2Fprofile",
+    label: "My Singer Profile",
+    description:
+      "Use this if you want to be found personally as a singer. You decide when it becomes discoverable.",
   },
   {
-    href: "/find?kind=singers",
-    label: "Browse singers",
-    description: "Find singers who are open to quartet opportunities.",
+    href: "/sign-in?next=%2Fapp%2Flistings",
+    label: "My Quartet Profile",
+    description:
+      "Use this if you represent a quartet or prospective quartet looking for one or more singers.",
   },
   {
-    href: "/find",
-    label: "View the map",
-    description: "Explore approximate singer and quartet locations.",
+    href: "/help",
+    label: "Get oriented",
+    description:
+      "Read how optional profiles, independent visibility, and app-mediated contact work before signing in.",
   },
 ];
 
@@ -45,8 +48,9 @@ export default function Home() {
             </p>
             <p className="mt-4 max-w-2xl text-base leading-7 text-[#394548]">
               {PRODUCT_NAME} is for practical introductions: create a singer
-              profile with the parts you sing by voicing, list an incomplete
-              quartet, or look around before you decide what to share.
+              profile with the parts you sing by voicing, create a quartet
+              profile for an incomplete group, or use both without choosing a
+              permanent role.
             </p>
             <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap">
               <Link
@@ -92,25 +96,26 @@ export default function Home() {
         </section>
 
         <section
-          aria-label="Public discovery links"
+          aria-label="Profile paths"
           className="mt-12 border-t border-[#d7cec0] pt-8"
         >
           <div className="max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#2f6f73]">
-              Want to look around first?
+              Two optional profiles
             </p>
             <h2 className="mt-3 text-2xl font-bold text-[#172023]">
-              Public discovery is open before you sign in.
+              Use either profile, or both.
             </h2>
             <p className="mt-4 text-base leading-7 text-[#394548]">
-              Use Find to filter public listings, scan approximate areas on the
-              map, and compare results in a table before creating your profile
-              or quartet listing.
+              Use My Singer Profile if you want to be found as a singer. Use My
+              Quartet Profile if you represent a quartet looking for a missing
+              part. Each profile has its own visibility setting, so filling one
+              out does not force it into discovery.
             </p>
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
-            {discoveryLinks.map((link) => (
+            {profilePaths.map((link) => (
               <Link
                 className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 shadow-sm hover:bg-white"
                 href={link.href}

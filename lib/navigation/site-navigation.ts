@@ -1,15 +1,15 @@
 export const publicNavigationLinks = [
   {
-    href: "/find",
-    label: "Find",
+    href: "/help",
+    label: "Help",
+  },
+  {
+    href: "/privacy",
+    label: "Privacy",
   },
   {
     href: "/sign-in",
     label: "Sign in",
-  },
-  {
-    href: "/help",
-    label: "Help",
   },
 ] as const;
 

@@ -9,17 +9,20 @@ export const signedInPrimaryNavigationLinks = [
     label: "My Singer Profile",
   },
   {
+    href: "/app/listings",
+    label: "My Quartet Profile",
+  },
+  {
     href: "/find",
     label: "Find",
   },
-] as const;
-
-export const signedInModeNavigationLinks = [
   {
-    href: "/app/listings",
-    label: "Quartet Mode",
+    href: "/help",
+    label: "Help",
   },
 ] as const;
+
+export const signedInModeNavigationLinks: SignedInNavigationLink[] = [];
 
 export const signedInUtilityNavigationLinks: SignedInNavigationLink[] = [];
 

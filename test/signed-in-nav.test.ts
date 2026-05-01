@@ -7,22 +7,23 @@ import {
 } from "@/lib/navigation/signed-in-nav";
 
 describe("signed-in navigation", () => {
-  it("groups singer-first tasks apart from quartet mode and utility actions", () => {
+  it("keeps stable signed-in tasks without a mode switch", () => {
     expect(signedInPrimaryNavigationLinks.map((link) => link.label)).toEqual([
       "My Singer Profile",
+      "My Quartet Profile",
       "Find",
+      "Help",
     ]);
-    expect(signedInModeNavigationLinks).toEqual([
-      { href: "/app/listings", label: "Quartet Mode" },
-    ]);
+    expect(signedInModeNavigationLinks).toEqual([]);
     expect(signedInUtilityNavigationLinks).toEqual([]);
   });
 
   it("keeps existing route targets for the reorganized labels", () => {
     expect(signedInNavigationLinks).toEqual([
       { href: "/app/profile", label: "My Singer Profile" },
+      { href: "/app/listings", label: "My Quartet Profile" },
       { href: "/find", label: "Find" },
-      { href: "/app/listings", label: "Quartet Mode" },
+      { href: "/help", label: "Help" },
     ]);
   });
 });

@@ -17,30 +17,32 @@ const pageSource = readFileSync(
 );
 
 describe("first-run onboarding", () => {
-  it("uses the requested Singer and Quartet Mode language", () => {
+  it("uses intent-based onboarding language without permanent modes", () => {
     const text = JSON.stringify(onboardingChoices);
 
     expect(text).toContain("I'm a singer looking for quartet openings");
-    expect(text).toContain("I'm a singer looking for other singers");
     expect(text).toContain("I represent a quartet looking for a singer");
-    expect(text).toContain("I just want to browse for now");
+    expect(text).toContain("I'm not sure yet / I just want to get oriented");
+    expect(text).toContain("My Singer Profile");
+    expect(text).toContain("My Quartet Profile");
     expect(pageSource).toContain("not a permanent role");
+    expect(pageSource).toContain("What are you here to do first?");
   });
 
   it("routes each first action to the expected destination", () => {
-    expect(destinationForOnboardingChoice("find-quartet-openings")).toBe(
-      "/find?kind=quartets",
+    expect(destinationForOnboardingChoice("singer-profile-first")).toBe(
+      "/app/profile",
     );
-    expect(destinationForOnboardingChoice("quartet-mode-listing")).toBe(
+    expect(destinationForOnboardingChoice("quartet-profile-first")).toBe(
       "/app/listings",
     );
-    expect(destinationForOnboardingChoice("browse-for-now")).toBe("/find");
+    expect(destinationForOnboardingChoice("get-oriented")).toBe("/app");
     expect(destinationForOnboardingChoice("unknown")).toBe("/app");
   });
 
   it("validates choices and post-onboarding paths", () => {
-    expect(onboardingChoices.length).toBe(4);
-    expect(isValidOnboardingChoice("find-singers-as-singer")).toBe(true);
+    expect(onboardingChoices.length).toBe(3);
+    expect(isValidOnboardingChoice("quartet-profile-first")).toBe(true);
     expect(isValidOnboardingChoice("skipped")).toBe(false);
     expect(normalizePostOnboardingPath("/app/profile")).toBe("/app/profile");
     expect(normalizePostOnboardingPath("/app/onboarding")).toBe("/app");

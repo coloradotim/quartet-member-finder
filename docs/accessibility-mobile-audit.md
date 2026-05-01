@@ -8,7 +8,7 @@ This pre-launch audit covers the core public and signed-in flows:
 - signed-in dashboard
 - onboarding
 - My Singer Profile
-- Quartet Mode
+- My Quartet Profile
 - Find
 - detailed Quartet Opening search
 - detailed Singer search
