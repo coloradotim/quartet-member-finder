@@ -23,6 +23,10 @@ import {
   voicingPartOptions,
   voicingPartValue,
 } from "@/lib/parts/voicings";
+import {
+  discoverabilityExplanation,
+  discoverabilityStatusLabel,
+} from "@/lib/search/discoverability-status";
 import { parseDiscoveryFilters } from "@/lib/search/discovery-filters";
 import {
   profileOriginState,
@@ -288,24 +292,6 @@ function unavailableProfileStatusLine({
   }
 
   return `${label} does not have enough location information for distance search.`;
-}
-
-function discoverabilityLabel({
-  isVisible,
-  state,
-}: {
-  isVisible: boolean | null | undefined;
-  state: ProfileOriginState;
-}) {
-  if (!isVisible) {
-    return "Not shown in Find";
-  }
-
-  if (state.status !== "usable") {
-    return "Shown in Find, but missing location for distance search";
-  }
-
-  return "Shown in Find";
 }
 
 function radiusToKilometers(
@@ -581,7 +567,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
             <div>
               <dt className="font-semibold text-[#172023]">Singer Profile</dt>
               <dd>
-                {discoverabilityLabel({
+                {discoverabilityStatusLabel({
                   isVisible: singerOrigin?.is_visible,
                   state: singerSearchOrigin,
                 })}
@@ -590,7 +576,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
             <div>
               <dt className="font-semibold text-[#172023]">Quartet Profile</dt>
               <dd>
-                {discoverabilityLabel({
+                {discoverabilityStatusLabel({
                   isVisible: quartetOrigin?.is_visible,
                   state: quartetSearchOrigin,
                 })}
@@ -598,9 +584,10 @@ export default async function FindPage({ searchParams }: FindPageProps) {
             </div>
           </dl>
           <p className="mt-3 leading-6">
-            {singerOrigin?.is_visible || quartetOrigin?.is_visible
-              ? "You can search either way. These settings only control whether other people can find your profiles."
-              : "You can still search, but other users will not discover your Singer Profile or Quartet Profile until you turn visibility on."}
+            {discoverabilityExplanation({
+              hasVisibleQuartetProfile: quartetOrigin?.is_visible,
+              hasVisibleSingerProfile: singerOrigin?.is_visible,
+            })}
           </p>
           <div className="mt-3 flex flex-wrap gap-3">
             <a className="font-semibold text-[#2f6f73]" href="/app/profile">
