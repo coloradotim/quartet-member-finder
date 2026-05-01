@@ -32,6 +32,21 @@ function viewDefinition(viewName: string) {
   return match[0];
 }
 
+function functionReturnDefinition(functionName: string) {
+  const pattern = new RegExp(
+    `create or replace function public\\.${functionName}[\\s\\S]*?returns table \\(([\\s\\S]*?)\\)\\nlanguage`,
+    "i",
+  );
+
+  const match = migration.match(pattern);
+
+  if (!match) {
+    throw new Error(`Missing ${functionName} return definition`);
+  }
+
+  return match[1];
+}
+
 describe("initial Supabase schema migration", () => {
   it("enables row level security on every app table", () => {
     for (const table of appTables) {
@@ -68,6 +83,37 @@ describe("initial Supabase schema migration", () => {
     expect(viewDefinition("quartet_discovery_listings")).not.toMatch(
       privateFieldPattern,
     );
+  });
+
+  it("adds authenticated radius search without returning exact coordinates", () => {
+    expect(migration).toContain(
+      "create or replace function public.distance_between_coordinates_km",
+    );
+    expect(migration).toContain(
+      "create or replace function public.search_singer_discovery_profiles",
+    );
+    expect(migration).toContain(
+      "create or replace function public.search_quartet_discovery_listings",
+    );
+    expect(migration).toContain(
+      "grant execute on function public.search_singer_discovery_profiles",
+    );
+    expect(migration).toContain(
+      "grant execute on function public.search_quartet_discovery_listings",
+    );
+    expect(
+      functionReturnDefinition("search_singer_discovery_profiles"),
+    ).toContain("distance_km double precision");
+    expect(
+      functionReturnDefinition("search_quartet_discovery_listings"),
+    ).toContain("distance_km double precision");
+    expect(migration).toContain("latitude_private is not null");
+    expect(
+      functionReturnDefinition("search_singer_discovery_profiles"),
+    ).not.toMatch(/latitude_private|longitude_private/i);
+    expect(
+      functionReturnDefinition("search_quartet_discovery_listings"),
+    ).not.toMatch(/latitude_private|longitude_private/i);
   });
 
   it("stores and exposes parts with explicit voicing context", () => {

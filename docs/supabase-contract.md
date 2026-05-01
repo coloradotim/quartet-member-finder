@@ -20,6 +20,8 @@ It includes these data areas:
 - `feedback_submissions`: private authenticated-user feedback from the help page.
 - `singer_discovery_profiles`: privacy-safe singer discovery view.
 - `quartet_discovery_listings`: privacy-safe quartet discovery view.
+- `search_singer_discovery_profiles`: authenticated radius-search RPC.
+- `search_quartet_discovery_listings`: authenticated radius-search RPC.
 
 The schema also defines enums for distance units, location precision, quartet
 part status, and contact request status. Earlier migrations created a
@@ -105,11 +107,13 @@ The signed-in discovery routes are:
 - `/quartets`, backed by `quartet_discovery_listings`
 - `/map`, backed by both discovery views as a compatibility map view
 
-These routes may filter on voicing-aware parts and goals. `/find` presents a
-search-origin and radius interface, but true distance-from-origin filtering
-requires a future approximate geocoding/RPC layer; until then, the map and cards
-use privacy-safe public location summaries from the discovery views. They should
-not read private base-table location or contact fields.
+These routes may filter on voicing-aware parts and goals. `/find` can resolve a
+search origin and radius when server-side geocoding is configured, then use
+authenticated RPC functions to return visible results sorted by approximate
+distance. If a search origin is missing, radius is missing, or geocoding cannot
+resolve the origin, `/find` falls back to visible discovery results with a clear
+notice. Browser code should not read private base-table location or contact
+fields.
 
 These routes require authentication before reading discovery views. The views
 still expose only privacy-safe public fields, but anonymous visitors are
@@ -140,9 +144,11 @@ Public discovery is exposed through:
 
 - `singer_discovery_profiles`
 - `quartet_discovery_listings`
+- `search_singer_discovery_profiles`
+- `search_quartet_discovery_listings`
 
-Those views filter to `is_visible = true` and `is_active = true` and include
-only privacy-safe columns. They intentionally omit:
+Those views and functions filter to `is_visible = true` and `is_active = true`
+and include only privacy-safe columns. They intentionally omit:
 
 - `user_id` and `owner_user_id`
 - private postal codes
@@ -228,6 +234,21 @@ location fields:
 The public discovery views expose country, region, locality, public location
 label, and preferred distance unit. They do not expose private postal codes,
 formatted addresses, or exact coordinates.
+
+Approximate radius search uses
+`supabase/migrations/20260501020000_approximate_radius_search.sql`:
+
+- `distance_between_coordinates_km` computes private server/database distance.
+- `search_singer_discovery_profiles` returns visible singer rows within a
+  caller-provided radius and includes only `distance_km`, not coordinates.
+- `search_quartet_discovery_listings` does the same for quartet listings.
+- radius indexes cover visible active rows with private coordinates.
+- execute grants are limited to authenticated users.
+
+The app's server actions geocode profile/listing location fields through the
+server-only approximate geocoder when configured. Saved coordinates remain in
+private base-table fields. Search-origin geocoding for `/find` is temporary and
+not stored.
 
 The public map route must continue to use those discovery views rather than base
 tables. Map markers are built from public location summaries and country/region

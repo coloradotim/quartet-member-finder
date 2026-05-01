@@ -4,8 +4,14 @@ import { captureProductEvent } from "@/lib/analytics/product-analytics";
 import { requireAuthenticatedDiscovery } from "@/lib/auth/require-authenticated-discovery";
 import {
   approximateLocationLabel,
+  formatApproximateDistance,
+  milesToKilometers,
   travelRadiusLabel,
 } from "@/lib/location/approximate-location";
+import {
+  geocodeApproximateLocation,
+  type ApproximateGeocodingStatus,
+} from "@/lib/location/geocoding";
 import {
   buildDiscoveryMapMarkers,
   type DiscoveryMapItem,
@@ -30,6 +36,7 @@ type SingerFindRow = {
   parts: string[];
   region: string | null;
   travel_radius_km: number | null;
+  distance_km?: number | null;
 };
 
 type QuartetFindRow = {
@@ -47,6 +54,7 @@ type QuartetFindRow = {
   parts_needed: string[];
   region: string | null;
   travel_radius_km: number | null;
+  distance_km?: number | null;
 };
 
 type FindPageProps = {
@@ -63,6 +71,7 @@ type FindResult = DiscoveryMapItem & {
   resultLabel: string;
   targetKind: "quartet" | "singer";
   travelRadiusKm: number | null;
+  distanceKm: number | null;
 };
 
 const kindOptions = [
@@ -124,6 +133,13 @@ function locationLabel(item: FindResult) {
     locationLabelPublic: item.locationLabelPublic,
     region: item.region,
   });
+}
+
+function distanceLabel(
+  item: FindResult,
+  filters: ReturnType<typeof parseDiscoveryFilters>,
+) {
+  return formatApproximateDistance(item.distanceKm, filters.distanceUnit);
 }
 
 function selectedPartValues(filters: ReturnType<typeof parseDiscoveryFilters>) {
@@ -199,6 +215,29 @@ function filterAnalyticsProperties(
   return { filterCount, flags };
 }
 
+function radiusToKilometers(
+  radius: number | null,
+  unit: ReturnType<typeof parseDiscoveryFilters>["distanceUnit"],
+) {
+  if (radius == null) {
+    return null;
+  }
+
+  return unit === "mi" ? milesToKilometers(radius) : radius;
+}
+
+function geocodingStatusMessage(status: ApproximateGeocodingStatus) {
+  if (status === "not_configured") {
+    return "Radius search needs server-side Mapbox geocoding configuration before a search origin can be resolved.";
+  }
+
+  if (status === "not_found") {
+    return "That search origin could not be resolved. Try a city plus region/country or a postal code plus country.";
+  }
+
+  return "The search origin could not be resolved right now. Try again in a moment or clear the location search.";
+}
+
 export default async function FindPage({ searchParams }: FindPageProps) {
   const params = await searchParams;
   const filters = parseDiscoveryFilters(params);
@@ -206,23 +245,55 @@ export default async function FindPage({ searchParams }: FindPageProps) {
   const selectedParts = selectedPartValues(filters);
   const returnTo = returnToPath(params);
   const supabase = await requireAuthenticatedDiscovery("/find", params);
+  const radiusKm = radiusToKilometers(filters.radius, filters.distanceUnit);
+  const shouldUseRadiusSearch = Boolean(filters.searchFrom && radiusKm);
+  const geocodingResult = shouldUseRadiusSearch
+    ? await geocodeApproximateLocation(
+        {
+          locality: filters.searchFrom,
+        },
+        { storageMode: "temporary" },
+      )
+    : null;
+  const radiusSearchOrigin = geocodingResult?.coordinates ?? null;
 
   let results: FindResult[] = [];
   let errorMessage: string | null = null;
+  let searchNotice: string | null = null;
+
+  if (filters.searchFrom && filters.radius == null) {
+    searchNotice =
+      "Add a radius to search by distance from the entered place. Without a radius, results show all visible areas that match the other filters.";
+  } else if (filters.radius != null && !filters.searchFrom) {
+    searchNotice =
+      "Add a search origin to use radius filtering. Without a search origin, results show all visible areas that match the other filters.";
+  } else if (shouldUseRadiusSearch && geocodingResult?.status !== "resolved") {
+    searchNotice = geocodingStatusMessage(geocodingResult?.status ?? "failed");
+  }
 
   if (kind === "both" || kind === "singers") {
-    let query = supabase
-      .from("singer_discovery_profiles")
-      .select(
-        "id, display_name, parts, goals, experience_level, availability, travel_radius_km, country_code, country_name, region, locality, location_label_public",
-      )
-      .order("updated_at", { ascending: false });
+    const { data, error } =
+      radiusSearchOrigin && radiusKm
+        ? await supabase.rpc("search_singer_discovery_profiles", {
+            goal_filter: filters.goal,
+            radius_km: radiusKm,
+            search_latitude: radiusSearchOrigin.latitude,
+            search_longitude: radiusSearchOrigin.longitude,
+          })
+        : await (() => {
+            let query = supabase
+              .from("singer_discovery_profiles")
+              .select(
+                "id, display_name, parts, goals, experience_level, availability, travel_radius_km, country_code, country_name, region, locality, location_label_public",
+              )
+              .order("updated_at", { ascending: false });
 
-    if (filters.goal) {
-      query = query.contains("goals", [filters.goal]);
-    }
+            if (filters.goal) {
+              query = query.contains("goals", [filters.goal]);
+            }
 
-    const { data, error } = await query;
+            return query;
+          })();
 
     if (error) {
       errorMessage = error.message;
@@ -234,6 +305,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
           countryCode: singer.country_code,
           countryName: singer.country_name,
           description: null,
+          distanceKm: singer.distance_km ?? null,
           experienceLevel: singer.experience_level,
           goals: singer.goals,
           id: singer.id,
@@ -254,18 +326,28 @@ export default async function FindPage({ searchParams }: FindPageProps) {
   }
 
   if (!errorMessage && (kind === "both" || kind === "quartets")) {
-    let query = supabase
-      .from("quartet_discovery_listings")
-      .select(
-        "id, name, description, parts_covered, parts_needed, goals, experience_level, availability, travel_radius_km, country_code, country_name, region, locality, location_label_public",
-      )
-      .order("updated_at", { ascending: false });
+    const { data, error } =
+      radiusSearchOrigin && radiusKm
+        ? await supabase.rpc("search_quartet_discovery_listings", {
+            goal_filter: filters.goal,
+            radius_km: radiusKm,
+            search_latitude: radiusSearchOrigin.latitude,
+            search_longitude: radiusSearchOrigin.longitude,
+          })
+        : await (() => {
+            let query = supabase
+              .from("quartet_discovery_listings")
+              .select(
+                "id, name, description, parts_covered, parts_needed, goals, experience_level, availability, travel_radius_km, country_code, country_name, region, locality, location_label_public",
+              )
+              .order("updated_at", { ascending: false });
 
-    if (filters.goal) {
-      query = query.contains("goals", [filters.goal]);
-    }
+            if (filters.goal) {
+              query = query.contains("goals", [filters.goal]);
+            }
 
-    const { data, error } = await query;
+            return query;
+          })();
 
     if (error) {
       errorMessage = error.message;
@@ -277,6 +359,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
           countryCode: quartet.country_code,
           countryName: quartet.country_name,
           description: quartet.description,
+          distanceKm: quartet.distance_km ?? null,
           experienceLevel: quartet.experience_level,
           goals: quartet.goals,
           id: quartet.id,
@@ -444,12 +527,11 @@ export default async function FindPage({ searchParams }: FindPageProps) {
             </div>
           </div>
 
-          <p className="mt-4 rounded-md border border-[#d7cec0] bg-white/70 p-3 text-sm leading-6 text-[#394548]">
-            Radius search is ready in the interface, but exact
-            distance-from-place filtering is not enabled until approximate
-            geocoding is added. The current result set still uses privacy-safe
-            discovery data and approximate map regions.
-          </p>
+          {searchNotice ? (
+            <p className="mt-4 rounded-md border border-[#d7cec0] bg-white/70 p-3 text-sm leading-6 text-[#394548]">
+              {searchNotice}
+            </p>
+          ) : null}
         </form>
 
         {errorMessage ? (
@@ -474,7 +556,8 @@ export default async function FindPage({ searchParams }: FindPageProps) {
                 {results.length} results across {markers.length} approximate
                 regions. Scope:{" "}
                 {textValue(filters.searchFrom) || "all visible areas"}; radius:{" "}
-                {radiusLabel}.
+                {radiusLabel}
+                {radiusSearchOrigin ? "; sorted by approximate distance." : "."}
               </p>
             </div>
             <div
@@ -562,6 +645,9 @@ export default async function FindPage({ searchParams }: FindPageProps) {
                       </h3>
                       <p className="mt-2 text-sm leading-6 text-[#394548]">
                         {locationLabel(result)}
+                        {distanceLabel(result, filters)
+                          ? `; ${distanceLabel(result, filters)}`
+                          : ""}
                       </p>
                     </div>
                     <a
@@ -635,6 +721,9 @@ export default async function FindPage({ searchParams }: FindPageProps) {
                           Approximate area:
                         </span>{" "}
                         {locationLabel(result)}
+                        {distanceLabel(result, filters)
+                          ? `; ${distanceLabel(result, filters)}`
+                          : ""}
                       </p>
                       <p>
                         <span className="font-semibold text-[#172023]">

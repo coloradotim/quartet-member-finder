@@ -13,6 +13,7 @@ import {
   parseQuartetListingFormData,
 } from "@/lib/quartets/quartet-listing-form";
 import { distanceUnitForCountry } from "@/lib/location/country-location-defaults";
+import { geocodeApproximateLocation } from "@/lib/location/geocoding";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 function redirectWithListingMessage(
@@ -51,6 +52,10 @@ export async function saveQuartetListing(formData: FormData) {
     );
   }
 
+  const geocodingResult = await geocodeApproximateLocation(values, {
+    storageMode: "permanent",
+  });
+  const geocodedCoordinates = geocodingResult.coordinates;
   const listingPayload = {
     availability: values.availability,
     country_code: values.countryCode,
@@ -60,9 +65,13 @@ export async function saveQuartetListing(formData: FormData) {
     goals: values.goals,
     is_active: true,
     is_visible: values.isVisible,
+    latitude_private: geocodedCoordinates?.latitude ?? null,
     locality: values.locality,
     location_label_public: buildQuartetPublicLocationLabel(values),
-    location_precision: inferQuartetLocationPrecision(values),
+    location_precision: geocodedCoordinates
+      ? "geocoded"
+      : inferQuartetLocationPrecision(values),
+    longitude_private: geocodedCoordinates?.longitude ?? null,
     name: values.name,
     owner_user_id: user.id,
     postal_code_private: values.postalCodePrivate,
