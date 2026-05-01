@@ -114,16 +114,23 @@ export function profileOriginState(row: ProfileOriginRow | null) {
 }
 
 export function profileOriginUnavailableMessage(status: ProfileOriginStatus) {
+  return profileOriginUnavailableMessageFor(status, "My Singer Profile");
+}
+
+export function profileOriginUnavailableMessageFor(
+  status: ProfileOriginStatus,
+  profileName: "My Quartet Profile" | "My Singer Profile",
+) {
   if (status === "missing_profile") {
-    return "Create My Singer Profile with country, region, city, and ZIP/postal code, or switch to a typed search origin.";
+    return `Create ${profileName} with country, region, city, and ZIP/postal code, or search from another location.`;
   }
 
   if (status === "incomplete_location") {
-    return "My Singer Profile needs country, region, city, and ZIP/postal code before it can be used as a search origin. Edit My Singer Profile or switch to a typed search origin.";
+    return `${profileName} needs country, region, city, and ZIP/postal code before it can be used for distance search. Edit ${profileName} or search from another location.`;
   }
 
   if (status === "needs_geocoding") {
-    return "My Singer Profile has location text but does not have saved approximate coordinates yet. Re-save My Singer Profile so the location can be prepared for radius search, or switch to a typed search origin.";
+    return `${profileName} has location text but does not have saved approximate coordinates yet. Re-save ${profileName} so the location can be prepared for distance search, or search from another location.`;
   }
 
   return null;

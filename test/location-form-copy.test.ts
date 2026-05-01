@@ -60,8 +60,9 @@ describe("location and distance form copy", () => {
   });
 
   it("puts the miles/kilometers picker only on Find", () => {
-    expect(findPage).toContain("Distance units");
+    expect(findPage).toContain("Within");
     expect(findPage).toContain("Miles");
+    expect(findPage).not.toContain("Distance units");
     expect(profilePage).not.toContain("Distance units");
     expect(listingPage).not.toContain("Distance units");
     expect(onboardingPage).not.toContain("Distance units");
