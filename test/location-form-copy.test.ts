@@ -16,14 +16,21 @@ const onboardingPage = readFileSync(
 const findPage = readFileSync("app/find/page.tsx", "utf8");
 
 describe("location and distance form copy", () => {
-  it("uses simple country, city, and ZIP/postal code fields", () => {
-    for (const source of [profilePage, listingPage, onboardingPage]) {
+  it("uses simple country, region, city, and ZIP/postal code fields", () => {
+    for (const source of [profilePage, listingPage]) {
       expect(source).toContain("Country");
-      expect(source).toContain("City");
-      expect(source).toContain("ZIP/postal code");
+      expect(source).toContain("locationLabels.region");
+      expect(source).toContain("locationLabels.locality");
+      expect(source).toContain("locationLabels.postalCode");
+      expect(source).toContain('name="region"');
+      expect(source).toContain('name="locality"');
+      expect(source).toContain('name="postalCodePrivate"');
       expect(source).not.toContain("Country code");
-      expect(source).not.toContain("Region/admin");
     }
+    expect(onboardingPage).toContain("Country");
+    expect(onboardingPage).toContain("City");
+    expect(onboardingPage).toContain("ZIP/postal code");
+    expect(onboardingPage).not.toContain("Country code");
   });
 
   it("keeps ZIP/postal code private and approximate", () => {
@@ -32,6 +39,24 @@ describe("location and distance form copy", () => {
     expect(onboardingPage).toContain("not shown publicly");
     expect(profilePage).toContain("approximate area");
     expect(listingPage).toContain("approximate area");
+    expect(profilePage).toContain("No street address is required");
+    expect(listingPage).toContain("No street");
+  });
+
+  it("warns when discoverable profiles have incomplete location fields", () => {
+    const profileAction = readFileSync(
+      "app/(protected)/app/profile/actions.ts",
+      "utf8",
+    );
+    const listingAction = readFileSync(
+      "app/(protected)/app/listings/actions.ts",
+      "utf8",
+    );
+
+    expect(profileAction).toContain("discoverabilityLocationWarning");
+    expect(listingAction).toContain("discoverabilityLocationWarning");
+    expect(profileAction).toContain("Singer profile saved.");
+    expect(listingAction).toContain("Quartet listing saved.");
   });
 
   it("puts the miles/kilometers picker only on Find", () => {

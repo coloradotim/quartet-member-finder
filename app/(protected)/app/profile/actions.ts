@@ -8,6 +8,7 @@ import {
 } from "@/lib/analytics/product-analytics";
 import {
   buildPublicLocationLabel,
+  discoverabilityLocationWarning,
   inferLocationPrecision,
   parseSingerProfileFormData,
 } from "@/lib/profiles/singer-profile-form";
@@ -127,5 +128,11 @@ export async function saveSingerProfile(formData: FormData) {
     },
     { distinctId: pseudonymousAnalyticsUserId(user.id) },
   );
-  redirectWithProfileMessage("message", "Singer profile saved.");
+  const locationWarning = discoverabilityLocationWarning(values);
+  redirectWithProfileMessage(
+    "message",
+    locationWarning
+      ? `Singer profile saved. ${locationWarning}`
+      : "Singer profile saved.",
+  );
 }

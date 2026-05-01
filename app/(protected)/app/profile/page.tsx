@@ -7,6 +7,7 @@ import {
 import {
   countryOptions,
   kilometersToRoundedMiles,
+  locationFieldLabelsForCountry,
 } from "@/lib/location/country-location-defaults";
 import {
   VOICINGS,
@@ -29,6 +30,7 @@ type SingerProfileRow = {
   is_visible: boolean;
   locality: string | null;
   postal_code_private: string | null;
+  region: string | null;
   travel_radius_km: number | null;
 };
 
@@ -78,7 +80,7 @@ export default async function ManageProfilePage({
       ? await supabase
           .from("singer_profiles")
           .select(
-            "id, availability, bio, country_name, display_name, experience_level, goals, is_visible, locality, postal_code_private, travel_radius_km",
+            "id, availability, bio, country_name, display_name, experience_level, goals, is_visible, locality, postal_code_private, region, travel_radius_km",
           )
           .eq("user_id", user.id)
           .maybeSingle<SingerProfileRow>()
@@ -95,6 +97,7 @@ export default async function ManageProfilePage({
   const selectedParts =
     parts?.map((partRow) => `${partRow.voicing}:${partRow.part}`) ?? [];
   const selectedCountry = profile?.country_name ?? "United States";
+  const locationLabels = locationFieldLabelsForCountry(null, selectedCountry);
 
   return (
     <div>
@@ -255,7 +258,7 @@ export default async function ManageProfilePage({
             Used only to place you approximately on the map and support
             location-based search. Your ZIP/postal code is not shown publicly,
             and public discovery shows an approximate area, not your exact
-            location.
+            location. No street address is required.
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
@@ -283,7 +286,19 @@ export default async function ManageProfilePage({
             </label>
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
-                City
+                {locationLabels.region}
+                <span className="font-normal text-[#596466]"> Optional</span>
+              </span>
+              <input
+                className="mt-2 w-full rounded-md border border-[#d7cec0] bg-white px-3 py-2 text-base text-[#172023] shadow-sm outline-none focus:border-[#2f6f73] focus:ring-2 focus:ring-[#2f6f73]/20"
+                defaultValue={fieldValue(profile?.region)}
+                maxLength={120}
+                name="region"
+              />
+            </label>
+            <label className="block">
+              <span className="text-sm font-semibold text-[#172023]">
+                {locationLabels.locality}
                 <span className="font-normal text-[#596466]"> Optional</span>
               </span>
               <input
@@ -295,7 +310,7 @@ export default async function ManageProfilePage({
             </label>
             <label className="block">
               <span className="text-sm font-semibold text-[#172023]">
-                ZIP/postal code
+                {locationLabels.postalCode}
                 <span className="font-normal text-[#596466]"> Optional</span>
               </span>
               <input

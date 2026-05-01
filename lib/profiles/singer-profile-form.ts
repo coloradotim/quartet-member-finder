@@ -138,6 +138,28 @@ export function parseSingerProfileFormData(
   };
 }
 
+export function discoverabilityLocationWarning(
+  values: Pick<
+    SingerProfileFormValues,
+    "countryName" | "isVisible" | "locality" | "postalCodePrivate" | "region"
+  >,
+) {
+  if (!values.isVisible) {
+    return null;
+  }
+
+  if (
+    values.countryName &&
+    values.region &&
+    values.locality &&
+    values.postalCodePrivate
+  ) {
+    return null;
+  }
+
+  return "Discoverability will be limited without country, state/province/region, city, and ZIP/postal code. These are used only for approximate map placement and search; your ZIP/postal code is not shown publicly.";
+}
+
 export function inferLocationPrecision(
   values: Pick<
     SingerProfileFormValues,

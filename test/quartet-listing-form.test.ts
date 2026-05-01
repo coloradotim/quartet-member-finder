@@ -21,6 +21,7 @@ describe("quartet listing form parsing", () => {
       formData([
         ["name", "Harbour Lights"],
         ["countryName", "Canada"],
+        ["region", "Ontario"],
         ["locality", "Toronto"],
         ["postalCodePrivate", "M5V"],
         ["voicing", "TTBB"],
@@ -33,6 +34,7 @@ describe("quartet listing form parsing", () => {
     );
 
     expect(values.countryCode).toBe("CA");
+    expect(values.region).toBe("Ontario");
     expect(values.postalCodePrivate).toBe("M5V");
     expect(values.partsCovered).toEqual([
       { part: "Lead", voicing: "TTBB" },

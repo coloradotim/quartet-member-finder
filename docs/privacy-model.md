@@ -50,8 +50,8 @@ The MVP can be English-only, but location and distance handling should be global
 
 ## Location handling
 
-Users enter a country, city, and ZIP/postal code where useful. Forms avoid
-country-code and admin-area language.
+Users enter country, state/province/region, city/locality, and ZIP/postal code
+where useful. Forms avoid country-code and street-address language.
 
 The app may store normalized location data to support distance search, but public UI should only expose approximate location.
 
@@ -59,9 +59,10 @@ Private geocoded data should be transformed into a public location summary
 before display. Public summaries may contain only locality/city, region when
 available, and country. They must not contain exact latitude, longitude, private
 postal code, formatted private address, or other precise address components.
-Until automatic geocoding is added, country plus city and ZIP/postal code are
-enough for the current approximate map/search approach because the map uses
-country/region anchors and public city/country labels rather than exact pins.
+Until automatic geocoding is added, country, region, city, and ZIP/postal code
+provide useful context for the current approximate map/search approach because
+the map uses country/region anchors and public city/country labels rather than
+exact pins.
 
 Distance helpers may use exact coordinates internally for matching later, but
 public distance display should be rounded and approximate. Find defaults
@@ -250,10 +251,15 @@ can appear in Find results and approximate map discovery. Hidden means it stays
 out of discovery. Filling out one profile does not require publishing it, and
 hiding one profile does not hide the other.
 
-Country on the singer profile or quartet listing drives practical defaults such
-as miles vs kilometers and country-aware labels like ZIP code, postcode, state,
-province, or region where practical. The app should keep those labels helpful
-without requiring strict international address validation.
+Singer profile and quartet profile location forms ask for country,
+state/province/region, city/locality, and ZIP/postal code. The fields remain
+optional for saving drafts, but if a user makes a profile discoverable with
+important location fields missing, the app warns that map placement and
+location-based search may be limited. Country on the singer profile or quartet
+listing drives practical defaults such as miles vs kilometers and country-aware
+labels like ZIP code, postcode, state, province, or region where practical. The
+app should keep those labels helpful without requiring strict international
+address validation or a street address.
 
 ## Abuse and safety considerations
 

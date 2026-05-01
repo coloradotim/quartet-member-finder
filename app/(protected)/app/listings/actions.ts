@@ -6,6 +6,7 @@ import {
   captureProductEvent,
   pseudonymousAnalyticsUserId,
 } from "@/lib/analytics/product-analytics";
+import { discoverabilityLocationWarning } from "@/lib/profiles/singer-profile-form";
 import {
   buildQuartetPublicLocationLabel,
   inferQuartetLocationPrecision,
@@ -140,5 +141,11 @@ export async function saveQuartetListing(formData: FormData) {
     },
     { distinctId: pseudonymousAnalyticsUserId(user.id) },
   );
-  redirectWithListingMessage("message", "Quartet listing saved.");
+  const locationWarning = discoverabilityLocationWarning(values);
+  redirectWithListingMessage(
+    "message",
+    locationWarning
+      ? `Quartet listing saved. ${locationWarning}`
+      : "Quartet listing saved.",
+  );
 }

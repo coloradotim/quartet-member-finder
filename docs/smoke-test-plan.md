@@ -91,6 +91,7 @@ validation.
    - parts: TTBB Lead and SATB Soprano / Mixed Tenor
    - goals: Pickup and Learning
    - country: United Kingdom
+   - region/county/state: England
    - city: Manchester
    - ZIP/postal code: `M1 TEST`
    - travel radius: `25` miles
@@ -115,6 +116,7 @@ validation.
    - needed parts: TTBB Lead and Baritone
    - goals: Regular Rehearsal and Contest
    - country: Ireland
+   - region/county/state: County Dublin
    - city: Dublin
    - ZIP/postal code: `D02 TEST`
    - travel radius: `30` miles

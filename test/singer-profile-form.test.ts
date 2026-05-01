@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildPublicLocationLabel,
+  discoverabilityLocationWarning,
   inferLocationPrecision,
   parseSingerProfileFormData,
 } from "@/lib/profiles/singer-profile-form";
@@ -35,6 +36,7 @@ describe("singer profile form parsing", () => {
       formData([
         ["displayName", "Priya"],
         ["countryName", "United Kingdom"],
+        ["region", "England"],
         ["locality", "Manchester"],
         ["postalCodePrivate", "M1 1AE"],
         ["parts", "TTBB:Lead"],
@@ -45,6 +47,7 @@ describe("singer profile form parsing", () => {
     );
 
     expect(values.countryCode).toBe("GB");
+    expect(values.region).toBe("England");
     expect(values.postalCodePrivate).toBe("M1 1AE");
     expect(values.parts).toEqual([
       { part: "Lead", voicing: "TTBB" },
@@ -84,6 +87,38 @@ describe("singer profile form parsing", () => {
     expect(buildPublicLocationLabel(values)).toBe("Toronto, Canada area");
     expect(buildPublicLocationLabel(values)).not.toContain("M5V");
     expect(inferLocationPrecision(values)).toBe("postal_code");
+  });
+
+  it("warns when discoverable profiles have incomplete location", () => {
+    const hiddenValues = parseSingerProfileFormData(
+      formData([
+        ["displayName", "Ari"],
+        ["countryName", "Canada"],
+      ]),
+    );
+    const visibleValues = parseSingerProfileFormData(
+      formData([
+        ["displayName", "Ari"],
+        ["countryName", "Canada"],
+        ["isVisible", "on"],
+      ]),
+    );
+    const completeVisibleValues = parseSingerProfileFormData(
+      formData([
+        ["displayName", "Ari"],
+        ["countryName", "Canada"],
+        ["region", "Ontario"],
+        ["locality", "Toronto"],
+        ["postalCodePrivate", "M5V"],
+        ["isVisible", "on"],
+      ]),
+    );
+
+    expect(discoverabilityLocationWarning(hiddenValues)).toBeNull();
+    expect(discoverabilityLocationWarning(visibleValues)).toContain(
+      "Discoverability will be limited",
+    );
+    expect(discoverabilityLocationWarning(completeVisibleValues)).toBeNull();
   });
 
   it("requires a display name", () => {
