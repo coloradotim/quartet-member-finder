@@ -153,7 +153,8 @@ The MVP contact flow should:
 1. Allow a signed-in user to send a short message to a singer or quartet listing.
 2. Notify the recipient by email using Resend.
 3. Avoid exposing the recipient’s email address to the sender.
-4. Allow the recipient to decide whether to reply or share direct contact information.
+4. Let sender and recipient read the request and replies in signed-in Messages.
+5. Allow either participant to decide whether to share direct contact information.
 
 Do not publicly display phone numbers or email addresses by default.
 
@@ -168,8 +169,9 @@ request may be stored for audit but email delivery is deferred.
 
 Contact notifications should not reveal the sender’s direct email address by
 default. They should tell the recipient a signed-in user sent the request and
-allow the recipient to decide whether to respond or share direct contact
-information later.
+link through sign-in to the message detail page. Full message and reply bodies
+should stay behind authenticated app access by default. Replies are stored with
+the original request and should be visible only to the two contact participants.
 
 ## Feedback model
 

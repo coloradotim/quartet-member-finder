@@ -14,6 +14,7 @@ const appTables = [
   "quartet_listings",
   "quartet_listing_parts",
   "contact_requests",
+  "contact_request_replies",
   "feedback_submissions",
 ];
 
@@ -132,5 +133,21 @@ describe("initial Supabase schema migration", () => {
     expect(migration).toContain(
       "quartet_listing_parts.voicing || ':' || quartet_listing_parts.part",
     );
+  });
+
+  it("adds participant-only replies for app-mediated messages", () => {
+    expect(migration).toContain("create table public.contact_request_replies");
+    expect(migration).toContain("contact_request_replies_mark_responded");
+    expect(migration).toContain(
+      'create policy "Contact participants can read replies"',
+    );
+    expect(migration).toContain(
+      'create policy "Contact participants can create replies"',
+    );
+    expect(migration).toContain(
+      "grant select, insert on table public.contact_request_replies",
+    );
+    expect(migration).toContain("recipient_read_at");
+    expect(migration).toContain("sender_read_at");
   });
 });

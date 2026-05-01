@@ -17,6 +17,7 @@ It includes these data areas:
 - `quartet_listings`: incomplete quartet listings owned by one authenticated user.
 - `quartet_listing_parts`: voicing-aware parts currently covered or needed by a quartet.
 - `contact_requests`: app-mediated first-contact messages.
+- `contact_request_replies`: app-mediated replies attached to contact requests.
 - `feedback_submissions`: private authenticated-user feedback from the help page.
 - `singer_discovery_profiles`: privacy-safe singer discovery view.
 - `quartet_discovery_listings`: privacy-safe quartet discovery view.
@@ -132,6 +133,7 @@ RLS should enforce:
 - private fields are not exposed in public discovery views
 - contact requests require an authenticated sender
 - recipients can read contact requests addressed to them or to listings they own
+- contact request participants can read and reply inside their own message thread
 - feedback submissions require an authenticated submitter and are not readable by
   other regular users
 
@@ -170,6 +172,14 @@ After the insert, server-only service-role access may read the resolved
 `recipient_user_id` and look up the recipient auth email for a Resend
 notification. Successful notification delivery may update the request status to
 `delivered`; requests remain auditable even if email configuration is missing.
+
+The signed-in Messages area reads `contact_requests` through participant access
+and stores replies in `contact_request_replies`. A reply must be inserted by the
+authenticated sender and must reference a contact request where that user is the
+original sender or resolved recipient. Reply inserts mark the parent contact
+request as `responded`. Notification email for first-contact messages and
+replies links users back through sign-in to `/app/messages/[id]`; full message
+and reply bodies stay behind authenticated app access.
 
 Help-page feedback inserts are authenticated-only. The server action writes
 `feedback_submissions` with the authenticated user ID and, when available, the
@@ -272,6 +282,18 @@ The MVP contact flow should use app-mediated contact with Resend notifications.
 - message body
 - status
 - created and updated timestamps
+- optional sender/recipient read timestamps
+
+`contact_request_replies` stores lightweight app-mediated replies:
+
+- parent contact request
+- reply sender user
+- message body
+- notification status
+- created timestamp
+
+RLS lets only contact participants read replies and lets only participants add
+replies to their own contact requests.
 
 The app applies a basic sender-side rate limit before insert: five contact
 requests per authenticated sender per hour. Database-side rate limiting or abuse

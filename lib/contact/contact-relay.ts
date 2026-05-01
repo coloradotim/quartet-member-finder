@@ -21,6 +21,13 @@ export type ContactNotification = {
   target: ContactTarget;
 };
 
+export type ContactReplyNotification = {
+  recipientEmail: string;
+  requestId: string;
+  replierDisplayName: string;
+  target: ContactTarget;
+};
+
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -98,12 +105,14 @@ export function getContactRelayConfig(): ContactRelayConfig | null {
 }
 
 export function buildContactNotificationEmail({
-  message,
   requestId,
   senderDisplayName,
   target,
 }: Omit<ContactNotification, "recipientEmail">) {
   const appUrl = getAppUrl();
+  const messageUrl = `${appUrl}/sign-in?next=${encodeURIComponent(
+    `/app/messages/${requestId}`,
+  )}`;
   const targetType =
     target.kind === "singer" ? "singer profile" : "quartet listing";
   const subject = `New Quartet Member Finder contact request for ${target.name}`;
@@ -112,13 +121,38 @@ export function buildContactNotificationEmail({
     "",
     `From: ${senderDisplayName}`,
     "",
-    "Message:",
-    message,
-    "",
     `Request ID: ${requestId}`,
-    `Sign in to Quartet Member Finder to decide whether to respond: ${appUrl}/app`,
+    `Sign in to Quartet Member Finder to read and reply: ${messageUrl}`,
     "",
     "Your email address was not shown to the sender.",
+    "The full message is kept behind sign-in.",
+  ].join("\n");
+
+  return { subject, text };
+}
+
+export function buildContactReplyNotificationEmail({
+  requestId,
+  replierDisplayName,
+  target,
+}: ContactReplyNotification) {
+  const appUrl = getAppUrl();
+  const messageUrl = `${appUrl}/sign-in?next=${encodeURIComponent(
+    `/app/messages/${requestId}`,
+  )}`;
+  const targetType =
+    target.kind === "singer" ? "singer profile" : "quartet listing";
+  const subject = `New Quartet Member Finder reply for ${target.name}`;
+  const text = [
+    `You have a new reply about the ${targetType}, "${target.name}".`,
+    "",
+    `From: ${replierDisplayName}`,
+    "",
+    `Request ID: ${requestId}`,
+    `Sign in to Quartet Member Finder to read and reply: ${messageUrl}`,
+    "",
+    "Private email addresses were not shown through the app.",
+    "The full reply is kept behind sign-in.",
   ].join("\n");
 
   return { subject, text };
@@ -145,5 +179,31 @@ export async function sendContactNotification(
 
   if (!response.ok) {
     throw new Error(`Resend notification failed with ${response.status}.`);
+  }
+}
+
+export async function sendContactReplyNotification(
+  config: ContactRelayConfig,
+  notification: ContactReplyNotification,
+) {
+  const { subject, text } = buildContactReplyNotificationEmail(notification);
+  const response = await fetch("https://api.resend.com/emails", {
+    body: JSON.stringify({
+      from: config.fromEmail,
+      subject,
+      text,
+      to: notification.recipientEmail,
+    }),
+    headers: {
+      Authorization: `Bearer ${config.apiKey}`,
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Resend reply notification failed with ${response.status}.`,
+    );
   }
 }

@@ -7,6 +7,7 @@ describe("signed-in navigation", () => {
       "My Singer Profile",
       "My Quartet Profile",
       "Find",
+      "Messages",
       "Help",
     ]);
   });
@@ -16,6 +17,7 @@ describe("signed-in navigation", () => {
       { href: "/app/profile", label: "My Singer Profile" },
       { href: "/app/listings", label: "My Quartet Profile" },
       { href: "/find", label: "Find" },
+      { href: "/app/messages", label: "Messages" },
       { href: "/help", label: "Help" },
     ]);
     expect(signedInNavigationLinks.map((link) => link.href)).not.toContain(

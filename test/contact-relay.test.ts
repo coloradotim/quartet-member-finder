@@ -4,6 +4,7 @@ import {
   CONTACT_RATE_LIMIT_COUNT,
   CONTACT_RATE_LIMIT_WINDOW_MINUTES,
   buildContactNotificationEmail,
+  buildContactReplyNotificationEmail,
   contactRateLimitWindowStart,
   getContactRelayConfig,
   normalizeReturnTo,
@@ -73,9 +74,30 @@ describe("contact relay helpers", () => {
     });
 
     expect(subject).toContain("Chord Harbor");
-    expect(text).toContain("We are looking for a bass.");
+    expect(text).toContain("/sign-in?next=%2Fapp%2Fmessages%2Frequest-1");
+    expect(text).toContain("The full message is kept behind sign-in.");
     expect(text).toContain("Your email address was not shown to the sender.");
+    expect(text).not.toContain("We are looking for a bass.");
     expect(text).not.toContain("@example.com");
+  });
+
+  it("builds reply notifications that keep reply content behind sign-in", () => {
+    const { subject, text } = buildContactReplyNotificationEmail({
+      recipientEmail: "sender@example.com",
+      requestId: "request-1",
+      replierDisplayName: "A signed-in Quartet Member Finder user",
+      target: {
+        id: "target-1",
+        kind: "singer",
+        name: "Avery Singer",
+      },
+    });
+
+    expect(subject).toContain("Avery Singer");
+    expect(text).toContain("new reply");
+    expect(text).toContain("/sign-in?next=%2Fapp%2Fmessages%2Frequest-1");
+    expect(text).toContain("The full reply is kept behind sign-in.");
+    expect(text).not.toContain("sender@example.com");
   });
 
   it("reads Resend configuration only from server environment", () => {

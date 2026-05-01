@@ -12,6 +12,10 @@ export const signedInNavigationLinks = [
     label: "Find",
   },
   {
+    href: "/app/messages",
+    label: "Messages",
+  },
+  {
     href: "/help",
     label: "Help",
   },
