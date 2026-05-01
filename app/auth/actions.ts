@@ -47,6 +47,12 @@ export async function signInWithEmail(formData: FormData) {
     redirectWithMessage("/sign-in", "error", error.message);
   }
 
+  await captureProductEvent("sign_in_started", {
+    route: "/sign-in",
+    route_area: "auth",
+    status: "sent",
+  });
+
   redirect(
     `/sign-in?email=${encodeURIComponent(email)}&next=${encodeURIComponent(
       safeNext,
@@ -113,6 +119,15 @@ export async function verifyEmailOtp(formData: FormData) {
     {
       route: "/sign-in",
       route_area: "auth",
+    },
+    { distinctId: pseudonymousAnalyticsUserId(user.id) },
+  );
+  await captureProductEvent(
+    "sign_in_completed",
+    {
+      route: "/sign-in",
+      route_area: "auth",
+      status: "verified",
     },
     { distinctId: pseudonymousAnalyticsUserId(user.id) },
   );

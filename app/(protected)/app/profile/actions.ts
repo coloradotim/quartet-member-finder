@@ -62,6 +62,11 @@ export async function saveSingerProfile(formData: FormData) {
     storageMode: "permanent",
   });
   const geocodedCoordinates = geocodingResult.coordinates;
+  const { data: existingProfile } = await supabase
+    .from("singer_profiles")
+    .select("is_visible")
+    .eq("user_id", user.id)
+    .maybeSingle<{ is_visible: boolean | null }>();
 
   const { data: profile, error: profileError } = await supabase
     .from("singer_profiles")
@@ -137,6 +142,22 @@ export async function saveSingerProfile(formData: FormData) {
     },
     { distinctId: pseudonymousAnalyticsUserId(user.id) },
   );
+  if (
+    existingProfile &&
+    existingProfile.is_visible !== null &&
+    existingProfile.is_visible !== values.isVisible
+  ) {
+    await captureProductEvent(
+      "singer_profile_visibility_changed",
+      {
+        is_visible: values.isVisible,
+        route: "/app/profile",
+        route_area: "signed_in_app",
+        visibility_enabled: values.isVisible,
+      },
+      { distinctId: pseudonymousAnalyticsUserId(user.id) },
+    );
+  }
   const locationWarning = discoverabilityLocationWarning(values);
   redirectWithProfileMessage(
     "message",

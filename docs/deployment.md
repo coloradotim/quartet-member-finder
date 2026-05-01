@@ -489,7 +489,9 @@ a non-default PostHog region.
 The app sends only allowlisted privacy-safe product events through
 `/api/analytics` or trusted server actions. Do not configure session replay,
 autocapture of form fields, advertising pixels, or direct user identification
-without a separate privacy review and documentation update.
+without a separate privacy review and documentation update. Event properties
+must stay limited to coarse categories, counts, route areas, normalized route
+paths, booleans, and generic statuses.
 
 ## Production readiness checklist
 

@@ -201,8 +201,11 @@ internal app endpoint, and server actions send high-level funnel events after
 successful actions.
 
 Allowed analytics properties are intentionally narrow, such as route area,
-public route path, result counts, filter-presence booleans, target kind,
-visibility enabled flags, generic status, feedback type, and onboarding choice.
+public route path, result counts, filter-presence booleans, distance unit,
+search origin type, target kind, participant role, reply count, visibility
+enabled flags, generic status, feedback type, report category, and onboarding
+choice. Route values must not include query strings or hash fragments, and
+ID-like route segments are normalized before capture.
 
 Analytics must not send:
 
@@ -218,6 +221,10 @@ Analytics must not send:
 Signed-in server events may use a pseudonymous hash of the authenticated user ID
 so funnel steps can be understood without identifying users by direct personal
 information.
+
+New analytics events must be added through the event/property allowlist in
+`lib/analytics/product-analytics.ts`, covered by tests, and documented before
+they are used by app code.
 
 ## Onboarding model
 

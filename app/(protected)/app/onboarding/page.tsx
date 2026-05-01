@@ -1,5 +1,9 @@
 import { redirect } from "next/navigation";
 import { completeOnboarding } from "@/app/(protected)/app/onboarding/actions";
+import {
+  captureProductEvent,
+  pseudonymousAnalyticsUserId,
+} from "@/lib/analytics/product-analytics";
 import { onboardingChoices } from "@/lib/onboarding/app-onboarding";
 import {
   ensureAccountProfileForOnboarding,
@@ -54,6 +58,15 @@ export default async function OnboardingPage({
   if (onboardingIsDone(onboardingStatus)) {
     redirect("/app");
   }
+
+  await captureProductEvent(
+    "onboarding_viewed",
+    {
+      route: "/app/onboarding",
+      route_area: "signed_in_app",
+    },
+    { distinctId: pseudonymousAnalyticsUserId(user.id) },
+  );
 
   const { data: accountProfile } = await supabase
     .from("account_profiles")

@@ -11,6 +11,9 @@ describe("product analytics helpers", () => {
   it("only accepts allowlisted analytics events", () => {
     expect(isProductAnalyticsEvent("analytics_client_ready")).toBe(true);
     expect(isProductAnalyticsEvent("app_route_viewed")).toBe(true);
+    expect(isProductAnalyticsEvent("find_searched")).toBe(true);
+    expect(isProductAnalyticsEvent("message_replied")).toBe(true);
+    expect(isProductAnalyticsEvent("sign_in_started")).toBe(true);
     expect(isProductAnalyticsEvent("user_logged_in")).toBe(true);
     expect(isProductAnalyticsEvent("contact_request_submitted")).toBe(true);
     expect(isProductAnalyticsEvent("profile_bio_changed")).toBe(false);
@@ -22,19 +25,32 @@ describe("product analytics helpers", () => {
         email: "singer@example.com",
         feedback_type: "bug",
         has_country: true,
+        has_radius_filter: true,
         has_locality: false,
         latitude_private: 40.5,
         message_body: "private message",
-        route: "/help",
+        recipient_user_id: "123e4567-e89b-12d3-a456-426614174000",
+        route: "/help?email=singer@example.com#private",
         postal_code_private: "M1 TEST",
         result_count: 2,
       }),
     ).toEqual({
       feedback_type: "bug",
       has_country: true,
+      has_radius_filter: true,
       has_locality: false,
       route: "/help",
       result_count: 2,
+    });
+  });
+
+  it("normalizes id-like route segments before capture", () => {
+    expect(
+      sanitizeAnalyticsProperties({
+        route: "/app/messages/123e4567-e89b-12d3-a456-426614174000",
+      }),
+    ).toEqual({
+      route: "/app/messages/[id]",
     });
   });
 
