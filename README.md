@@ -1,30 +1,41 @@
 # Quartet Member Finder
 
-Quartet Member Finder helps barbershop singers and incomplete quartets find each other.
+Quartet Member Finder helps barbershop singers and incomplete or prospective
+quartets find each other without turning discovery into a public social network.
+The app is built around practical, privacy-conscious introductions: signed-in
+discovery, approximate location, app-mediated Messages, and independent profile
+visibility controls.
 
-The app is intended to support privacy-conscious discovery, approximate location search, singer profiles, quartet listings, and safe first contact between people who may want to sing together.
+## Product Model
+
+One account can support two optional presences:
+
+- **My Singer Profile** represents the signed-in user personally as a singer.
+- **My Quartet Profile** represents a quartet, incomplete quartet, or
+  prospective quartet the user represents.
+
+Users can fill out either profile, both profiles, or neither while getting
+oriented. Each profile has its own visibility setting, so filling out a profile
+does not automatically make it discoverable.
+
+Discovery requires sign-in. Find combines filters, approximate radius search,
+privacy-safe map context, and result cards for singer profiles and quartet
+openings. First contact happens through Messages; private email addresses and
+phone numbers are not shown in discovery by default.
 
 ## Stack
 
 - Next.js App Router
 - TypeScript
 - Tailwind CSS
-- ESLint and Prettier
-- Vercel deployments from GitHub
+- Supabase Auth/Postgres with Row Level Security
+- Resend transactional email
+- Mapbox for interactive discovery maps and server-side approximate geocoding
 - Vitest for unit tests
-- GitHub Actions for CI
-- Planned: Supabase Auth/Postgres/Row Level Security
-- Planned: Resend transactional email
+- ESLint and Prettier
+- GitHub Actions CI and Vercel deployment
 
-## Product goals
-
-- Help individual singers publish enough information to be found by compatible quartets or other singers.
-- Help incomplete quartets advertise what parts and commitment level they are looking for.
-- Support map/list discovery without exposing exact home locations.
-- Provide a safe app-mediated contact flow before personal contact details are shared.
-- Keep the experience friendly, practical, and useful for the barbershop community.
-
-## Local development path
+## Local Development
 
 Use this local repo path for Codex work:
 
@@ -32,13 +43,14 @@ Use this local repo path for Codex work:
 /Users/timpeterson/Documents/Codex/quartet-member-finder
 ```
 
-## Local setup
-
 Install dependencies:
 
 ```bash
 npm install
 ```
+
+Copy `.env.example` to `.env.local` and fill in local service values. Keep real
+secrets out of source control.
 
 Start the development server:
 
@@ -46,7 +58,7 @@ Start the development server:
 npm run dev
 ```
 
-Validate the project:
+Core validation commands:
 
 ```bash
 npm run lint
@@ -56,38 +68,30 @@ npm run format:check
 npm run build
 ```
 
-Copy `.env.example` to `.env.local` when configuring local services. Keep real
-secrets out of source control.
+## Key Docs
 
-Testing expectations and the current unit-test structure are documented in
-`docs/testing.md`.
+- `AGENTS.md` captures agent workflow, product guardrails, privacy rules, and
+  repository expectations.
+- `docs/barbershop-context.md` captures durable barbershop/domain context for
+  future contributors and Codex work.
+- `docs/supabase-contract.md` documents schema, RLS, discovery views, contact,
+  reporting, and privacy expectations.
+- `docs/privacy-model.md` documents approximate location, contact privacy,
+  reporting, and safety boundaries.
+- `docs/deployment.md` documents Vercel, Supabase, Resend, Mapbox, domain, and
+  production deployment setup.
+- `docs/environment.md` lists required public and server-only environment
+  variables.
+- `docs/smoke-test-plan.md` and `docs/launch-readiness.md` describe manual
+  verification and launch readiness.
+- `docs/admin-moderation.md` documents report review, message blocking,
+  permanent block, and manual deletion process.
+- Public user-facing Help and Privacy copy lives in `lib/content/public-pages.ts`
+  and renders at `/help` and `/privacy`.
 
-Local and staging demo data is documented in `docs/seed-data.md`; the seed file
-is intentionally opt-in and must not be run against production.
+## Workflow
 
-Manual launch and deployment validation steps are documented in
-`docs/smoke-test-plan.md`.
-
-The final production-readiness and privacy launch checklist is documented in
-`docs/launch-readiness.md`.
-
-Privacy-safe PostHog event capture and launch dashboard setup are documented in
-`docs/posthog-analytics.md`.
-
-Vercel, Supabase, Resend, Namecheap DNS, and `quartetmemberfinder.org`
-deployment steps are documented in `docs/deployment.md`.
-
-## Repository workflow
-
-Normal work should happen on short-lived feature branches and merge to `main`
-through pull requests. The protected `main` branch requires the `guardrails`,
-`validate`, and `Vercel` checks before merge.
-
-Squash merge is the preferred merge strategy, auto-merge may be used once a PR
-is ready and checks are expected to pass, and feature branches should be deleted
-after merge.
-
-## Early project notes
-
-Project context, privacy expectations, workflow rules, and implementation
-guardrails are captured in `AGENTS.md` and the `docs/` folder.
+Normal work happens on short-lived feature branches and merges to `main` through
+pull requests. The protected `main` branch expects `guardrails`, `validate`, and
+`Vercel` checks. Squash merge is preferred, and auto-merge may be enabled once a
+PR is ready and checks are expected to pass.
