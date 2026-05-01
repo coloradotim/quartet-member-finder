@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { ContactRequestForm } from "@/components/contact/contact-request-form";
 import { DiscoveryModeNav } from "@/components/discovery/discovery-mode-nav";
-import { PublicSiteHeader } from "@/components/navigation/public-site-header";
+import { SignedInSiteHeader } from "@/components/navigation/signed-in-site-header";
 import { captureProductEvent } from "@/lib/analytics/product-analytics";
+import { requireAuthenticatedDiscovery } from "@/lib/auth/require-authenticated-discovery";
 import { contactStatusMessage } from "@/lib/contact/contact-status";
 import {
   approximateLocationLabel,
@@ -15,7 +16,6 @@ import {
   voicingPartValue,
 } from "@/lib/parts/voicings";
 import { parseDiscoveryFilters } from "@/lib/search/discovery-filters";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type QuartetDiscoveryRow = {
   availability: string | null;
@@ -122,62 +122,58 @@ export default async function QuartetSearchPage({
   const filters = parseDiscoveryFilters(params);
   const returnTo = returnToPath(params);
   const contactStatus = contactStatusMessage(params.contact);
-  const supabase = await createSupabaseServerClient();
+  const supabase = await requireAuthenticatedDiscovery("/quartets", params);
 
   let quartets: QuartetDiscoveryRow[] = [];
   let errorMessage: string | null = null;
 
-  if (!supabase) {
-    errorMessage = "Supabase is not configured for discovery search yet.";
+  let query = supabase
+    .from("quartet_discovery_listings")
+    .select(
+      "id, name, description, parts_covered, parts_needed, goals, experience_level, availability, travel_radius_km, preferred_distance_unit, country_name, region, locality, location_label_public",
+    )
+    .order("updated_at", { ascending: false });
+
+  if (filters.country) {
+    query = query.ilike("country_name", `%${filters.country}%`);
+  }
+
+  if (filters.region) {
+    query = query.ilike("region", `%${filters.region}%`);
+  }
+
+  if (filters.locality) {
+    query = query.ilike("locality", `%${filters.locality}%`);
+  }
+
+  if (filters.part) {
+    query = query.contains("parts_needed", [
+      voicingPartValue(filters.part.voicing, filters.part.part),
+    ]);
+  }
+
+  if (filters.goal) {
+    query = query.contains("goals", [filters.goal]);
+  }
+
+  if (filters.experience) {
+    query = query.ilike("experience_level", `%${filters.experience}%`);
+  }
+
+  if (filters.availability) {
+    query = query.ilike("availability", `%${filters.availability}%`);
+  }
+
+  if (filters.travelRadiusKm != null) {
+    query = query.gte("travel_radius_km", filters.travelRadiusKm);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    errorMessage = error.message;
   } else {
-    let query = supabase
-      .from("quartet_discovery_listings")
-      .select(
-        "id, name, description, parts_covered, parts_needed, goals, experience_level, availability, travel_radius_km, preferred_distance_unit, country_name, region, locality, location_label_public",
-      )
-      .order("updated_at", { ascending: false });
-
-    if (filters.country) {
-      query = query.ilike("country_name", `%${filters.country}%`);
-    }
-
-    if (filters.region) {
-      query = query.ilike("region", `%${filters.region}%`);
-    }
-
-    if (filters.locality) {
-      query = query.ilike("locality", `%${filters.locality}%`);
-    }
-
-    if (filters.part) {
-      query = query.contains("parts_needed", [
-        voicingPartValue(filters.part.voicing, filters.part.part),
-      ]);
-    }
-
-    if (filters.goal) {
-      query = query.contains("goals", [filters.goal]);
-    }
-
-    if (filters.experience) {
-      query = query.ilike("experience_level", `%${filters.experience}%`);
-    }
-
-    if (filters.availability) {
-      query = query.ilike("availability", `%${filters.availability}%`);
-    }
-
-    if (filters.travelRadiusKm != null) {
-      query = query.gte("travel_radius_km", filters.travelRadiusKm);
-    }
-
-    const { data, error } = await query;
-
-    if (error) {
-      errorMessage = error.message;
-    } else {
-      quartets = (data ?? []) as QuartetDiscoveryRow[];
-    }
+    quartets = (data ?? []) as QuartetDiscoveryRow[];
   }
 
   const { filterCount, flags } = filterAnalyticsProperties(filters);
@@ -195,7 +191,7 @@ export default async function QuartetSearchPage({
 
   return (
     <>
-      <PublicSiteHeader />
+      <SignedInSiteHeader />
       <main className="mx-auto w-full max-w-6xl px-6 py-12">
         <div>
           <h1 className="mt-4 text-3xl font-bold text-[#172023]">

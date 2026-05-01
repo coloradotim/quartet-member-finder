@@ -43,7 +43,7 @@ export const publicHelpSections = [
   },
   {
     body: [
-      "Public results show approximate places, such as a city or regional area. They do not show exact home addresses, exact coordinates, private postal codes, email addresses, or phone numbers.",
+      "Discovery results show approximate places, such as a city or regional area. They do not show exact home addresses, exact coordinates, private postal codes, email addresses, or phone numbers.",
       "Location fields are designed for a global barbershop community, so they are not limited to US ZIP codes or US states.",
     ],
     heading: "Location And Privacy",

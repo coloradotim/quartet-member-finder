@@ -97,7 +97,7 @@ Singer profiles and quartet listings keep their own public
 display/location/travel details for discovery rows, and save actions infer
 `preferred_distance_unit` from country.
 
-The public discovery routes are:
+The signed-in discovery routes are:
 
 - `/find`, backed by both discovery views for consolidated filters, map, and
   results table
@@ -109,6 +109,10 @@ These routes may filter on public location fields, voicing-aware part, goals,
 experience/commitment, availability, and travel willingness. They should not
 read private base-table location or contact fields.
 
+These routes require authentication before reading discovery views. The views
+still expose only privacy-safe public fields, but anonymous visitors are
+redirected to sign in before browsing singers, quartet openings, or map results.
+
 ## Row Level Security expectations
 
 RLS should enforce:
@@ -117,7 +121,7 @@ RLS should enforce:
 - users can update/delete only their own singer profile
 - users can create quartet listings they own
 - users can update/delete only quartet listings they own
-- public discovery reads return only active/visible listings and profiles
+- discovery reads return only active/visible listings and profiles
 - private fields are not exposed in public discovery views
 - contact requests require an authenticated sender
 - recipients can read contact requests addressed to them or to listings they own
