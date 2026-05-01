@@ -1,4 +1,5 @@
 import { ContactRequestForm } from "@/components/contact/contact-request-form";
+import { InteractiveDiscoveryMap } from "@/components/discovery/interactive-discovery-map";
 import { SignedInSiteHeader } from "@/components/navigation/signed-in-site-header";
 import { captureProductEvent } from "@/lib/analytics/product-analytics";
 import { requireAuthenticatedDiscovery } from "@/lib/auth/require-authenticated-discovery";
@@ -169,18 +170,6 @@ function markerSummary(marker: { names: string[] }) {
   return remainingCount > 0
     ? `${previewNames}, +${remainingCount} more`
     : previewNames;
-}
-
-function markerKindLabel(marker: { count: number; kinds: string[] }) {
-  if (marker.kinds.includes("quartet") && marker.kinds.includes("singer")) {
-    return "results";
-  }
-
-  if (marker.kinds[0] === "quartet") {
-    return marker.count === 1 ? "quartet opening" : "quartet openings";
-  }
-
-  return marker.count === 1 ? "singer" : "singers";
 }
 
 function returnToPath(params: Record<string, string | string[] | undefined>) {
@@ -544,59 +533,15 @@ export default async function FindPage({ searchParams }: FindPageProps) {
         ) : null}
 
         <section className="mt-6 grid gap-6 xl:grid-cols-[minmax(22rem,0.9fr)_minmax(0,1.1fr)]">
-          <section
-            aria-labelledby="map-heading"
-            className="overflow-hidden rounded-lg border border-[#d7cec0] bg-[#e7f0eb]"
-          >
-            <div className="border-b border-[#d7cec0] bg-white/85 px-4 py-3">
-              <h2 className="font-bold text-[#172023]" id="map-heading">
-                Approximate map scope
-              </h2>
-              <p className="mt-1 text-sm text-[#394548]">
-                {results.length} results across {markers.length} approximate
-                regions. Scope:{" "}
-                {textValue(filters.searchFrom) || "all visible areas"}; radius:{" "}
-                {radiusLabel}
-                {radiusSearchOrigin ? "; sorted by approximate distance." : "."}
-              </p>
-            </div>
-            <div
-              aria-label="Privacy-safe discovery map"
-              className="relative min-h-[460px] bg-[radial-gradient(circle_at_22%_38%,#c5d7c8_0_9%,transparent_10%),radial-gradient(circle_at_49%_38%,#c5d7c8_0_8%,transparent_9%),radial-gradient(circle_at_55%_55%,#c5d7c8_0_13%,transparent_14%),radial-gradient(circle_at_77%_63%,#c5d7c8_0_9%,transparent_10%),linear-gradient(135deg,#e7f0eb,#d9e8e1)]"
-              role="img"
-            >
-              {markers.length === 0 ? (
-                <div className="absolute inset-x-6 top-8 rounded-lg border border-[#d7cec0] bg-white/90 p-5 text-sm leading-6 text-[#394548] shadow-sm">
-                  No approximate map regions match. Try increasing the radius,
-                  clearing part filters, or changing what you are looking for.
-                </div>
-              ) : null}
-
-              {markers.map((marker) => (
-                <a
-                  className="absolute max-w-[10rem] -translate-x-1/2 -translate-y-1/2 rounded-md border border-[#174b4f]/30 bg-white px-3 py-2 text-sm shadow-sm [overflow-wrap:anywhere] hover:border-[#174b4f] focus:outline-none focus:ring-2 focus:ring-[#174b4f]"
-                  href={`#result-${marker.resultIds[0]}`}
-                  key={marker.id}
-                  style={{
-                    left: `${marker.xPercent}%`,
-                    top: `${marker.yPercent}%`,
-                  }}
-                >
-                  <span className="block font-bold text-[#172023]">
-                    {marker.label}
-                  </span>
-                  <span className="mt-1 block text-[#394548]">
-                    {marker.count} {markerKindLabel(marker)}
-                  </span>
-                  {marker.parts.length > 0 ? (
-                    <span className="mt-1 block text-[#596466]">
-                      {partsLabel(marker.parts)}
-                    </span>
-                  ) : null}
-                </a>
-              ))}
-            </div>
-          </section>
+          <InteractiveDiscoveryMap
+            emptyMessage="No approximate map regions match. Try increasing the radius, clearing part filters, or changing what you are looking for."
+            markers={markers}
+            resultLabel="Interactive map scope"
+            scopeLabel={`${textValue(filters.searchFrom) || "all visible areas"}; radius: ${radiusLabel}${
+              radiusSearchOrigin ? "; sorted by approximate distance" : ""
+            }`}
+            totalResults={results.length}
+          />
 
           <section aria-labelledby="results-heading">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">

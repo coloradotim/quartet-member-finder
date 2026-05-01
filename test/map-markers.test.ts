@@ -39,8 +39,10 @@ describe("privacy-safe discovery map markers", () => {
       expect(marker.xPercent).toBeLessThanOrEqual(92);
       expect(marker.yPercent).toBeGreaterThanOrEqual(16);
       expect(marker.yPercent).toBeLessThanOrEqual(82);
-      expect(Object.keys(marker)).not.toContain("latitude");
-      expect(Object.keys(marker)).not.toContain("longitude");
+      expect(marker.latitude).toBeGreaterThanOrEqual(-60);
+      expect(marker.latitude).toBeLessThanOrEqual(80);
+      expect(marker.longitude).toBeGreaterThanOrEqual(-175);
+      expect(marker.longitude).toBeLessThanOrEqual(175);
     }
   });
 

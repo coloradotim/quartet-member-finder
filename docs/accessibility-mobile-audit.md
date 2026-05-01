@@ -25,10 +25,13 @@ This pre-launch audit covers the core public and signed-in flows:
 - Error and success messages use status or alert semantics where server-rendered feedback appears.
 - Search filters accept global country, region, locality, and long location strings without US-only assumptions.
 - Contact and feedback flows keep personal contact details private and retain app-mediated language.
-- Find keeps filters/search above the privacy-safe approximate map and includes a results table below the visual map.
+- Find keeps filters/search above the privacy-safe interactive map and includes
+  result cards below the visual map.
 
 ## Follow-Up Issues
 
 - Add automated accessibility scanning to CI after the UI surface stabilizes.
-- Revisit the map if it becomes a real interactive map widget; keyboard panning, zoom controls, and marker popovers will need a separate accessibility pass.
+- Run a focused accessibility pass on the Mapbox widget after production data is
+  available; marker popovers are keyboard-openable, and result cards remain the
+  primary accessible way to browse results.
 - Consider a compact mobile filter drawer if discovery filters grow beyond the current launch fields.

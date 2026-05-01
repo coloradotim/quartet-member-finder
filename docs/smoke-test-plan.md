@@ -140,15 +140,17 @@ validation.
 3. Pass: the distance-unit picker defaults to Miles and sits beside the radius
    field.
 4. Pass: part filtering accepts multiple voicing-aware values.
-5. Pass: the approximate map and result cards use the same filtered result set.
-6. Pass: result cards distinguish singer profiles from quartet openings and
+5. Pass: the interactive map and result cards use the same filtered result set.
+6. Pass: the map uses a non-Mercator Mapbox projection, supports pan/zoom, and
+   opens marker summaries that link to matching result cards.
+7. Pass: result cards distinguish singer profiles from quartet openings and
    include enough decision-making detail to open the details/contact panel.
-7. Pass: details/contact panels stay on `/find` and do not expose private email,
+8. Pass: details/contact panels stay on `/find` and do not expose private email,
    phone, exact ZIP/postal code, street address, or exact coordinates.
-8. Pass: empty results show helpful next actions, including increasing radius or
+9. Pass: empty results show helpful next actions, including increasing radius or
    changing filters.
-9. Fail: hidden or inactive profiles/listings appear in public results.
-10. Fail: public UI exposes owner user IDs, private postal codes, exact
+10. Fail: hidden or inactive profiles/listings appear in public results.
+11. Fail: public UI exposes owner user IDs, private postal codes, exact
     coordinates, email addresses, or phone numbers.
 
 ## Detailed Quartet Opening Search
@@ -177,9 +179,9 @@ validation.
 2. Test filters for United States and at least one non-US location, such as
    Ireland or United Kingdom.
 3. Pass: visible singer profiles and quartet listings with public locations
-   appear as approximate region markers.
+   appear as approximate markers on the interactive map.
 4. Pass: repeated locations cluster without exposing private exact coordinates.
-5. Pass: markers are still usable on mobile width.
+5. Pass: markers are still usable on mobile width and the page can still scroll.
 6. Fail: markers use exact home pins, raw latitude/longitude, or private postal
    code labels.
 

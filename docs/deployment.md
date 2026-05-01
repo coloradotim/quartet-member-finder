@@ -30,9 +30,8 @@ Codex/local development path:
 - Vercel: web hosting, preview deployments, production deployment
 - Supabase: auth, database, Row Level Security
 - Resend: transactional email and contact relay notifications
-- Map provider: provider-agnostic MVP map now; MapLibre with
-  OpenStreetMap-compatible raster or vector tiles is the preferred future
-  provider approach when richer panning/zooming is needed
+- Map provider: Mapbox GL JS for the interactive discovery map, using a
+  non-Mercator projection by default
 - Namecheap: domain registrar for `quartetmemberfinder.org`
 
 ## Global location expectations
@@ -69,6 +68,12 @@ Expected variables will likely include:
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `NEXT_PUBLIC_POSTHOG_KEY` optional product analytics key
 - `NEXT_PUBLIC_POSTHOG_HOST` optional PostHog ingest host
+- `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` public Mapbox browser token for the
+  interactive discovery map
+- `NEXT_PUBLIC_MAPBOX_STYLE_URL` optional Mapbox style URL, defaulting to
+  `mapbox://styles/mapbox/streets-v12`
+- `NEXT_PUBLIC_MAPBOX_PROJECTION` optional Mapbox GL projection, defaulting to
+  `globe`
 - `SUPABASE_SERVICE_ROLE_KEY` for server-only administrative scripts, never browser code
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
@@ -117,6 +122,8 @@ Recommended Vercel project setup:
 NEXT_PUBLIC_APP_URL=https://quartetmemberfinder.org
 NEXT_PUBLIC_SUPABASE_URL=<production Supabase project URL>
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<production Supabase anon key>
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=<public Mapbox pk token>
+NEXT_PUBLIC_MAPBOX_PROJECTION=globe
 SUPABASE_SERVICE_ROLE_KEY=<production Supabase service-role key>
 RESEND_API_KEY=<production Resend API key>
 RESEND_FROM_EMAIL=messages@quartetmemberfinder.org
@@ -445,9 +452,15 @@ service-role code.
 
 ## Maps and geocoding
 
-The current public discovery map does not require a third-party map tile
-provider. It uses public discovery-view location summaries and country/region
-anchors to render approximate regional markers.
+The interactive discovery map uses Mapbox GL JS with the `globe` projection by
+default. Mapbox GL also supports alternatives such as `equalEarth`,
+`naturalEarth`, `winkelTripel`, and `equirectangular`; use
+`NEXT_PUBLIC_MAPBOX_PROJECTION` if the product needs a different non-Mercator
+presentation later.
+
+The browser map requires `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN`. Use a public
+`pk...` token with no secret scopes. Do not put an `sk...` secret token in a
+`NEXT_PUBLIC_` variable.
 
 Approximate radius search can use server-side Mapbox geocoding. Keep
 `MAPBOX_GEOCODING_TOKEN` server-only. Set `MAPBOX_GEOCODING_PERMANENT=true`
@@ -455,19 +468,10 @@ only when the Mapbox account is allowed to store geocoding results, because
 profile/listing save actions persist private approximate coordinates in
 Supabase.
 
-When interactive tiles are added, use a provider-compatible MapLibre setup
-rather than sending exact home coordinates to the browser. Provider
-configuration should be optional and documented in `.env.example`. Expected
-future public configuration values are:
-
-- `NEXT_PUBLIC_MAP_TILE_URL_TEMPLATE`
-- `NEXT_PUBLIC_MAP_ATTRIBUTION`
-- `NEXT_PUBLIC_MAP_STYLE_URL` when using a hosted vector style
-
 Geocoding provider secrets, if any, must be server-only. Browser-rendered map
 props should contain approximate public labels, regional anchors, rounded
-distances, or jittered/blurred marker positions, never exact private
-latitude/longitude or private address fields.
+distances, or jittered/blurred marker positions derived from public discovery
+fields, never exact private latitude/longitude or private address fields.
 
 ## Product analytics
 
