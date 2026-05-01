@@ -69,6 +69,18 @@ coordinates. They remain visible in non-radius discovery if the owner chose to
 publish them, but they cannot match radius searches until saved again after
 geocoding is configured.
 
+When `/find` uses My Singer Profile as the search origin, the app distinguishes
+three unavailable states:
+
+- no Singer Profile exists yet
+- the profile is missing one or more location text fields needed for profile
+  origin search
+- the profile has location text but no saved approximate coordinates yet
+
+Only the last state asks the user to re-save My Singer Profile so geocoding can
+prepare the location for radius search. A profile with usable saved coordinates
+can be selected without showing a missing-location warning.
+
 ## Cost and Limits
 
 Mapbox requests may be billed and rate limited according to the Mapbox account's
