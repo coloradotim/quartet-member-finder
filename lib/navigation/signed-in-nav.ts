@@ -1,9 +1,4 @@
-type SignedInNavigationLink = {
-  href: string;
-  label: string;
-};
-
-export const signedInPrimaryNavigationLinks = [
+export const signedInNavigationLinks = [
   {
     href: "/app/profile",
     label: "My Singer Profile",
@@ -20,14 +15,4 @@ export const signedInPrimaryNavigationLinks = [
     href: "/help",
     label: "Help",
   },
-] as const;
-
-export const signedInModeNavigationLinks: SignedInNavigationLink[] = [];
-
-export const signedInUtilityNavigationLinks: SignedInNavigationLink[] = [];
-
-export const signedInNavigationLinks = [
-  ...signedInPrimaryNavigationLinks,
-  ...signedInModeNavigationLinks,
-  ...signedInUtilityNavigationLinks,
 ] as const;
