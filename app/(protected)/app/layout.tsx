@@ -1,10 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { signOut } from "@/app/auth/actions";
-import {
-  signedInPrimaryNavigationLinks,
-  signedInUtilityNavigationLinks,
-} from "@/lib/navigation/signed-in-nav";
+import { SignedInSiteHeader } from "@/components/navigation/signed-in-site-header";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -43,56 +39,7 @@ export default async function ProtectedAppLayout({
 
   return (
     <div>
-      <header className="border-b border-[#d7cec0] bg-[#fffaf2]/90">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-6 py-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <Link
-              className="w-fit rounded-sm text-lg font-bold text-[#172023]"
-              href="/app"
-            >
-              Quartet Member Finder
-            </Link>
-            <div className="flex flex-wrap items-center gap-2">
-              {signedInUtilityNavigationLinks.map((link) => (
-                <Link
-                  className="inline-flex min-h-11 items-center rounded-md px-2 py-2 text-sm font-semibold text-[#394548] hover:bg-white/70 hover:text-[#174b4f]"
-                  href={link.href}
-                  key={link.href}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <form action={signOut}>
-                <button
-                  className="w-fit rounded-md border border-[#d7cec0] px-3 py-2 text-sm font-semibold text-[#172023] hover:bg-white"
-                  type="submit"
-                >
-                  Sign out
-                </button>
-              </form>
-            </div>
-          </div>
-          <nav
-            aria-label="App navigation"
-            className="grid gap-3 lg:grid-cols-[1fr_auto]"
-          >
-            <div
-              className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap"
-              aria-label="App tasks"
-            >
-              {signedInPrimaryNavigationLinks.map((link) => (
-                <Link
-                  className="inline-flex min-h-11 items-center justify-center rounded-md border border-[#d7cec0] bg-white/60 px-3 py-2 text-center text-sm font-semibold text-[#394548] hover:border-[#2f6f73] hover:text-[#174b4f]"
-                  href={link.href}
-                  key={link.href}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          </nav>
-        </div>
-      </header>
+      <SignedInSiteHeader />
       <main className="mx-auto w-full max-w-6xl px-6 py-10">{children}</main>
     </div>
   );
