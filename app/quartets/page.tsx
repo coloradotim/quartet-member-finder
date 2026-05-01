@@ -340,8 +340,8 @@ export default async function QuartetSearchPage({
               </h2>
               <p className="mt-3 text-sm leading-6">
                 Try clearing filters, widening the country/region/locality, or
-                checking the map. Some quartets may not have turned on discovery
-                for My Quartet Profile yet.
+                using the Find map. Some quartets may not have turned on
+                discovery for My Quartet Profile yet.
               </p>
               <div className="mt-4 flex flex-wrap gap-4">
                 <Link className="font-semibold text-[#2f6f73]" href="/quartets">

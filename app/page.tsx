@@ -90,9 +90,10 @@ export default function Home() {
           </h2>
           <p className="mt-4 text-base leading-7 text-[#394548]">
             Sign in to search quartet openings and singers. Discovery stays
-            behind sign-in, and results still use approximate locations. First
-            contact happens through the app, and you decide whether to respond
-            or share direct contact details.
+            behind sign-in, and Find combines radius search, a privacy-safe map,
+            and result cards with approximate locations. First contact happens
+            through the app, and you decide whether to respond or share direct
+            contact details.
           </p>
           <p className="mt-3 text-base leading-7 text-[#394548]">
             Help and privacy information are available before sign-in.

@@ -102,10 +102,10 @@ display/location/travel details for discovery rows, and save actions infer
 The signed-in discovery routes are:
 
 - `/find`, backed by both discovery views for consolidated filters, map, and
-  results table
+  result cards
 - `/singers`, backed by `singer_discovery_profiles`
 - `/quartets`, backed by `quartet_discovery_listings`
-- `/map`, backed by both discovery views as a compatibility map view
+- `/map`, a legacy compatibility redirect to `/find`
 
 These routes may filter on voicing-aware parts and goals. `/find` can resolve a
 search origin and radius when server-side geocoding is configured, then use
@@ -117,7 +117,8 @@ fields.
 
 These routes require authentication before reading discovery views. The views
 still expose only privacy-safe public fields, but anonymous visitors are
-redirected to sign in before browsing singers, quartet openings, or map results.
+redirected to sign in before browsing singers, quartet openings, or Find
+results.
 
 ## Row Level Security expectations
 

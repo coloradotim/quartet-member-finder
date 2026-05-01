@@ -16,23 +16,22 @@ describe("empty and first-time states", () => {
 
     expect(profilePage).toContain("Create My Singer Profile");
     expect(profilePage).toContain("Your profile is hidden");
-    expect(profilePage).toContain("Find, detailed singer search");
+    expect(profilePage).toContain("Find or detailed singer search");
     expect(listingPage).toContain("Create My Quartet Profile");
     expect(listingPage).toContain("My Quartet Profile is hidden");
-    expect(listingPage).toContain("Find, detailed quartet search");
+    expect(listingPage).toContain("Find or detailed quartet search");
   });
 
   it("turns public discovery no-results states into next actions", () => {
     const singersPage = source("app/singers/page.tsx");
     const quartetsPage = source("app/quartets/page.tsx");
-    const mapPage = source("app/map/page.tsx");
 
     expect(singersPage).toContain("No visible singer profiles match");
     expect(singersPage).toContain("Clear filters");
     expect(quartetsPage).toContain("No visible quartet openings match");
     expect(quartetsPage).toContain("My Quartet Profile");
-    expect(mapPage).toContain("No approximate map regions match");
-    expect(mapPage).toContain("approximate public location data");
+    expect(singersPage).toContain("Return to Find map");
+    expect(quartetsPage).toContain("Return to Find map");
   });
 
   it("explains sign-in for contact and feedback without exposing private data", () => {

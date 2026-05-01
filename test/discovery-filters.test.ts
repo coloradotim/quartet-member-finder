@@ -14,6 +14,7 @@ describe("discovery filters", () => {
       part: "SATB:Soprano",
       distanceUnit: "km",
       radius: "25",
+      searchOrigin: "profile",
       searchFrom: " Manchester, England ",
       travelRadiusKm: "50",
     });
@@ -26,6 +27,7 @@ describe("discovery filters", () => {
     expect(filters.parts).toEqual([{ part: "Soprano", voicing: "SATB" }]);
     expect(filters.distanceUnit).toBe("km");
     expect(filters.radius).toBe(25);
+    expect(filters.searchOrigin).toBe("profile");
     expect(filters.searchFrom).toBe("Manchester, England");
     expect(filters.travelRadiusKm).toBe(50);
     expect(hasDiscoveryFilters(filters)).toBe(true);
@@ -44,6 +46,7 @@ describe("discovery filters", () => {
     expect(filters.travelRadiusKm).toBeNull();
     expect(filters.radius).toBeNull();
     expect(filters.distanceUnit).toBe("mi");
+    expect(filters.searchOrigin).toBe("typed");
     expect(hasDiscoveryFilters(filters)).toBe(false);
   });
 

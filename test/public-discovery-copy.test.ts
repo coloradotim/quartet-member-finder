@@ -62,6 +62,7 @@ describe("public discovery copy", () => {
     expect(findPage).toContain("Filter discovery results");
     expect(findPage).toContain("InteractiveDiscoveryMap");
     expect(findPage).toContain("Search from");
+    expect(findPage).toContain("My Singer Profile");
     expect(findPage).toContain("Within");
     expect(findPage).toContain("multiple");
     expect(findPage).toContain("Matching results");

@@ -339,15 +339,15 @@ export default async function SingerSearchPage({
               </h2>
               <p className="mt-3 text-sm leading-6">
                 Try clearing filters, widening the country/region/locality, or
-                checking the map. Early on, some singers may still be creating
+                using the Find map. Early on, some singers may still be creating
                 My Singer Profile or keeping it hidden.
               </p>
               <div className="mt-4 flex flex-wrap gap-4">
                 <Link className="font-semibold text-[#2f6f73]" href="/singers">
                   Clear filters
                 </Link>
-                <Link className="font-semibold text-[#2f6f73]" href="/map">
-                  Switch to map view
+                <Link className="font-semibold text-[#2f6f73]" href="/find">
+                  Return to Find map
                 </Link>
                 <Link className="font-semibold text-[#2f6f73]" href="/quartets">
                   Find quartet openings
