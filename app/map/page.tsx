@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DiscoveryModeNav } from "@/components/discovery/discovery-mode-nav";
+import { InteractiveDiscoveryMap } from "@/components/discovery/interactive-discovery-map";
 import { SignedInSiteHeader } from "@/components/navigation/signed-in-site-header";
 import { captureProductEvent } from "@/lib/analytics/product-analytics";
 import { requireAuthenticatedDiscovery } from "@/lib/auth/require-authenticated-discovery";
@@ -99,18 +100,6 @@ function markerSummary(marker: { names: string[] }) {
   return remainingCount > 0
     ? `${previewNames}, +${remainingCount} more`
     : previewNames;
-}
-
-function markerKindLabel(marker: { count: number; kinds: string[] }) {
-  if (marker.kinds.includes("quartet") && marker.kinds.includes("singer")) {
-    return "listings";
-  }
-
-  if (marker.kinds[0] === "quartet") {
-    return marker.count === 1 ? "quartet listing" : "quartet listings";
-  }
-
-  return marker.count === 1 ? "singer profile" : "singer profiles";
 }
 
 export default async function DiscoveryMapPage({ searchParams }: MapPageProps) {
@@ -356,41 +345,16 @@ export default async function DiscoveryMapPage({ searchParams }: MapPageProps) {
           </p>
         ) : null}
 
-        <section className="mt-8 overflow-hidden rounded-lg border border-[#d7cec0] bg-[#e7f0eb]">
-          <div
-            aria-label="Privacy-safe discovery map"
-            className="relative min-h-[520px] bg-[radial-gradient(circle_at_22%_38%,#c5d7c8_0_9%,transparent_10%),radial-gradient(circle_at_49%_38%,#c5d7c8_0_8%,transparent_9%),radial-gradient(circle_at_55%_55%,#c5d7c8_0_13%,transparent_14%),radial-gradient(circle_at_77%_63%,#c5d7c8_0_9%,transparent_10%),linear-gradient(135deg,#e7f0eb,#d9e8e1)] sm:min-h-[420px]"
-            role="img"
-          >
-            <div className="absolute inset-x-0 top-0 flex flex-col gap-1 bg-white/85 px-4 py-3 text-sm text-[#394548] backdrop-blur sm:flex-row sm:items-center sm:justify-between">
-              <span>{markers.length} approximate regions</span>
-              <span>
-                {mapItems.length} visible listings with public location
-              </span>
-            </div>
-
-            {markers.map((marker) => (
-              <div
-                className="absolute max-w-[10rem] -translate-x-1/2 -translate-y-1/2 rounded-md border border-[#174b4f]/30 bg-white px-3 py-2 text-sm shadow-sm [overflow-wrap:anywhere] sm:max-w-48"
-                key={marker.id}
-                style={{
-                  left: `${marker.xPercent}%`,
-                  top: `${marker.yPercent}%`,
-                }}
-              >
-                <p className="font-bold text-[#172023]">{marker.label}</p>
-                <p className="mt-1 text-[#394548]">
-                  {marker.count} {markerKindLabel(marker)}
-                </p>
-                {marker.parts.length > 0 ? (
-                  <p className="mt-1 text-[#596466]">
-                    {partsLabel(marker.parts)}
-                  </p>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        </section>
+        <div className="mt-8">
+          <InteractiveDiscoveryMap
+            emptyMessage="The map only shows visible singer profiles and quartet openings with approximate public location data."
+            markers={markers}
+            resultBasePath="/map"
+            resultLabel="Interactive discovery map"
+            scopeLabel="current map filters"
+            totalResults={mapItems.length}
+          />
+        </div>
 
         <section className="mt-8 grid gap-4 md:grid-cols-2">
           {markers.length === 0 && !errorMessage ? (
@@ -421,6 +385,7 @@ export default async function DiscoveryMapPage({ searchParams }: MapPageProps) {
           {markers.map((marker) => (
             <article
               className="rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5 shadow-sm"
+              id={`result-${marker.resultIds[0]}`}
               key={marker.id}
             >
               <h2 className="text-xl font-bold text-[#172023]">

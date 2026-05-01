@@ -85,13 +85,14 @@ Avoid exact map pins. Map interfaces should use one of the following:
 - region/city-level markers
 - search-result areas rather than exact addresses
 
-The MVP discovery map uses region-level markers derived from public discovery
-fields only: public location label, locality, region, country, country code, and
-rounded approximate distance when radius search is active. It must not receive
-base-table coordinates, private postal codes, or formatted private addresses in
-browser-rendered props. Marker placement may use country/region anchors and
-deterministic offsets so nearby results can cluster without implying a home
-address or exact rehearsal location.
+The interactive discovery map uses Mapbox GL JS with a non-Mercator `globe`
+projection by default. It renders region-level markers derived from public
+discovery fields only: public location label, locality, region, country, country
+code, and rounded approximate distance when radius search is active. It must not
+receive base-table coordinates, private postal codes, or formatted private
+addresses in browser-rendered props. Marker placement may use country/region
+anchors and deterministic offsets so nearby results can cluster without implying
+a home address or exact rehearsal location.
 
 ## Visibility controls
 

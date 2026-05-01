@@ -23,9 +23,11 @@ The current scaffold includes `.env.example` with safe placeholder keys:
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
-- `NEXT_PUBLIC_MAP_TILE_URL_TEMPLATE` optional future map tile template
-- `NEXT_PUBLIC_MAP_ATTRIBUTION` optional future map attribution
-- `NEXT_PUBLIC_MAP_STYLE_URL` optional future hosted map style
+- `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` optional public Mapbox browser token for
+  the interactive discovery map
+- `NEXT_PUBLIC_MAPBOX_STYLE_URL` optional Mapbox style URL
+- `NEXT_PUBLIC_MAPBOX_PROJECTION` optional Mapbox GL projection, defaulting to
+  `globe`
 
 Do not expose server-only values in browser code.
 
@@ -111,10 +113,13 @@ must happen in server code after the database resolves the recipient.
 
 ## Maps
 
-The MVP discovery map does not require a map provider. Optional public map
-values are reserved for a future MapLibre/OpenStreetMap-compatible tile setup.
-Geocoding secrets, if later needed, should be server-only and must not use the
-`NEXT_PUBLIC_` prefix.
+The discovery map uses Mapbox GL JS. Set `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` in
+Vercel Production and Preview to render the interactive map. This must be a
+public `pk...` token with no secret scopes. `NEXT_PUBLIC_MAPBOX_PROJECTION`
+defaults to `globe` so the primary map is not Web Mercator.
+
+Server-side geocoding uses separate `MAPBOX_GEOCODING_*` values. Geocoding
+secrets should be server-only and must not use the `NEXT_PUBLIC_` prefix.
 
 ## Product Analytics
 

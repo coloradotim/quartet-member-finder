@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AnalyticsPageTracker } from "@/components/analytics/analytics-page-tracker";
 import { SiteFooter } from "@/components/navigation/site-footer";
+import "mapbox-gl/dist/mapbox-gl.css";
 import "./globals.css";
 
 export const metadata: Metadata = {

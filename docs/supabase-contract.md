@@ -252,7 +252,10 @@ not stored.
 
 The public map route must continue to use those discovery views rather than base
 tables. Map markers are built from public location summaries and country/region
-anchors; no latitude/longitude columns should be selected for browser display.
+anchors; no private latitude/longitude columns should be selected for browser
+display. The browser may receive approximate marker coordinates derived from
+public country/region/locality values so the interactive map can place regional
+markers without exposing stored home-location coordinates.
 
 ## Contact data expectations
 

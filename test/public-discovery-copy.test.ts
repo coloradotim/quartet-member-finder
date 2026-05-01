@@ -60,7 +60,7 @@ describe("public discovery copy", () => {
 
     expect(findPage).toContain("Search quartet openings and singers");
     expect(findPage).toContain("Filter discovery results");
-    expect(findPage).toContain("Privacy-safe discovery map");
+    expect(findPage).toContain("InteractiveDiscoveryMap");
     expect(findPage).toContain("Search from");
     expect(findPage).toContain("Within");
     expect(findPage).toContain("multiple");
