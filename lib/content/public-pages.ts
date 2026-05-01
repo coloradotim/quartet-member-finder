@@ -11,7 +11,7 @@ export const publicHelpSections = [
       "A singer profile describes who you are as a singer: your name, parts, goals, experience, availability, travel willingness, and approximate location.",
       "Parts are grouped by voicing, so TTBB Tenor, SATB Tenor, and SSAA part labels stay distinct in discovery.",
       "Only display name is required; the optional details help others decide whether a contact request makes sense.",
-      "You choose whether My Singer Profile appears in discovery. Hidden singer profiles stay out of singer search and the map, and hiding it does not hide My Quartet Profile.",
+      "You choose whether My Singer Profile appears in discovery. Hidden singer profiles stay out of singer search and Find, and hiding it does not hide My Quartet Profile.",
     ],
     heading: "Singer Profiles",
   },
@@ -26,17 +26,18 @@ export const publicHelpSections = [
     body: [
       "My Quartet Profile is for a quartet or prospective quartet that has some parts covered and is looking for one or more singers.",
       "It keeps covered parts and needed parts separate within the quartet's voicing so searchers can quickly understand what the group needs.",
-      "You choose whether My Quartet Profile appears in discovery. Hidden quartet profiles stay out of quartet search and the map, and hiding it does not hide My Singer Profile.",
+      "You choose whether My Quartet Profile appears in discovery. Hidden quartet profiles stay out of quartet search and Find, and hiding it does not hide My Singer Profile.",
     ],
     heading: "Quartet Profiles",
   },
   {
     body: [
-      "Find is the main discovery page. It combines filters, a privacy-safe regional map, and a results table for quartet openings and singer profiles.",
+      "Find is the main discovery page. It combines filters, a privacy-safe interactive map, and result cards for quartet openings and singer profiles.",
       "Use the looking-for filter to focus on quartet openings when you are a singer, or singer profiles when you are representing a quartet or looking for other singers.",
       "Part filters include voicing context, including TTBB, SSAA, and SATB / mixed labels.",
-      "The map is part of Find rather than a separate first step. It helps you scan approximate activity, then the table below gives names, parts, type, and next-step links.",
-      "Detailed singer and quartet search pages remain available from Find when you need more specific filters like availability, experience, or travel willingness.",
+      "Search from a typed place or your saved singer profile location, choose a radius, and switch between miles and kilometers. Radius search uses approximate distance when geocoding is configured.",
+      "The map is part of Find rather than a separate first step. It helps you scan approximate activity, then the result cards give names, parts, type, distance when available, and contact links.",
+      "Detailed singer and quartet search pages remain available when you need more specific filters like availability, experience, or travel willingness.",
       "Search results are useful even when a profile is incomplete, but more complete profiles are easier for others to evaluate.",
     ],
     heading: "Search",
@@ -57,7 +58,7 @@ export const publicHelpSections = [
   },
   {
     body: [
-      "Discoverable means a profile can appear in Find results and approximate map discovery. Hidden means it stays out of discovery.",
+      "Discoverable means a profile can appear in Find results and approximate map discovery inside Find. Hidden means it stays out of discovery.",
       "My Singer Profile and My Quartet Profile have independent visibility controls. You can make either one discoverable, both discoverable, or neither discoverable.",
       "Filling out a profile does not require making it discoverable. If you are no longer looking personally, hide My Singer Profile; if the quartet opening is no longer active, hide My Quartet Profile.",
     ],
@@ -67,7 +68,7 @@ export const publicHelpSections = [
     body: [
       "Country is the first location cue because it helps the app use sensible labels, such as ZIP code, postcode, state, province, or region, without strict address validation.",
       "Profile and listing forms ask for country, state/province/region, city/locality, and ZIP/postal code instead of country codes or street addresses. ZIP/postal codes are not shown in discovery.",
-      "Find defaults distance display to miles and lets you switch to kilometers when that is more useful.",
+      "Find defaults distance display to miles and lets you switch to kilometers when that is more useful. If your singer profile has a saved approximate location, Find can use it as the search origin.",
     ],
     heading: "Location Defaults",
   },
@@ -110,7 +111,7 @@ export const publicPrivacySections = [
   },
   {
     body: [
-      "Singer profiles and quartet profiles have independent visibility controls. Discoverable and active profiles can appear in search and the map. Hidden profiles should stay out of those discovery views.",
+      "Singer profiles and quartet profiles have independent visibility controls. Discoverable and active profiles can appear in search and Find. Hidden profiles should stay out of those discovery views.",
       "Both optional profiles can be discoverable at once when that matches your situation, but neither one has to be discoverable just because it has been filled out.",
       "The database uses privacy-safe discovery views for public search rather than exposing private base tables directly.",
     ],

@@ -12,7 +12,6 @@ This pre-launch audit covers the core public and signed-in flows:
 - Find
 - detailed Quartet Opening search
 - detailed Singer search
-- compatibility Map view
 - contact relay form
 - feedback form
 

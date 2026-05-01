@@ -162,10 +162,10 @@ export default async function ManageProfilePage({
             Your profile is hidden
           </h2>
           <p className="mt-3 text-sm leading-6 text-[#394548]">
-            Hidden profiles do not appear in Find, detailed singer search, or
-            the map view. Turn on the visibility checkbox below when you want
-            discovery to show your public singer details. This does not change
-            your quartet profile visibility.
+            Hidden profiles do not appear in Find or detailed singer search.
+            Turn on the visibility checkbox below when you want discovery to
+            show your public singer details. This does not change your quartet
+            profile visibility.
           </p>
         </section>
       )}
@@ -414,7 +414,8 @@ export default async function ManageProfilePage({
           <h2 className="text-xl font-bold text-[#172023]">Visibility</h2>
           <p className="text-sm leading-6 text-[#394548]">
             Discoverable means this profile can appear in Find results and
-            approximate map discovery. Hidden means it stays out of discovery.
+            approximate map discovery inside Find. Hidden means it stays out of
+            discovery.
           </p>
           <label className="flex items-start gap-3 rounded-md border border-[#d7cec0] bg-[#fffaf2] p-4">
             <input

@@ -20,7 +20,7 @@ describe("public help and privacy content", () => {
     expect(helpText).toContain("independent visibility controls");
     expect(helpText).toContain("Search");
     expect(helpText).toContain("Find is the main discovery page");
-    expect(helpText).toContain("results table");
+    expect(helpText).toContain("result cards");
     expect(helpText).toContain("Location And Privacy");
     expect(helpText).toContain("Location Defaults");
     expect(helpText).toContain("Contact");

@@ -14,14 +14,11 @@ function routeArea(pathname: string) {
 
   if (
     pathname === "/find" ||
+    pathname === "/map" ||
     pathname === "/singers" ||
     pathname === "/quartets"
   ) {
     return "discovery";
-  }
-
-  if (pathname === "/map") {
-    return "map";
   }
 
   if (pathname === "/help" || pathname === "/privacy") {

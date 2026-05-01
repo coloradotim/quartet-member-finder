@@ -20,8 +20,8 @@ describe("authenticated discovery", () => {
         part: ["TTBB:Lead", "SSAA:Bass"],
       }),
     ).toBe("/singers?country=United+Kingdom&part=TTBB%3ALead&part=SSAA%3ABass");
-    expect(discoverySignInPath("/map", { kind: "singers" })).toBe(
-      "/sign-in?next=%2Fmap%3Fkind%3Dsingers",
+    expect(discoverySignInPath("/find", { kind: "singers" })).toBe(
+      "/sign-in?next=%2Ffind%3Fkind%3Dsingers",
     );
   });
 
@@ -36,7 +36,6 @@ describe("authenticated discovery", () => {
         "app/quartets/page.tsx",
         'requireAuthenticatedDiscovery("/quartets", params)',
       ],
-      ["app/map/page.tsx", 'requireAuthenticatedDiscovery("/map", params)'],
     ];
 
     for (const [path, gate] of pages) {
@@ -60,7 +59,6 @@ describe("authenticated discovery", () => {
       "app/find/page.tsx",
       "app/singers/page.tsx",
       "app/quartets/page.tsx",
-      "app/map/page.tsx",
       "app/(protected)/app/layout.tsx",
     ];
 
@@ -75,5 +73,13 @@ describe("authenticated discovery", () => {
         /requireAuthenticatedDiscovery|redirect\("\/sign-in/,
       );
     }
+  });
+
+  it("redirects the legacy map route to Find", () => {
+    const mapPage = source("app/map/page.tsx");
+
+    expect(mapPage).toContain('redirect("/find")');
+    expect(mapPage).not.toContain("requireAuthenticatedDiscovery");
+    expect(mapPage).not.toContain(".from(");
   });
 });

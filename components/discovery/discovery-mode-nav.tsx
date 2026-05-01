@@ -13,12 +13,6 @@ export const discoveryModes = [
     id: "singers",
     label: "Singers",
   },
-  {
-    description: "A privacy-safe regional view of public discovery results.",
-    href: "/map",
-    id: "map",
-    label: "Map view",
-  },
 ] as const;
 
 type DiscoveryMode = (typeof discoveryModes)[number]["id"] | "overview";

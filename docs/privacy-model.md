@@ -250,9 +250,9 @@ the same kind of location and visibility decisions for a quartet or prospective
 quartet the user represents.
 
 Each optional profile has independent visibility. Discoverable means the profile
-can appear in Find results and approximate map discovery. Hidden means it stays
-out of discovery. Filling out one profile does not require publishing it, and
-hiding one profile does not hide the other.
+can appear in Find results and approximate map discovery inside Find. Hidden
+means it stays out of discovery. Filling out one profile does not require
+publishing it, and hiding one profile does not hide the other.
 
 Singer profile and quartet profile location forms ask for country,
 state/province/region, city/locality, and ZIP/postal code. The fields remain

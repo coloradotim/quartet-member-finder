@@ -8,6 +8,7 @@ import {
   formatApproximateDistance,
   milesToKilometers,
   travelRadiusLabel,
+  type Coordinates,
 } from "@/lib/location/approximate-location";
 import {
   geocodeApproximateLocation,
@@ -60,6 +61,15 @@ type QuartetFindRow = {
 
 type FindPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+type ProfileOriginRow = {
+  country_name: string | null;
+  latitude_private: number | string | null;
+  locality: string | null;
+  location_label_public: string | null;
+  longitude_private: number | string | null;
+  region: string | null;
 };
 
 type FindResult = DiscoveryMapItem & {
@@ -227,6 +237,43 @@ function geocodingStatusMessage(status: ApproximateGeocodingStatus) {
   return "The search origin could not be resolved right now. Try again in a moment or clear the location search.";
 }
 
+function coordinatesFromPrivateRow(
+  row: ProfileOriginRow | null,
+): Coordinates | null {
+  if (!row?.latitude_private || !row.longitude_private) {
+    return null;
+  }
+
+  const latitude = Number(row.latitude_private);
+  const longitude = Number(row.longitude_private);
+
+  if (
+    !Number.isFinite(latitude) ||
+    !Number.isFinite(longitude) ||
+    latitude < -90 ||
+    latitude > 90 ||
+    longitude < -180 ||
+    longitude > 180
+  ) {
+    return null;
+  }
+
+  return { latitude, longitude };
+}
+
+function labelForProfileOrigin(row: ProfileOriginRow | null) {
+  if (!row) {
+    return "your singer profile";
+  }
+
+  return approximateLocationLabel({
+    countryName: row.country_name,
+    locality: row.locality,
+    locationLabelPublic: row.location_label_public,
+    region: row.region,
+  });
+}
+
 export default async function FindPage({ searchParams }: FindPageProps) {
   const params = await searchParams;
   const filters = parseDiscoveryFilters(params);
@@ -235,28 +282,60 @@ export default async function FindPage({ searchParams }: FindPageProps) {
   const returnTo = returnToPath(params);
   const supabase = await requireAuthenticatedDiscovery("/find", params);
   const radiusKm = radiusToKilometers(filters.radius, filters.distanceUnit);
-  const shouldUseRadiusSearch = Boolean(filters.searchFrom && radiusKm);
-  const geocodingResult = shouldUseRadiusSearch
-    ? await geocodeApproximateLocation(
-        {
-          locality: filters.searchFrom,
-        },
-        { storageMode: "temporary" },
+  let radiusSearchOrigin: Coordinates | null = null;
+  let radiusSearchOriginLabel = textValue(filters.searchFrom);
+  let profileOrigin: ProfileOriginRow | null = null;
+  let geocodingResult: Awaited<
+    ReturnType<typeof geocodeApproximateLocation>
+  > | null = null;
+
+  if (filters.searchOrigin === "profile") {
+    const { data } = await supabase
+      .from("singer_profiles")
+      .select(
+        "latitude_private, longitude_private, country_name, region, locality, location_label_public",
       )
-    : null;
-  const radiusSearchOrigin = geocodingResult?.coordinates ?? null;
+      .maybeSingle();
+
+    profileOrigin = (data ?? null) as ProfileOriginRow | null;
+    radiusSearchOrigin = coordinatesFromPrivateRow(profileOrigin);
+    radiusSearchOriginLabel = labelForProfileOrigin(profileOrigin);
+  } else if (filters.searchFrom && radiusKm) {
+    geocodingResult = await geocodeApproximateLocation(
+      {
+        locality: filters.searchFrom,
+      },
+      { storageMode: "temporary" },
+    );
+    radiusSearchOrigin = geocodingResult.coordinates;
+  }
 
   let results: FindResult[] = [];
   let errorMessage: string | null = null;
   let searchNotice: string | null = null;
 
-  if (filters.searchFrom && filters.radius == null) {
+  if (filters.searchOrigin === "profile" && !radiusSearchOrigin) {
+    searchNotice =
+      "Your singer profile does not have a saved approximate location yet. Save My Singer Profile with country, region, city, and ZIP/postal code, or switch to a typed search origin.";
+  } else if (filters.searchOrigin === "profile" && filters.radius == null) {
+    searchNotice =
+      "Add a radius to search by distance from your singer profile location. Without a radius, results show all visible areas that match the other filters.";
+  } else if (filters.searchFrom && filters.radius == null) {
     searchNotice =
       "Add a radius to search by distance from the entered place. Without a radius, results show all visible areas that match the other filters.";
-  } else if (filters.radius != null && !filters.searchFrom) {
+  } else if (
+    filters.radius != null &&
+    filters.searchOrigin === "typed" &&
+    !filters.searchFrom
+  ) {
     searchNotice =
       "Add a search origin to use radius filtering. Without a search origin, results show all visible areas that match the other filters.";
-  } else if (shouldUseRadiusSearch && geocodingResult?.status !== "resolved") {
+  } else if (
+    filters.searchOrigin === "typed" &&
+    filters.searchFrom &&
+    radiusKm &&
+    geocodingResult?.status !== "resolved"
+  ) {
     searchNotice = geocodingStatusMessage(geocodingResult?.status ?? "failed");
   }
 
@@ -378,6 +457,9 @@ export default async function FindPage({ searchParams }: FindPageProps) {
     filters.radius == null
       ? "Any distance"
       : `${filters.radius} ${filters.distanceUnit === "km" ? "kilometers" : "miles"}`;
+  const searchScopeLabel = `${radiusSearchOriginLabel || "all visible areas"}; radius: ${radiusLabel}${
+    radiusSearchOrigin ? "; sorted by approximate distance" : ""
+  }`;
 
   await captureProductEvent("map_viewed", {
     ...flags,
@@ -410,7 +492,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
           aria-label="Filter discovery results"
           className="mt-6 rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-4 shadow-sm"
         >
-          <div className="grid gap-4 lg:grid-cols-[1fr_1.4fr_0.7fr_0.9fr]">
+          <div className="grid gap-4 lg:grid-cols-[1fr_1fr_1.4fr_0.7fr_0.9fr]">
             <label className="block">
               <span className="text-sm font-semibold">Looking for</span>
               <select
@@ -427,6 +509,18 @@ export default async function FindPage({ searchParams }: FindPageProps) {
             </label>
 
             <label className="block">
+              <span className="text-sm font-semibold">Search origin</span>
+              <select
+                className={filterControlClass}
+                defaultValue={filters.searchOrigin}
+                name="searchOrigin"
+              >
+                <option value="typed">Typed place</option>
+                <option value="profile">My Singer Profile</option>
+              </select>
+            </label>
+
+            <label className="block">
               <span className="text-sm font-semibold">Search from</span>
               <input
                 className={filterControlClass}
@@ -434,6 +528,9 @@ export default async function FindPage({ searchParams }: FindPageProps) {
                 name="searchFrom"
                 placeholder="Fort Collins, CO or M5V, Canada"
               />
+              <span className="mt-2 block text-xs leading-5 text-[#596466]">
+                Used when Search origin is Typed place.
+              </span>
             </label>
 
             <label className="block">
@@ -537,9 +634,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
             emptyMessage="No approximate map regions match. Try increasing the radius, clearing part filters, or changing what you are looking for."
             markers={markers}
             resultLabel="Interactive map scope"
-            scopeLabel={`${textValue(filters.searchFrom) || "all visible areas"}; radius: ${radiusLabel}${
-              radiusSearchOrigin ? "; sorted by approximate distance" : ""
-            }`}
+            scopeLabel={searchScopeLabel}
             totalResults={results.length}
           />
 
@@ -568,7 +663,7 @@ export default async function FindPage({ searchParams }: FindPageProps) {
                   Try increasing the radius, selecting fewer parts, clearing
                   goal filters, or searching both singers and quartet openings.
                   If no origin is entered, add a city/region/country or postal
-                  code to make the search easier to interpret.
+                  code, or use your saved singer profile location.
                 </p>
               </section>
             ) : null}

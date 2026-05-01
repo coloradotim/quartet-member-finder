@@ -173,17 +173,11 @@ validation.
 5. Pass: contact buttons are available for visible profiles.
 6. Fail: hidden or inactive singer profiles appear in public results.
 
-## Compatibility Map View
+## Legacy Map Route
 
 1. Open `/map`.
-2. Test filters for United States and at least one non-US location, such as
-   Ireland or United Kingdom.
-3. Pass: visible singer profiles and quartet listings with public locations
-   appear as approximate markers on the interactive map.
-4. Pass: repeated locations cluster without exposing private exact coordinates.
-5. Pass: markers are still usable on mobile width and the page can still scroll.
-6. Fail: markers use exact home pins, raw latitude/longitude, or private postal
-   code labels.
+2. Pass: the route redirects to `/find`.
+3. Fail: `/map` shows a separate discovery UI from `/find`.
 
 ## Contact Relay
 
@@ -227,8 +221,8 @@ validation.
 
 Run these at a narrow mobile viewport, around 390 px wide:
 
-1. Open `/`, `/find`, `/singers`, `/quartets`, `/map`, `/help`, `/privacy`, and
-   `/app` while signed in where required.
+1. Open `/`, `/find`, `/singers`, `/quartets`, `/help`, `/privacy`, and `/app`
+   while signed in where required.
 2. Pass: text does not overlap controls, cards, forms, or navigation.
 3. Pass: forms can be completed without horizontal scrolling.
 4. Pass: contact and feedback text areas are usable.

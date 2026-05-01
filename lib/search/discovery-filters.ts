@@ -19,9 +19,12 @@ export type DiscoveryFilters = {
   parts: VoicingPartSelection[];
   radius: number | null;
   region: string | null;
+  searchOrigin: SearchOrigin;
   searchFrom: string | null;
   travelRadiusKm: number | null;
 };
+
+export type SearchOrigin = "profile" | "typed";
 
 function normalizeSearchText(value: string | string[] | undefined) {
   const rawValue = Array.isArray(value) ? value[0] : value;
@@ -45,6 +48,10 @@ function parseAllowedValue<T extends string>(
   }
 
   return allowedValues.includes(normalized as T) ? (normalized as T) : null;
+}
+
+function parseSearchOrigin(value: string | string[] | undefined): SearchOrigin {
+  return normalizeSearchText(value) === "profile" ? "profile" : "typed";
 }
 
 function parseTravelRadiusKm(value: string | string[] | undefined) {
@@ -103,6 +110,7 @@ export function parseDiscoveryFilters(
     parts,
     radius: parseRadius(searchParams.radius),
     region: normalizeSearchText(searchParams.region),
+    searchOrigin: parseSearchOrigin(searchParams.searchOrigin),
     searchFrom: normalizeSearchText(searchParams.searchFrom),
     travelRadiusKm: parseTravelRadiusKm(searchParams.travelRadiusKm),
   };
@@ -112,6 +120,10 @@ export function hasDiscoveryFilters(filters: DiscoveryFilters) {
   return Object.entries(filters).some(([key, value]) => {
     if (key === "distanceUnit") {
       return false;
+    }
+
+    if (key === "searchOrigin") {
+      return value !== "typed";
     }
 
     if (Array.isArray(value)) {

@@ -51,7 +51,8 @@ export default async function AppHomePage() {
         </p>
         <p className="mt-3 max-w-3xl text-base leading-7 text-[#394548]">
           Discoverable means a profile can appear in Find results and
-          approximate map discovery. Hidden means it stays out of discovery.
+          approximate map discovery inside Find. Hidden means it stays out of
+          discovery.
         </p>
       </header>
 
