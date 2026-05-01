@@ -8,31 +8,24 @@ export type OnboardingChoice = {
 export const onboardingChoices: OnboardingChoice[] = [
   {
     description:
-      "Browse visible quartet openings after saving your starter profile context. You can complete your singer profile later.",
-    href: "/find?kind=quartets",
-    id: "find-quartet-openings",
+      "Open My Singer Profile first. You can make it discoverable when you want quartets or other singers to find you.",
+    href: "/app/profile",
+    id: "singer-profile-first",
     label: "I'm a singer looking for quartet openings",
   },
   {
     description:
-      "Browse visible singer profiles and look for people nearby or in another region who might want to sing.",
-    href: "/find?kind=singers",
-    id: "find-singers-as-singer",
-    label: "I'm a singer looking for other singers",
-  },
-  {
-    description:
-      "Open Quartet Mode and create a listing with the quartet's voicing, covered parts, missing parts, goals, and approximate area.",
+      "Open My Quartet Profile first. You can describe the opening and make it discoverable when the group is actively looking.",
     href: "/app/listings",
-    id: "quartet-mode-listing",
+    id: "quartet-profile-first",
     label: "I represent a quartet looking for a singer",
   },
   {
     description:
-      "Go to Find with your starter context saved. You can complete singer or quartet details later.",
-    href: "/find",
-    id: "browse-for-now",
-    label: "I just want to browse for now",
+      "Go to the signed-in dashboard for a quick overview. You can fill out either profile, both profiles, or neither profile while you get oriented.",
+    href: "/app",
+    id: "get-oriented",
+    label: "I'm not sure yet / I just want to get oriented",
   },
 ];
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  quartetModeDashboardActions,
+  quartetDashboardActions,
   singerDashboardActions,
   supportDashboardActions,
 } from "@/lib/dashboard/app-dashboard";
@@ -9,13 +9,13 @@ describe("signed-in app dashboard", () => {
   it("foregrounds the singer workflow with all primary next actions", () => {
     expect(singerDashboardActions.map((action) => action.label)).toEqual([
       "My Singer Profile",
-      "Find",
+      "Find quartet openings",
     ]);
   });
 
-  it("keeps quartet mode separate from the primary singer workflow", () => {
-    expect(quartetModeDashboardActions.map((action) => action.label)).toEqual([
-      "Manage Quartet Listing",
+  it("keeps the quartet profile separate from the singer profile", () => {
+    expect(quartetDashboardActions.map((action) => action.label)).toEqual([
+      "My Quartet Profile",
       "Find singers",
     ]);
   });
@@ -23,11 +23,11 @@ describe("signed-in app dashboard", () => {
   it("links every dashboard action to an existing route", () => {
     expect([
       ...singerDashboardActions,
-      ...quartetModeDashboardActions,
+      ...quartetDashboardActions,
       ...supportDashboardActions,
     ]).toEqual([
       expect.objectContaining({ href: "/app/profile" }),
-      expect.objectContaining({ href: "/find" }),
+      expect.objectContaining({ href: "/find?kind=quartets" }),
       expect.objectContaining({ href: "/app/listings" }),
       expect.objectContaining({ href: "/find?kind=singers" }),
       expect.objectContaining({ href: "/help" }),

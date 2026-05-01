@@ -53,8 +53,9 @@ describe("initial Supabase schema migration", () => {
     expect(migration).toContain("add column onboarding_completed_at");
     expect(migration).toContain("add column onboarding_skipped_at");
     expect(migration).toContain("add column onboarding_last_choice");
-    expect(migration).toContain("'find-quartet-openings'");
-    expect(migration).toContain("'quartet-mode-listing'");
+    expect(migration).toContain("'singer-profile-first'");
+    expect(migration).toContain("'quartet-profile-first'");
+    expect(migration).toContain("'get-oriented'");
   });
 
   it("keeps private fields out of discovery views", () => {

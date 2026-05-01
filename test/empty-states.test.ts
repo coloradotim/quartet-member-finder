@@ -10,15 +10,15 @@ function normalizedSource(path: string) {
 }
 
 describe("empty and first-time states", () => {
-  it("guides first-time signed-in users from profile and Quartet Mode forms", () => {
+  it("guides first-time signed-in users from optional profile forms", () => {
     const profilePage = source("app/(protected)/app/profile/page.tsx");
     const listingPage = source("app/(protected)/app/listings/page.tsx");
 
     expect(profilePage).toContain("Create My Singer Profile");
     expect(profilePage).toContain("Your profile is hidden");
     expect(profilePage).toContain("Find, detailed singer search");
-    expect(listingPage).toContain("Start Quartet Mode");
-    expect(listingPage).toContain("This quartet listing is hidden");
+    expect(listingPage).toContain("Create My Quartet Profile");
+    expect(listingPage).toContain("My Quartet Profile is hidden");
     expect(listingPage).toContain("Find, detailed quartet search");
   });
 
@@ -30,7 +30,7 @@ describe("empty and first-time states", () => {
     expect(singersPage).toContain("No visible singer profiles match");
     expect(singersPage).toContain("Clear filters");
     expect(quartetsPage).toContain("No visible quartet openings match");
-    expect(quartetsPage).toContain("Quartet Mode listing");
+    expect(quartetsPage).toContain("My Quartet Profile");
     expect(mapPage).toContain("No approximate map regions match");
     expect(mapPage).toContain("approximate public location data");
   });

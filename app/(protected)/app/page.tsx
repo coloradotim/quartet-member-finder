@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {
-  quartetModeDashboardActions,
+  quartetDashboardActions,
   singerDashboardActions,
   supportDashboardActions,
   type DashboardAction,
@@ -45,14 +45,13 @@ export default async function AppHomePage() {
           {user?.email ? `, ${user.email}` : ""}?
         </h1>
         <p className="mt-4 max-w-3xl text-base leading-7 text-[#394548]">
-          Use the app as a singer, as someone helping an incomplete quartet, or
-          both. Singer profiles help others find you, quartet openings help you
-          find groups looking for missing parts, and first contact starts
-          through the app.
+          You can maintain a singer profile, a quartet profile, or both. Each
+          has its own visibility setting, so you control what appears in
+          discovery without choosing a permanent role.
         </p>
         <p className="mt-3 max-w-3xl text-base leading-7 text-[#394548]">
-          Discovery uses approximate locations so singers and quartets can judge
-          practical distance without exposing exact home-location details.
+          Discoverable means a profile can appear in Find results and
+          approximate map discovery. Hidden means it stays out of discovery.
         </p>
       </header>
 
@@ -65,38 +64,38 @@ export default async function AppHomePage() {
             className="mt-3 text-2xl font-bold text-[#172023]"
             id="singer-dashboard-heading"
           >
-            Start with your singer workflow
+            My Singer Profile
           </h2>
           <p className="mt-3 text-base leading-7 text-[#394548]">
-            Build a useful profile, look for quartet openings, connect with
-            other singers, and use the map for privacy-minded regional
-            discovery.
+            This profile represents you personally as a singer. Make it
+            discoverable if you want quartets or other singers to find you; hide
+            it any time without affecting your quartet profile.
           </p>
         </div>
         <DashboardActionList actions={singerDashboardActions} />
       </section>
 
       <section
-        aria-labelledby="quartet-mode-dashboard-heading"
+        aria-labelledby="quartet-profile-dashboard-heading"
         className="border-t border-[#d7cec0] pt-8"
       >
         <div className="max-w-3xl">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#2f6f73]">
-            Quartet Mode
+            As a quartet representative
           </p>
           <h2
             className="mt-3 text-2xl font-bold text-[#172023]"
-            id="quartet-mode-dashboard-heading"
+            id="quartet-profile-dashboard-heading"
           >
-            Represent an incomplete quartet
+            My Quartet Profile
           </h2>
           <p className="mt-3 text-base leading-7 text-[#394548]">
-            Quartet Mode is for managing a quartet listing and finding singers
-            who may fit the missing part. You can use it alongside your own
-            singer profile.
+            This profile represents a quartet or prospective quartet you
+            represent. Make it discoverable when you are looking for one or more
+            singers; hide it any time without affecting your singer profile.
           </p>
         </div>
-        <DashboardActionList actions={quartetModeDashboardActions} />
+        <DashboardActionList actions={quartetDashboardActions} />
       </section>
 
       <section

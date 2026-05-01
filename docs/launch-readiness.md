@@ -123,7 +123,7 @@ Record before launch:
 | Complete | Onboarding routes signed-in first-time users to a useful first action.                                                                                   | Issue #41; smoke test plan.                                          |
 | Complete | Empty states provide useful next actions.                                                                                                                | Issue #40; smoke test plan.                                          |
 | Complete | My Singer Profile stores parts, goals, location, visibility, and private postal code separately.                                                         | `/app/profile`; `docs/privacy-model.md#singer-profile-management`.   |
-| Complete | Quartet Mode stores covered parts and needed parts separately.                                                                                           | `/app/listings`; `docs/privacy-model.md#quartet-listing-management`. |
+| Complete | My Quartet Profile stores covered parts and needed parts separately.                                                                                     | `/app/listings`; `docs/privacy-model.md#quartet-listing-management`. |
 | Complete | Find consolidates public discovery into filters, privacy-safe map, and results table; detailed Singer, Quartet Opening, and Map routes remain available. | `/find`, `/singers`, `/quartets`, `/map`.                            |
 | Manual   | Run the full manual smoke test plan on production before launch.                                                                                         | `docs/smoke-test-plan.md`.                                           |
 | Manual   | Confirm seed/demo data is not loaded into production.                                                                                                    | `docs/seed-data.md`; Supabase production data review.                |
@@ -141,12 +141,12 @@ Record before launch:
 
 ## Global Location and Non-US Assumptions
 
-| Status   | Item                                                                                                | Verification                                                     |
-| -------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Complete | Location fields are globally tolerant and avoid US-only validation.                                 | `docs/privacy-model.md#global-location-expectations`.            |
-| Complete | Search and smoke tests include non-US examples such as Manchester, Dublin, Toronto, or Melbourne.   | `docs/smoke-test-plan.md`.                                       |
-| Complete | Distance display supports kilometers and miles.                                                     | `lib/location/approximate-location.ts`; tests.                   |
-| Manual   | Verify at least one non-US singer profile and one non-US quartet listing in production smoke tests. | `docs/smoke-test-plan.md#my-singer-profile` and `#quartet-mode`. |
+| Status   | Item                                                                                                | Verification                                                           |
+| -------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Complete | Location fields are globally tolerant and avoid US-only validation.                                 | `docs/privacy-model.md#global-location-expectations`.                  |
+| Complete | Search and smoke tests include non-US examples such as Manchester, Dublin, Toronto, or Melbourne.   | `docs/smoke-test-plan.md`.                                             |
+| Complete | Distance display supports kilometers and miles.                                                     | `lib/location/approximate-location.ts`; tests.                         |
+| Manual   | Verify at least one non-US singer profile and one non-US quartet listing in production smoke tests. | `docs/smoke-test-plan.md#my-singer-profile` and `#my-quartet-profile`. |
 
 ## Abuse and Spam Protections
 

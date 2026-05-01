@@ -5,11 +5,11 @@ import {
 } from "@/lib/navigation/site-navigation";
 
 describe("site navigation", () => {
-  it("keeps public discovery and help links available before login", () => {
+  it("keeps public navigation focused on help, privacy, and sign-in", () => {
     expect(publicNavigationLinks).toEqual([
-      { href: "/find", label: "Find" },
-      { href: "/sign-in", label: "Sign in" },
       { href: "/help", label: "Help" },
+      { href: "/privacy", label: "Privacy" },
+      { href: "/sign-in", label: "Sign in" },
     ]);
   });
 

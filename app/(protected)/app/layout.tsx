@@ -2,7 +2,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { signOut } from "@/app/auth/actions";
 import {
-  signedInModeNavigationLinks,
   signedInPrimaryNavigationLinks,
   signedInUtilityNavigationLinks,
 } from "@/lib/navigation/signed-in-nav";
@@ -79,25 +78,11 @@ export default async function ProtectedAppLayout({
           >
             <div
               className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap"
-              aria-label="Singer tasks"
+              aria-label="App tasks"
             >
               {signedInPrimaryNavigationLinks.map((link) => (
                 <Link
                   className="inline-flex min-h-11 items-center justify-center rounded-md border border-[#d7cec0] bg-white/60 px-3 py-2 text-center text-sm font-semibold text-[#394548] hover:border-[#2f6f73] hover:text-[#174b4f]"
-                  href={link.href}
-                  key={link.href}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-            <div
-              className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap lg:justify-end"
-              aria-label="Quartet mode"
-            >
-              {signedInModeNavigationLinks.map((link) => (
-                <Link
-                  className="inline-flex min-h-11 items-center justify-center rounded-md bg-[#174b4f] px-3 py-2 text-center text-sm font-semibold text-white hover:bg-[#10393c]"
                   href={link.href}
                   key={link.href}
                 >

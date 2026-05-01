@@ -2,7 +2,7 @@ export const publicHelpSections = [
   {
     body: [
       "Quartet Member Finder helps barbershop singers and incomplete quartets find each other. It is for practical discovery and safer introductions, not for building a public social network.",
-      "You can use it to create a singer profile, list an incomplete quartet, search for nearby possibilities, and send an app-mediated first contact request.",
+      "One account can support My Singer Profile, My Quartet Profile, or both. You can use either optional profile without choosing a permanent role.",
     ],
     heading: "What It Is For",
   },
@@ -11,23 +11,24 @@ export const publicHelpSections = [
       "A singer profile describes who you are as a singer: your name, parts, goals, experience, availability, travel willingness, and approximate location.",
       "Parts are grouped by voicing, so TTBB Tenor, SATB Tenor, and SSAA part labels stay distinct in discovery.",
       "Only display name is required; the optional details help others decide whether a contact request makes sense.",
-      "You choose whether the profile appears in public discovery. Hidden profiles stay out of singer search and the map.",
+      "You choose whether My Singer Profile appears in discovery. Hidden singer profiles stay out of singer search and the map, and hiding it does not hide My Quartet Profile.",
     ],
     heading: "Singer Profiles",
   },
   {
     body: [
       "After sign-in, onboarding first asks for basic profile context like display name, country, and approximate location.",
-      "Then you choose what to do first. That choice is not permanent; you can use singer search, quartet openings, and Quartet Mode later.",
+      "Then you choose what you are here to do first. That choice is not permanent; you can use My Singer Profile, My Quartet Profile, Find, and Help later.",
     ],
     heading: "First Sign-In",
   },
   {
     body: [
-      "A quartet listing is for a quartet or prospective quartet that has some parts covered and is looking for one or more singers.",
-      "Listings keep covered parts and needed parts separate within the quartet's voicing so searchers can quickly understand what the group needs.",
+      "My Quartet Profile is for a quartet or prospective quartet that has some parts covered and is looking for one or more singers.",
+      "It keeps covered parts and needed parts separate within the quartet's voicing so searchers can quickly understand what the group needs.",
+      "You choose whether My Quartet Profile appears in discovery. Hidden quartet profiles stay out of quartet search and the map, and hiding it does not hide My Singer Profile.",
     ],
-    heading: "Quartet Listings",
+    heading: "Quartet Profiles",
   },
   {
     body: [
@@ -56,8 +57,9 @@ export const publicHelpSections = [
   },
   {
     body: [
-      "You can hide a singer profile or quartet listing by turning off its search visibility and saving. Hidden items should disappear from public search and the map.",
-      "If you no longer want a profile or listing to be active, keep it hidden until deletion or stronger deactivation controls are added.",
+      "Discoverable means a profile can appear in Find results and approximate map discovery. Hidden means it stays out of discovery.",
+      "My Singer Profile and My Quartet Profile have independent visibility controls. You can make either one discoverable, both discoverable, or neither discoverable.",
+      "Filling out a profile does not require making it discoverable. If you are no longer looking personally, hide My Singer Profile; if the quartet opening is no longer active, hide My Quartet Profile.",
     ],
     heading: "Visibility Controls",
   },
@@ -94,6 +96,7 @@ export const publicPrivacySections = [
   {
     body: [
       "You choose what to put in a singer profile or quartet listing. That can include names, parts, goals, experience, availability, travel willingness, a short description, and approximate location fields.",
+      "My Singer Profile and My Quartet Profile are optional and have independent visibility controls. Filling out one does not publish the other.",
       "Do not put private contact details or exact home-location details into public text fields if you do not want other people to see them.",
     ],
     heading: "Information You Add",
@@ -107,7 +110,8 @@ export const publicPrivacySections = [
   },
   {
     body: [
-      "Singer profiles and quartet listings have visibility controls. Visible and active items can appear in public search and the map. Hidden items should stay out of those public discovery views.",
+      "Singer profiles and quartet profiles have independent visibility controls. Discoverable and active profiles can appear in search and the map. Hidden profiles should stay out of those discovery views.",
+      "Both optional profiles can be discoverable at once when that matches your situation, but neither one has to be discoverable just because it has been filled out.",
       "The database uses privacy-safe discovery views for public search rather than exposing private base tables directly.",
     ],
     heading: "Visibility",

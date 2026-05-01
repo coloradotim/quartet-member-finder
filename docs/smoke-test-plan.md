@@ -24,8 +24,8 @@ validation.
 1. Open `/`.
 2. Pass: the page loads without a server error and clearly names Quartet Member
    Finder.
-3. Pass: primary links to Find, Help, Privacy, My Singer Profile, and Quartet
-   Mode are present.
+3. Pass: primary links include Help, Privacy, and Sign in, and the page explains
+   My Singer Profile and My Quartet Profile as optional profiles.
 4. Fail: the page exposes private email addresses, phone numbers, exact
    coordinates, private postal codes, or raw database IDs.
 
@@ -64,8 +64,8 @@ validation.
 
 1. Sign in and open `/app`.
 2. Pass: the dashboard loads behind authentication.
-3. Pass: it distinguishes My Singer Profile, Find, Quartet Mode, Account
-   Settings, Help, and Privacy.
+3. Pass: it distinguishes My Singer Profile, My Quartet Profile, Find, Help,
+   and Privacy without requiring a global mode switch.
 4. Pass: signed-out users visiting `/app` are redirected to sign in.
 5. Fail: dashboard links point to missing routes or expose another user's data.
 
@@ -77,8 +77,9 @@ validation.
 3. Pass: display name is clearly required and the location fields are clearly
    optional.
 4. Pass: workflow options are plain language and do not imply a permanent role.
-5. Pass: saving creates hidden starter profile context and routes to the chosen
-   next page.
+5. Pass: saving creates hidden starter profile context and routes to My Singer
+   Profile, My Quartet Profile, or the signed-in dashboard based on first
+   intent.
 6. Fail: onboarding publishes the profile in discovery without the visibility
    control being turned on.
 
@@ -104,7 +105,7 @@ validation.
 8. Fail: public UI exposes private postal code, formatted private address, exact
    latitude/longitude, email address, or phone number.
 
-## Quartet Mode
+## My Quartet Profile
 
 1. Open `/app/listings`.
 2. Create or edit a quartet listing with:

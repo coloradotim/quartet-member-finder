@@ -15,7 +15,9 @@ describe("public help and privacy content", () => {
     const helpText = pageText(publicHelpSections);
 
     expect(helpText).toContain("Singer Profiles");
-    expect(helpText).toContain("Quartet Listings");
+    expect(helpText).toContain("Quartet Profiles");
+    expect(helpText).toContain("One account can support My Singer Profile");
+    expect(helpText).toContain("independent visibility controls");
     expect(helpText).toContain("Search");
     expect(helpText).toContain("Find is the main discovery page");
     expect(helpText).toContain("results table");
@@ -32,6 +34,8 @@ describe("public help and privacy content", () => {
 
     expect(privacyText).toContain("Approximate Location");
     expect(privacyText).toContain("Public search results should not show");
+    expect(privacyText).toContain("independent visibility controls");
+    expect(privacyText).toContain("Both optional profiles can be discoverable");
     expect(privacyText).toContain("email addresses or phone numbers");
     expect(privacyText).toContain("global");
     expect(privacyText).toContain("not a formal legal privacy policy");

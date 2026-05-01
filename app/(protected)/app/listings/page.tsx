@@ -96,15 +96,15 @@ export default async function ManageListingsPage({
     <div>
       <div className="max-w-3xl">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#2f6f73]">
-          Quartet listings
+          Quartet profile
         </p>
         <h1 className="mt-4 text-3xl font-bold text-[#172023]">
-          Manage quartet listing
+          Manage My Quartet Profile
         </h1>
         <p className="mt-4 text-base leading-7 text-[#394548]">
-          Create the listing that tells singers which parts are covered, which
-          parts are needed, and what kind of quartet you are building. Keep the
-          public location approximate.
+          This profile is for a quartet or prospective quartet you represent.
+          Make it discoverable when you are looking for one or more singers;
+          hide it any time without affecting your singer profile.
         </p>
       </div>
 
@@ -129,12 +129,13 @@ export default async function ManageListingsPage({
       {!listing ? (
         <section className="mt-8 max-w-3xl rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5">
           <h2 className="text-xl font-bold text-[#172023]">
-            Start Quartet Mode
+            Create My Quartet Profile
           </h2>
           <p className="mt-3 text-sm leading-6 text-[#394548]">
-            Quartet Mode is for a quartet or prospective quartet looking for
-            singers. Create a listing with covered parts, missing parts, and an
-            approximate location so singers can judge whether it might fit.
+            My Quartet Profile is for a quartet or prospective quartet looking
+            for singers. Create a profile with covered parts, missing parts, and
+            an approximate location so singers can judge whether it might fit.
+            You can keep it hidden until the opening is active.
           </p>
           <Link
             className="mt-4 inline-flex font-semibold text-[#2f6f73]"
@@ -146,12 +147,13 @@ export default async function ManageListingsPage({
       ) : listing.is_visible ? null : (
         <section className="mt-8 max-w-3xl rounded-lg border border-[#d7cec0] bg-[#fffaf2] p-5">
           <h2 className="text-xl font-bold text-[#172023]">
-            This quartet listing is hidden
+            My Quartet Profile is hidden
           </h2>
           <p className="mt-3 text-sm leading-6 text-[#394548]">
             Hidden listings do not appear in Find, detailed quartet search, or
             the map view, so singers cannot discover them yet. Turn on
-            visibility below when the listing is ready.
+            visibility below when the opening is active. This does not change
+            your singer profile visibility.
           </p>
         </section>
       )}
@@ -308,6 +310,10 @@ export default async function ManageListingsPage({
 
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-[#172023]">Visibility</h2>
+          <p className="text-sm leading-6 text-[#394548]">
+            Discoverable means this profile can appear in Find results and
+            approximate map discovery. Hidden means it stays out of discovery.
+          </p>
           <label className="flex items-start gap-3 rounded-md border border-[#d7cec0] bg-[#fffaf2] p-4">
             <input
               className="mt-1"
@@ -317,7 +323,7 @@ export default async function ManageListingsPage({
             />
             <span>
               <span className="block font-semibold text-[#172023]">
-                Show this quartet listing in discovery
+                Show My Quartet Profile in discovery
               </span>
               <span className="mt-1 block text-sm leading-6 text-[#596466]">
                 Discovery views include the name, parts covered and needed,

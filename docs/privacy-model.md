@@ -217,8 +217,9 @@ information.
 
 First-run onboarding first asks signed-in users for basic profile context:
 display name, country, city, and ZIP/postal code. It then asks what they want to
-do first, not what role they permanently are. A user may use the app as a singer
-and in Quartet Mode.
+do first, not what role they permanently are. A user may maintain My Singer
+Profile, My Quartet Profile, both profiles, or neither profile while getting
+oriented.
 
 Onboarding state is stored on the user's private `account_profiles` row. The app
 records whether onboarding was completed and the selected first action. This
@@ -240,8 +241,14 @@ unit.
 
 My Singer Profile is the place for public singer discovery data: public display
 name, parts, goals, experience, availability, approximate location, private
-postal code for future matching, and search visibility. Quartet Mode owns the
-same kind of location and visibility decisions for quartet listings.
+postal code for future matching, and search visibility. My Quartet Profile owns
+the same kind of location and visibility decisions for a quartet or prospective
+quartet the user represents.
+
+Each optional profile has independent visibility. Discoverable means the profile
+can appear in Find results and approximate map discovery. Hidden means it stays
+out of discovery. Filling out one profile does not require publishing it, and
+hiding one profile does not hide the other.
 
 Country on the singer profile or quartet listing drives practical defaults such
 as miles vs kilometers and country-aware labels like ZIP code, postcode, state,
