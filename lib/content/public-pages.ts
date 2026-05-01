@@ -58,7 +58,7 @@ export const publicHelpSections: HelpGuideSection[] = [
       {
         body: [
           "You can fill out My Singer Profile, My Quartet Profile, both profiles, or neither while you get oriented. You do not need to publish both profiles just because both options exist.",
-          "The two profiles are independent. Hiding My Singer Profile does not hide My Quartet Profile, and hiding My Quartet Profile does not hide My Singer Profile.",
+          "The two profiles are independent. Taking My Singer Profile out of Find does not take My Quartet Profile out of Find, and taking My Quartet Profile out of Find does not take My Singer Profile out of Find.",
         ],
         title: "Use either profile, both, or neither",
       },
@@ -68,9 +68,9 @@ export const publicHelpSections: HelpGuideSection[] = [
           "Both profiles can be discoverable at the same time if that matches your situation, such as when you personally sing and also represent a quartet looking for another part.",
         ],
         bullets: [
-          "Discoverable profiles can appear in Find.",
-          "Hidden profiles stay out of discovery.",
-          "You can hide a profile when you are no longer looking.",
+          "Profiles shown in Find can appear in discovery.",
+          "Profiles not shown in Find stay out of discovery.",
+          "You can turn off Find visibility when you are no longer looking.",
         ],
         title: "Independent visibility",
       },
@@ -99,10 +99,10 @@ export const publicHelpSections: HelpGuideSection[] = [
       },
       {
         body: [
-          "Keep the profile hidden while it is incomplete, while you are not open to opportunities, or while you are only using the app as a quartet representative.",
+          "Keep the profile out of Find while it is incomplete, while you are not open to opportunities, or while you are only using the app as a quartet representative.",
           "If important discovery or location fields are incomplete, your profile can be harder to interpret and may not place well in map or radius search context.",
         ],
-        title: "When to hide it",
+        title: "When not to show it in Find",
       },
     ],
   },
@@ -123,7 +123,7 @@ export const publicHelpSections: HelpGuideSection[] = [
       {
         body: [
           "Covered parts and needed parts are separate. That lets a Lead, Bass, Baritone, or Tenor see whether the opening actually fits before contacting you.",
-          "Like My Singer Profile, My Quartet Profile has its own visibility setting. Hide it when the opening is filled, paused, or not ready for people to find.",
+          "Like My Singer Profile, My Quartet Profile has its own visibility setting. Keep it out of Find when the opening is filled, paused, or not ready for people to discover.",
         ],
         title: "Covered and needed parts",
       },
@@ -221,10 +221,10 @@ export const publicHelpSections: HelpGuideSection[] = [
     topics: [
       {
         body: [
-          "Visible profiles can appear in Find. Hidden profiles stay out of discovery. My Singer Profile and My Quartet Profile have separate visibility controls.",
+          "Profiles shown in Find can appear in discovery. Profiles not shown in Find stay out of discovery. My Singer Profile and My Quartet Profile have separate visibility controls.",
           "Do not put private contact details or exact home-location information in public bio, description, availability, or goal fields.",
         ],
-        title: "Visible versus hidden",
+        title: "Shown in Find",
       },
       {
         body: [
@@ -279,7 +279,7 @@ export const publicHelpSections: HelpGuideSection[] = [
       },
       {
         body: [
-          "Your profile may be hidden, incomplete, or missing useful location details. Filling out a profile does not publish it; check the visibility setting before expecting it to appear in Find.",
+          "Your profile may not be shown in Find, may be incomplete, or may be missing useful location details. Filling out a profile does not publish it; check the visibility setting before expecting it to appear in Find.",
         ],
         title: "Why does my profile not show up?",
       },
@@ -345,7 +345,7 @@ export const publicPrivacySections = [
   },
   {
     body: [
-      "Singer profiles and quartet profiles have independent visibility controls. Discoverable and active profiles can appear in search and Find. Hidden profiles should stay out of those discovery views.",
+      "Singer profiles and quartet profiles have independent visibility controls. Active profiles shown in Find can appear in search and discovery. Profiles not shown in Find should stay out of those discovery views.",
       "Both optional profiles can be discoverable at once when that matches your situation, but neither one has to be discoverable just because it has been filled out.",
       "The database uses privacy-safe discovery views for public search rather than exposing private base tables directly.",
     ],
